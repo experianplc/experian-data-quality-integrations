@@ -9,9 +9,9 @@ form fields.
 Before starting, it's important to make sure you have access to the following
 things:
 
-*  PeopleTools Application Designer (we have tested this with PeopleTools 8.54 and HRMS 9.20, but older and newer versions should apply with little to no change in our instructions).
+* PeopleTools Application Designer (we have tested this with PeopleTools 8.54 and HRMS 9.20, but older and newer versions should apply with little to no change in our instructions).
 * Reverse Proxy (optional for general use, but required for use with self-hosted Pro Web).
-* The integration files, which will be provided in this repository.
+* The integration files, which will be provided in this repository in the `src` folder.
 
 # Installation instructions
 
@@ -63,7 +63,7 @@ now selected to view the **HTML Area Properties**. The screen below will show ho
 ![HTML Area Properties](media/html-area-properties.png)
 
 Then, after configuration, put the integration HTML code in the main field after specifying the HTML **Value**
-as being a *Constant*.
+as being a *Constant*. Integration code for `EO_ADDR_USA_SEC` can be found under `src`.
 
 
 # Testing the integration
