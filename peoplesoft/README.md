@@ -70,3 +70,10 @@ as being a *Constant*.
 
 Once you've followed the steps specified above, you can test out the integration by going to the specified
 Page (or Definition) in PeopleSoft using your web browser.
+
+
+# Creating a layout
+
+The integration requires that each Address Line only have a single element. Modifying `Database Layout`, create a new layout in the *QAS Configuration Editor* (can be found under QAS Pro Web -> QAS Configuration Editor) and follow the below configuration settings:
+
+![Pro Web Laout](media/pro-web-layout.png)
