@@ -1,0 +1,33 @@
+{
+  "functionalSuites": "functional/**/*.js",
+  "filterErrorStack": true,
+
+  "capabilities": {
+    "acceptInsecureCerts": true
+  },
+
+  "environments": [
+    {
+      "browserName": "chrome",
+      "chromeOptions": {
+        "args": [
+          //"headless",
+          //"remote-debugging-port=9222",
+          "window-size=1280,960",
+          "disable-gpu"
+        ]
+
+      }
+    }
+  ],
+
+  "tunnelOptions": {
+    "drivers": [
+      {
+        "name": "chrome",
+        "version": "2.37"
+      }
+    ]
+  }
+}
+

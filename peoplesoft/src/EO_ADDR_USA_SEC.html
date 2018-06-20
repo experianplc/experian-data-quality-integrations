@@ -17,77 +17,86 @@
 
   var trigger = document.getElementById("EDQ_VERIFY_EO_ADDR_USA_SEC");
 
-  window.EdqConfig = {
-    PRO_WEB_TIMEOUT: PRO_WEB_TIMEOUT,
-    PRO_WEB_SERVICE_URL: PRO_WEB_SERVICE_URL,
-    PRO_WEB_SUBMIT_TRIGGERS: [
-      {
-        type: "click",
-        element: trigger
-      }
-    ],
-    PRO_WEB_LAYOUT: PRO_WEB_LAYOUT,
-    PRO_WEB_COUNTRY: 'USA',
-    PRO_WEB_MAPPING: [
-      {
-        field: document.getElementById('DERIVED_ADDRESS_ADDRESS1'),
-        modalFieldSelector: '#interaction-address--original-address-line-one',
-        elements: ['Primary number', 'Street'],
-        separator: ' '
-      },
-
-      {
-        field: document.getElementById('DERIVED_ADDRESS_ADDRESS2'),
-        modalFieldSelector: '#interaction-address--original-address-line-two',
-        elements: ['Secondary number'],
-        separator: ''
-      },
-
-      {
-        field: document.getElementById('DERIVED_ADDRESS_CITY'),
-        modalFieldSelector: '#interaction-address--original-locality',
-        elements: ['City name'],
-        separator: ''
-      },
-
-      {
-        field: document.getElementById('DERIVED_ADDRESS_STATE'),
-        modalFieldSelector: '#interaction-address--original-province',
-        elements: ['State code'],
-        separator: ''
-      },
-
-      {
-        field: document.getElementById('DERIVED_ADDRESS_POSTAL'),
-        modalFieldSelector: '#interaction-address--original-postal-code',
-        elements: ['ZIP Code', '+4 code'],
-        separator: '-'
-      },
-
-      {
-        field: document.getElementById('DERIVED_ADDRESS_COUNTY'),
-        modalFieldSelector: '', // Only the standard first 5 address lines require modalFieldSelector
-        elements: ['County name'],
-        separator: ''
-      },
-    ]
-  };
-
   var interval = setInterval(function() {
     if (trigger !== null){
       clearInterval(interval);
 
+      window.EdqConfig = {
+        PRO_WEB_TIMEOUT: PRO_WEB_TIMEOUT,
+        PRO_WEB_SERVICE_URL: PRO_WEB_SERVICE_URL,
+        PRO_WEB_SUBMIT_TRIGGERS: [
+          {
+            type: "click",
+            element: trigger
+          }
+        ],
+        PRO_WEB_LAYOUT: PRO_WEB_LAYOUT,
+        PRO_WEB_COUNTRY: 'USA',
+        PRO_WEB_MAPPING: [
+          {
+            field: document.getElementById('DERIVED_ADDRESS_ADDRESS1'),
+            modalFieldSelector: '#interaction-address--original-address-line-one',
+            elements: ['Primary number', 'Street'],
+            separator: ' '
+          },
+
+          {
+            field: document.getElementById('DERIVED_ADDRESS_ADDRESS2'),
+            modalFieldSelector: '#interaction-address--original-address-line-two',
+            elements: ['Secondary number'],
+            separator: ''
+          },
+
+          {
+            field: document.getElementById('DERIVED_ADDRESS_CITY'),
+            modalFieldSelector: '#interaction-address--original-locality',
+            elements: ['City name'],
+            separator: ''
+          },
+
+          {
+            field: document.getElementById('DERIVED_ADDRESS_STATE'),
+            modalFieldSelector: '#interaction-address--original-province',
+            elements: ['State code'],
+            separator: ''
+          },
+
+          {
+            field: document.getElementById('DERIVED_ADDRESS_POSTAL'),
+            modalFieldSelector: '#interaction-address--original-postal-code',
+            elements: ['ZIP Code', '+4 code'],
+            separator: '-'
+          },
+
+          {
+            field: document.getElementById('DERIVED_ADDRESS_COUNTY'),
+            modalFieldSelector: '', // Only the standard first 5 address lines require modalFieldSelector
+            elements: ['County name'],
+            separator: ''
+          },
+        ]
+      };
+
+      var verificationUnicornScript = document.createElement("script");
+      verificationUnicornScript.type = "text/javascript";
+      verificationUnicornScript.src = "https://cdn.edq.com/static/unicorn-wizard-dependencies/verification-unicorn.js";
+      verificationUnicornScript.id = "edq-verification-unicorn";
+
       var edqScript = document.createElement("script");
       edqScript.type = "text/javascript";
       edqScript.src = "https://cdn.edq.com/static/unicorn-wizard-dependencies/edq.js";
-      edqScript.onload = function() {
-        var verificationUnicornScript = document.createElement("script");
-        verificationUnicornScript.type = "text/javascript";
-        verificationUnicornScript.src = "https://cdn.edq.com/static/unicorn-wizard-dependencies/verification-unicorn.js";
+      edqScript.id = "edq-pegasus";
+      edqScript.onload = function() { document.body.appendChild(verificationUnicornScript); }
+
+      if (document.getElementById('edq-pegasus') === null) {
+        document.body.appendChild(edqScript);
+
+      // This is here because PeopleSoft will "reset" the integration each time you change a field
+      // and refocus. The purpose of this is to rebind the integration.
+      } else {
+        document.getElementById('edq-verification-unicorn').remove();
         document.body.appendChild(verificationUnicornScript);
       }
-
-      document.body.appendChild(edqScript);
     }
   }, 1000);
 </script>
