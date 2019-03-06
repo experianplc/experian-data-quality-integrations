@@ -72,7 +72,7 @@ Once you've followed the steps specified above, you can test out the integration
 Page (or Definition) in PeopleSoft using your web browser.
 
 
-# Creating a layout
+# Creating a layout (On-Premise Pro Web only)
 
 The integration requires that each Address Line only have a single element. Modifying `Database Layout`, create a new layout in the *QAS Configuration Editor* (can be found under QAS Pro Web -> QAS Configuration Editor) and follow the below configuration settings:
 
