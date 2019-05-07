@@ -11,8 +11,7 @@
       "browserName": "chrome",
       "chromeOptions": {
         "args": [
-          //"headless",
-          //"remote-debugging-port=9222",
+          "headless",
           "window-size=1280,960",
           "disable-gpu"
         ]
