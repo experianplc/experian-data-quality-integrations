@@ -9,7 +9,12 @@
   "dependencies": {
     "intern": "^4.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chromedriver": "^74.0.0",
+    "selenium-standalone": "^6.16.0",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "typescript": "^3.4.5"
+  },
   "scripts": {
     "test": "npm run intern"
   },
