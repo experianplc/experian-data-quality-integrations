@@ -1,2 +1,3 @@
 peoplesoft/node_modules
 peoplesoft/**/*.js
+**/nunit3.xml

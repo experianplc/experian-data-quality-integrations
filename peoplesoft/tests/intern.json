@@ -20,6 +20,8 @@
     }
   ],
 
+  "plugins": ["reporters/nunit3.js"],
+
   "tunnelOptions": {
     "drivers": [
       {
