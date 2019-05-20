@@ -47,5 +47,6 @@ export {
   setMultiField,
   navigateTo,
   poll,
-  pollEval
+  pollEval,
+  pollUntil
 }
