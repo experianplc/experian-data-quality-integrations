@@ -32,37 +32,31 @@ function fillInFluidAddressField() {
   return function() {
     return this.parent
       .findByCssSelector("#ADDRESS1")
-        .click()
         .clearValue()
         .type("53 State Street")
         .end()
       .findByCssSelector("#ADDRESS2")
-        .click()
         .clearValue()
         .type("Fl 2")
         .end()
       .findByCssSelector("#CITY")
-        .click()
         .clearValue()
         .type("Boston")
         .end()
       .findByCssSelector("#DESCR_STATE")
-        .click()
         .clearValue()
         .type("Massachusetts")
         .end()
       .findByCssSelector("#POSTAL")
-        .click()
         .clearValue()
         .end()
       .findByCssSelector("#COUNTY")
-        .click()
         .clearValue()
         .end()
   }
 }
 
-registerSuite('PeopleSoft Tests', {
+registerSuite('PeopleSoft HCM Tests', {
 
   before: function() {
     return this.remote
@@ -100,16 +94,16 @@ registerSuite('PeopleSoft Tests', {
           .click()
           .end()
         .then(fillInAddressField())
-        .sleep(1000)
+        .sleep(3000)
         .findByCssSelector('#EDQ_VERIFY_EO_ADDR_USA_SEC')
           .sleep(100)
           .click()
           .end()
-        .sleep(1000)
+        .sleep(1500)
         .findByCssSelector('#DERIVED_ADDRESS_POSTAL')
           .getProperty('value')
-        .then(function(val) {
-          assert.equal('02110-1685', val, 'Postal code value populated. Integration functioning')
+        .then(function(postalCode) {
+          assert.equal(true, Boolean(postalCode), 'Postal code value populated. Integration functioning')
         })
     },
 
@@ -146,7 +140,6 @@ registerSuite('PeopleSoft Tests', {
         .findByCssSelector('#DERIVED_ADDRESS_POSTAL')
           .getProperty('value')
         .then(function(postalCode) {
-          console.log(postalCode);
           assert.equal(true, Boolean(postalCode), 'Postal code value populated. Integration functioning')
         })
     },
@@ -154,15 +147,17 @@ registerSuite('PeopleSoft Tests', {
     "ADDRESS_DFT_SCF Integration Works": function() {
       return this.remote
         .get("http://bospshcm92dev2.qas.com/psc/HCM92EXP/EMPLOYEE/HRMS/c/EL_EMPLOYEE_FL.HR_EE_ADDR_FL.GBL")
+        .sleep(5000)
         .findByCssSelector("[id='win0divHOME_ADDR_SMRYgridc$0']")
           .click()
+          .sleep(2000) 
           .end()
         .then(poll("#ptModFrame_0"))
         .switchToFrame("ptModFrame_0")
         .then(fillInFluidAddressField())
         .findByCssSelector("#EDQ_VERIFY_")
           .click()
-          .sleep(100)
+          .sleep(500)
           .click()
           .end()
         .sleep(5000)

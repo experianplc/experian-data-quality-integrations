@@ -39,7 +39,7 @@ function fillInFluidAddressField() {
   }
 }
 
-registerSuite("PeopleSoft Tests", {
+registerSuite("PeopleSoft CS Tests", {
 
   before: function() {
     return this.remote
