@@ -1,4 +1,5 @@
 import intern from 'intern';
+import keys from '@theintern/leadfoot/keys';
 import { poll, pollEval } from '../pages/main';
 
 const { registerSuite } = intern.getInterface('object');
@@ -80,7 +81,7 @@ registerSuite('PeopleSoft Tests', {
 
   tests: {
 
-    "EO_ADDR_USA_SEC Integration Works": function() {
+    "EO_ADDR_USA_SEC Integration Works - Pro Web": function() {
       return this.remote
         .get('http://bospshcm92dev2.qas.com/psp/HCM92EXP/EMPLOYEE/HRMS/c/ADMINISTER_WORKFORCE_(GBL).PERSONAL_DATA_ADD.GBL?FolderPath=PORTAL_ROOT_OBJECT.HC_WORKFORCE_ADMINISTRATION.CO_PERSONAL_INFORMATION.HC_ADD_PERSON_2&IsFolder=false&IgnoreParamTempl=FolderPath%2cIsFolder')
         .then(poll('#ptifrmtgtframe'))
@@ -112,6 +113,44 @@ registerSuite('PeopleSoft Tests', {
         })
     },
 
+    "EO_ADDR_USA_SEC Integration Works - Global Intuitive": function() {
+      return this.remote
+        .get('http://bospshcm92dev2.qas.com/psp/HCM92EXP/EMPLOYEE/HRMS/c/ADMINISTER_WORKFORCE_(GBL).PERSONAL_DATA_ADD.GBL?FolderPath=PORTAL_ROOT_OBJECT.HC_WORKFORCE_ADMINISTRATION.CO_PERSONAL_INFORMATION.HC_ADD_PERSON_2&IsFolder=false&IgnoreParamTempl=FolderPath%2cIsFolder')
+        .then(poll('#ptifrmtgtframe'))
+        .switchToFrame('ptifrmtgtframe')
+        .findByCssSelector('#DERIVED_HCR_PER_ADD_PERSON_LINK')
+          .click()
+          .end()
+        .findByXpath('id("ICTAB_1")/SPAN')
+          .click()
+          .end()
+        .findByXpath('id("ADDR_HISTORY_BTN$0")')
+          .click()
+          .end()
+        .then(poll('#DERIVED_ADDR_UPDATE_ADDRESS\\$0'))
+        .findByCssSelector('#DERIVED_ADDR_UPDATE_ADDRESS\\$0')
+          .click()
+          .end()
+        .sleep(1000)
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .type("53 State Street")
+          .sleep(1000)
+          .end()
+        .execute(function() {
+          document.getElementById("DERIVED_ADDRESS_ADDRESS1").dispatchEvent(new KeyboardEvent("keyup"));
+        })
+        .findByCssSelector(".edq-global-intuitive-address-suggestion")
+          .click()
+          .end()
+        .sleep(500)
+        .findByCssSelector('#DERIVED_ADDRESS_POSTAL')
+          .getProperty('value')
+        .then(function(postalCode) {
+          console.log(postalCode);
+          assert.equal(true, Boolean(postalCode), 'Postal code value populated. Integration functioning')
+        })
+    },
+
     "ADDRESS_DFT_SCF Integration Works": function() {
       return this.remote
         .get("http://bospshcm92dev2.qas.com/psc/HCM92EXP/EMPLOYEE/HRMS/c/EL_EMPLOYEE_FL.HR_EE_ADDR_FL.GBL")
@@ -133,6 +172,5 @@ registerSuite('PeopleSoft Tests', {
           assert.equal("02109-3105", postalCode, "Postal code value populated. Integration functioning");
         })
     }
-
   },
 });
