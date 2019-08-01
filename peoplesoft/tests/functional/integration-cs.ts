@@ -1,3 +1,4 @@
+
 import intern from 'intern';
 import keys from '@theintern/leadfoot/keys';
 import { poll, pollEval, pollUntil } from '../pages/main';
@@ -12,13 +13,15 @@ function fillInFluidAddressField() {
         .click()
         .clearValue()
         .type("53 State Street")
+        .sleep(1000)
         .end()
+      .pressKeys(keys.TAB)
       .findByCssSelector("#DERIVED_ADDRESS_ADDRESS2")
         .click()
         .clearValue()
         .type("Fl 2")
         .end()
-      .findByCssSelector("[id='DERIVED_ADDRESS_CITY$69$']")
+      .findByCssSelector("input[id^='DERIVED_ADDRESS_CITY']")
         .click()
         .clearValue()
         .type("Boston")
@@ -73,8 +76,7 @@ registerSuite("PeopleSoft CS Tests", {
         .sleep(1000)
         .findByLinkText('Verify Address')
           .click()
-          .sleep(5000)
-          .click()
+	  .sleep(5000)
           .end()
         .findByCssSelector('input[id^="DERIVED_ADDRESS_POSTAL"]')
           .getProperty('value')
@@ -114,3 +116,4 @@ registerSuite("PeopleSoft CS Tests", {
 
   },
 });
+
