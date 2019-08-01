@@ -105,7 +105,7 @@ registerSuite("PeopleSoft CS Tests", {
           .click()
           .end()
         .sleep(500)
-        .findByCssSelector('#DERIVED_ADDRESS_POSTAL\\$70\\$')
+        .findByCssSelector('input[id^="DERIVED_ADDRESS_POSTAL"]')
           .getProperty('value')
         .then(function(postalCode) {
           assert.equal(true, Boolean(postalCode), 'Postal code value populated. Integration functioning')
