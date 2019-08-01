@@ -28,7 +28,7 @@ function fillInFluidAddressField() {
         .clearValue()
         .type("Massachusetts")
         .end()
-      .findByCssSelector("[id='DERIVED_ADDRESS_POSTAL$70$']")
+      .findByCssSelector('input[id^="DERIVED_ADDRESS_POSTAL"]')
         .click()
         .clearValue()
         .end()
@@ -76,7 +76,7 @@ registerSuite("PeopleSoft CS Tests", {
           .sleep(5000)
           .click()
           .end()
-        .findByCssSelector('#DERIVED_ADDRESS_POSTAL\\$70\\$')
+        .findByCssSelector('input[id^="DERIVED_ADDRESS_POSTAL"]')
           .getProperty('value')
         .then(function(postalCode) {
           assert.equal(true, Boolean(postalCode), 'Postal code value populated. Integration functioning')
