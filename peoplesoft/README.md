@@ -63,7 +63,8 @@ now selected to view the **HTML Area Properties**. The screen below will show ho
 ![HTML Area Properties](media/html-area-properties.png)
 
 Then, after configuration, put the integration HTML code in the main field after specifying the HTML **Value**
-as being a *Constant*. Integration code for `EO_ADDR_USA_SEC` can be found under `src`.
+as being a *Constant*. Integration code for `EO_ADDR_USA_SEC` can be found under `src`. If you want to integrate
+into a touchpoint that doesn't a file you can do so by following the section titled **Custom Touchpoints**
 
 
 # Testing the integration
@@ -77,3 +78,8 @@ Page (or Definition) in PeopleSoft using your web browser.
 The integration requires that each Address Line only have a single element. Modifying `Database Layout`, create a new layout in the *QAS Configuration Editor* (can be found under QAS Pro Web -> QAS Configuration Editor) and follow the below configuration settings:
 
 ![Pro Web Laout](media/pro-web-layout.png)
+
+It's important that your new layout have the exact configuration as specified above in order to map the items properly. 
+
+
+# Custom Touchpoints
