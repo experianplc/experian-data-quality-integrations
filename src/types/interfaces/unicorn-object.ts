@@ -9,7 +9,7 @@ interface UnicornObject {
   INVALID_BASE64_ICON?: string;
   UNKNOWN_BASE64_ICON?: string;
 
-
+  PRO_WEB_AUTH_TOKEN?: string;
   PRO_WEB_MODAL?: any;
   PRO_WEB_MAPPING?: Array<any>;
   PRO_WEB_COUNTRY: string;

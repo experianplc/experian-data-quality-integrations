@@ -1,10 +1,6 @@
 {
-  "types": [
-    "intern",
-    "autocompletion"
-  ],
-
   "compilerOptions": {
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "dom.iterable",
@@ -16,7 +12,6 @@
     "checkJs": true,
     "sourceMap": true,
     "allowJs": true,
-    "skipLibCheck": true,
     "outDir": "lib"
   },
 
