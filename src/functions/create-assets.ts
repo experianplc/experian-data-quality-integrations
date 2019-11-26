@@ -19,7 +19,7 @@ export function createAssets(currentElement) {
   var globalIntuitiveUnicornScript = document.createElement("script");
   globalIntuitiveUnicornScript.type = "text/javascript";
   globalIntuitiveUnicornScript.id = "edq-global-intuitive-unicorn";
-  globalIntuitiveUnicornScript.src = currentElement.getAttribute("PRO_WEB_VERIFICATION_URL") || "https://edqprofservus.blob.core.windows.net/assets/global-intuitive-unicorn.js";
+  globalIntuitiveUnicornScript.src = currentElement.getAttribute("GLOBAL_INTUITIVE_URL") || "https://edqprofservus.blob.core.windows.net/assets/global-intuitive-unicorn.js";
 
   var edqScript = document.createElement("script");
   edqScript.type = "text/javascript";

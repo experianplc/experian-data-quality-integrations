@@ -1,6 +1,6 @@
-import { createAssets } from "../../../functions/create-assets";
+import { createAssets } from "../../../../functions/create-assets";
 
-let currentElement = document.getElementById("edq-9.2-pages_fluid-ADDRESS_DFT_SBF");
+let currentElement = document.getElementById("edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF");
 
 let interval = setInterval(function() {
   if (document.getElementById("ADDRESS1") !== null){
@@ -28,11 +28,8 @@ let interval = setInterval(function() {
         {
           type: "click",
           element: trigger
-        }
+        },
       ],
-      PRO_WEB_SERVICE_URL: currentElement.getAttribute("PRO_WEB_SERVICE_URL"),
-      SOAP_ACTION_URL: currentElement.getAttribute("SOAP_ACTION_URL") || "http://www.qas.com/web-2013-12",
-      PRO_WEB_LAYOUT: "Peoplesoft",
       PRO_WEB_COUNTRY: "USA",
       PRO_WEB_MAPPING: [
         {
@@ -40,30 +37,35 @@ let interval = setInterval(function() {
           elements: ["Primary number", "Street"],
           separator: " ",
           modalFieldSelector: "#interaction-address--original-address-line-one",
+          typedownFieldSelector: "#typedown-final--address-line-one"
         },
         {
           field: document.getElementById("ADDRESS2"),
           elements: ["Secondary number"],
           separator: "",
           modalFieldSelector: "#interaction-address--original-address-line-two",
+          typedownFieldSelector: "#typedown-final--address-line-two"
         },
         {
           field: document.getElementById("CITY"),
           elements: ["City name"],
           separator: "",
           modalFieldSelector: "#interaction-address--original-locality",
+          typedownFieldSelector: "#typedown-final--city"
         },
         {
           field: document.getElementById("DESCR_STATE"),
           elements: ["State name"],
           separator: "",
           modalFieldSelector: "#interaction-address--original-province",
+          typedownFieldSelector: "#typedown-final--state"
         },
         {
           field: document.getElementById("POSTAL"),
           elements: ["ZIP Code", "+4 code"],
           separator: "-",
           modalFieldSelector: "#interaction-address--original-postal-code",
+          typedownFieldSelector: "#typedown-final--postal-code"
         },
         {
           field: document.getElementById("COUNTY"),
@@ -71,7 +73,31 @@ let interval = setInterval(function() {
           separator: "",
           modalFieldSelector: "#"
         },
-      ],
+      ]
+    };
+
+    const proWebUseTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN");
+    if (proWebUseTypedown) {
+      window.EdqConfig = Object.assign(window.EdqConfig, {
+        PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("ADDRESS1")
+      });
+    }
+
+    const proWebAuthToken = currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
+    const proWebServiceUrl = currentElement.getAttribute("PRO_WEB_SERVICE_URL");
+    const soapActionUrl = currentElement.getAttribute("SOAP_ACTION_URL") || "http://www.qas.com/web-2013-12";    
+    if (proWebAuthToken) {
+      window.EdqConfig = Object.assign(window.EdqConfig, {
+        PRO_WEB_AUTH_TOKEN: proWebAuthToken,
+        PRO_WEB_LAYOUT: "AllElements",
+      });
+    } else if (proWebServiceUrl && soapActionUrl) {
+      window.EdqConfig = Object.assign(window.EdqConfig, {
+        PRO_WEB_SERVICE_URL: proWebServiceUrl,
+        SOAP_ACTION_URL: soapActionUrl,
+        PRO_WEB_LAYOUT: "Peoplesoft",
+        
+      });
     };
 
    createAssets(currentElement); 
