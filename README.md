@@ -13,7 +13,7 @@ Before starting, it's important to make sure you have access to the following th
 - The integration files, which will be provided in this repository in the src folder.
 - Pro Web 7.XX. If you are using a self installed Pro Web instance it must be at least version 7.
 
-## Pro Web Layout
+## Pro Web Layout (Optional)
 If you're using Pro Web that's hosted on your own premises you will need to create a layout. Edit
 your `Qawserve` file for the version of Pro Web you're using (in Windows this file will be located
 by default somewhere like `C:\Program Files\QAS\QAS Pro Web 7.XX\Qawserve`, where XX is the
@@ -21,7 +21,6 @@ sub-version number.
 
 Go to LAYOUT.md in this folder and copy the entire contents. From there paste those contents to the
 Qawserve found above.
-
 
 # Installation instructions (pre-created integrations)
 
@@ -31,41 +30,39 @@ The find these, you can visit the src folder and follow the file path to the com
 choice. 
 
 > For example, to use the pre-created integration for the fluid page `ADDRESS_DFT_SBF` you
-will need to go to `src/9.2/pages_fluid/ADDRESS_DFT_SBF`.
+will need to go to `src/9.2/hcm/pages_fluid/ADDRESS_DFT_SBF`.
 
-Each pre-made integration has subfolders that correspond to the product that's being integrated.
-Please note that not every Definition will have all of the folders available. 
-Please see the table below for a reference:
-
-| Folder Name                  | Product Type | Product                                       |
-|----------------------------- | ------------ | -----------------------------------------     |
-| pro-web                      | Address      | Pro Web (on-premise). Verification Engine     |
-| pro-web-on-demand            | Address      | Pro Web (hosted). Verification Engine         |
-| pro-web-typedown             | Address      | Pro Web (on-premise). Typedown Engine         |
-| pro-web-on-demand-typedown   | Address      | Pro Web (hosted). Typedown Engine             |
-| pro-web-all-demand           | Address      | Pro Web (hosted). Typedown + Verification     |
-| pro-web-all                  | Address      | Pro Web (on-premise). Typedown + Verification |
-| global-intuitive             | Address      | Global Intuitive                              |
-| address-all                  | Address      | Typedown + Verification + Global Intuitive    |
-| email-validate               | Email        | Email Validate                                |
-| phone-validate               | Phone        | Global Phone Validate                         | 
+Each pre-made integration has a single file, `integration.html`, that should be edited to
+enable the functionality that you would like. The functionality that *can* be enabled will be
+reflected in the options. 
 
 ## Configuring the integration
 Once you select which product you would like there is some basic configuration that needs to be
-done. For this example we will assume that we are using the `pro-web` integration as referenced from
-the folder options above.
+done. For this example we will assume that we are using the `EO_ADDR_USA_SEC` integration.
 
-Once you're in this folder you will see an integration.html file. Below is the content for the 
-`integration.html` of `ADDRESS_DFT_SBF` for example:
+For example, 
 
 ```html
-<script id="edq-9.2-pages_fluid-ADDRESS_DFT_SBF"
-        src="https://edqprofservus.blob.core.windows.net/peoplesoft/9.2/pages_fluid/ADDRESS_DFT_SBF/pro-web/integration.js"
-        PRO_WEB_SERVICE_URL=""></script>
+<div
+  id="edq-9.2-hcm-pages-EO_ADDR_USA_SEC"
+  PRO_WEB_AUTH_TOKEN=""
+  PRO_WEB_SERVICE_URL=""
+  PRO_WEB_USE_TYPEDOWN=false
+  GLOBAL_INTUITIVE_AUTH_TOKEN="">
+</div>
+<script
+  src="https://edqprofservus.blob.core.windows.net/peoplesoft/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js">
+</script>
 ```
 
-As a user you need fill all of the blank fields. In the above case, `PRO_WEB_SERVICE_URL` is what
-will need to be filled (e.g. `http://your-pro-web-url-proxy:8080`)
+The following table describes the functionality possible:
+
+| HTML Key                    | Description  |
+|---------------------------- | ------------ |
+| PRO_WEB_AUTH_TOKEN          | This is the auth token used for Pro Web On Demand (Verification and Typedown) |
+| PRO_WEB_SERVICE_URL         | If you are using a self-hosted instance, this is the proxied URL. |
+| PRO_WEB_USE_TYPEDOWN        | If you want to use Typedown, this needs to be set to true |
+| GLOBAL_INTUITIVE_AUTH_TOKEN | This is the auth token used for Global Intuitive. If unset, Global Intuitive will not be used |
 
 ## Putting the integration into your environment.
 Once the `integration.html` file has its configuration set you should put the file in the Definition
