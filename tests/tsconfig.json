@@ -1,8 +1,8 @@
 {
-  "compileOptions": {
+  "compilerOptions": {
     "target": "es5",
     "removeComments": true,
-    "lib": ["es2015", "es6"],
+    "lib": ["es2016", "dom"],
     "skipLibCheck": true,
     "sourceMap": true,
     "module": "commonjs",

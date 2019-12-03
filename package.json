@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Integrations for PeopleSoft",
   "dependencies": {
-    "intern": "^4.6.0",
+    "chromedriver": "^78.0.1",
+    "intern": "4.2.2",
+    "selenium-standalone": "^6.15.0",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "ts-loader": "^6.2.1",
     "typescript": "^2.9.2",
     "webpack": "^4.41.0",

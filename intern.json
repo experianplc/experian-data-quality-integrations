@@ -12,7 +12,6 @@
       "browserName": "chrome",
       "goog:chromeOptions": {
         "args": [
-          //"headless",
           "window-size=1920,1080",
           "disable-gpu",
           "disable-extensions"
@@ -21,7 +20,6 @@
       },
       "chromeOptions": {
         "args": [
-          //"headless",
           "window-size=1280,960",
           "disable-gpu",
           "disable-extensions"
