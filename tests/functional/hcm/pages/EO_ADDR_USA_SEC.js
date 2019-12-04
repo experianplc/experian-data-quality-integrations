@@ -12,7 +12,6 @@ function addGlobalIntuitive() {
             .execute(function (GLOBAL_INTUITIVE_AUTH_TOKEN, root) {
             var element = document.createElement("div");
             element.id = "edq-9.2-hcm-pages-EO_ADDR_USA_SEC";
-            element.setAttribute("PRO_WEB_USE_TYPEDOWN", "false");
             element.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", GLOBAL_INTUITIVE_AUTH_TOKEN);
             var script = document.createElement("script");
             script.src = "http://localhost:8000/lib/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js";
@@ -21,34 +20,36 @@ function addGlobalIntuitive() {
         }, [GLOBAL_INTUITIVE_AUTH_TOKEN, root]);
     };
 }
-function addProWebOnDemand() {
+function addProWebOnDemand(useTypedown) {
+    if (useTypedown === void 0) { useTypedown = false; }
     return function () {
         return this.parent
-            .execute(function (PRO_WEB_AUTH_TOKEN, root) {
+            .execute(function (PRO_WEB_AUTH_TOKEN, root, useTypedown) {
             var element = document.createElement("div");
             element.id = "edq-9.2-hcm-pages-EO_ADDR_USA_SEC";
-            element.setAttribute("PRO_WEB_USE_TYPEDOWN", "false");
+            element.setAttribute("PRO_WEB_USE_TYPEDOWN", String(useTypedown));
             element.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
             var script = document.createElement("script");
             script.src = "http://localhost:8000/lib/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js";
             document.body.appendChild(element);
             document.body.appendChild(script);
-        }, [PRO_WEB_AUTH_TOKEN, root]);
+        }, [PRO_WEB_AUTH_TOKEN, root, useTypedown]);
     };
 }
-function addProWebOnPremise() {
+function addProWebOnPremise(useTypedown) {
+    if (useTypedown === void 0) { useTypedown = false; }
     return function () {
         return this.parent
-            .execute(function (PRO_WEB_AUTH_TOKEN, root) {
+            .execute(function (root, useTypedown) {
             var element = document.createElement("div");
             element.id = "edq-9.2-hcm-pages-EO_ADDR_USA_SEC";
-            element.setAttribute("PRO_WEB_USE_TYPEDOWN", "false");
-            element.setAttribute("PRO_WEB_SERVICE_URL", "http://bospshcm92dev2.qas.com:8080/");
+            element.setAttribute("PRO_WEB_USE_TYPEDOWN", String(useTypedown));
+            element.setAttribute("PRO_WEB_SERVICE_URL", "http://bospshcm92dev2.qas.com:8080");
             var script = document.createElement("script");
             script.src = "http://localhost:8000/lib/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js";
             document.body.appendChild(element);
             document.body.appendChild(script);
-        }, [PRO_WEB_AUTH_TOKEN, root]);
+        }, [root, useTypedown]);
     };
 }
 function typeAddressAndSubmit(address) {
@@ -114,7 +115,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
             .findByLinkText("Add Address")
             .click()
             .end()
-            .sleep(2000)
+            .sleep(4000)
             .execute(function () {
             window.EDQ = null;
             window.EdqConfig = null;
@@ -142,7 +143,12 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
                 var globalIntuitive = document.getElementById("edq-global-intuitive-unicorn");
                 globalIntuitive.remove();
             }
-        });
+            if (document.getElementById("edq-9.2-hcm-pages-EO_ADDR_USA_SEC")) {
+                var integration = document.getElementById("edq-9.2-hcm-pages-EO_ADDR_USA_SEC");
+                integration.remove();
+            }
+        })
+            .sleep(4000);
     },
     tests: {
         "Pro Web without adding integration fails": function () {
@@ -167,7 +173,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
                 address1: "53 State Street",
                 postal: "02109-2820"
             }))
-                .sleep(2000)
+                .sleep(3000)
                 .findByCssSelector("#DERIVED_ADDRESS_CITY")
                 .getProperty("value")
                 .then(function (city) {
@@ -193,7 +199,59 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
             })
                 .end();
         },
+        "Pro Web with PRO_WEB_USE_TYPEDOWN does not work when integration is not properly set": function () {
+            return this.remote
+                .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+                .click()
+                .end()
+                .execute(function () {
+                return document.getElementById("typedown-steps");
+            })
+                .then(function (domElement) {
+                assert.equal(domElement, null, "Typedown Modal should not appear with integration");
+            });
+        },
+        "Global Intuitive without adding integration does not work": function () {
+            return this.remote
+                .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+                .type("53 State Street Boston")
+                .sleep(1000)
+                .end()
+                .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+                .click()
+                .type(" ")
+                .sleep(2000)
+                .end()
+                .execute(function () {
+                return document.querySelector(".edq-global-intuitive-address-suggestion");
+            })
+                .then(function (selector) {
+                assert.equal(selector, null, "No suggestions an be found");
+            });
+        },
         "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function () {
+            return this.remote
+                .then(addGlobalIntuitive())
+                .sleep(3000)
+                .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+                .type("53 State Street Boston")
+                .sleep(1000)
+                .end()
+                .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+                .click()
+                .type(" ")
+                .sleep(2000)
+                .end()
+                .findByCssSelector(".edq-global-intuitive-address-suggestion")
+                .click()
+                .end()
+                .sleep(1000)
+                .findByCssSelector("#DERIVED_ADDRESS_CITY")
+                .getProperty("value")
+                .then(function (city) {
+                assert.equal(city, "Boston", "Full address includes city");
+            })
+                .end();
         }
     }
 });

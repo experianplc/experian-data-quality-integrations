@@ -37,7 +37,8 @@ export function createAssets(currentElement) {
       document.body.appendChild(globalIntuitiveUnicornScript); 
     }
 
-    let useTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN");
+    let useTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN") &&
+      currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN") !== "false";
     if ((useTypedown && proWebAuthToken) || (useTypedown && proWebServiceUrl)) {
       document.body.appendChild(typedownUnicornScript); 
     }
