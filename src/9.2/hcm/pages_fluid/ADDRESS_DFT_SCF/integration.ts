@@ -73,6 +73,16 @@ let interval = setInterval(function() {
           separator: "",
           modalFieldSelector: "#"
         },
+      ],
+
+      GLOBAL_INTUITIVE_ELEMENT: (document.getElementById("ADDRESS1") as HTMLInputElement),
+      GLOBAL_INTUITIVE_MAPPING: [
+        { field: document.getElementById("ADDRESS1"), elements: ["address.addressLine1"] },
+        { field: document.getElementById("ADDRESS2"), elements: ["address.addressLine2"] },
+        { field: document.getElementById("CITY"), elements: ["address.locality"] },
+        { field: document.getElementById("DESCR_STATE"), elements: ["address.province"] },
+        { field: document.getElementById("POSTAL"), elements: ["address.postalCode"] },
+        { field: document.getElementById("COUNTY"), elements: ["components.county1"] },
       ]
     };
 
@@ -80,6 +90,13 @@ let interval = setInterval(function() {
     if (proWebUseTypedown) {
       window.EdqConfig = Object.assign(window.EdqConfig, {
         PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("ADDRESS1")
+      });
+    }
+
+    const globalIntuitiveAuthToken = currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
+    if (globalIntuitiveAuthToken) {
+      window.EdqConfig = Object.assign(window.EdqConfig, {
+        GLOBAL_INTUITIVE_AUTH_TOKEN: globalIntuitiveAuthToken
       });
     }
 

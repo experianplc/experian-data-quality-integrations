@@ -13,16 +13,16 @@ function addGlobalIntuitive() {
     return this.parent
       .execute(function(GLOBAL_INTUITIVE_AUTH_TOKEN, root) {
         let element = document.createElement("div");
-        element.id = "edq-9.2-hcm-pages-EO_ADDR_USA_SEC";
+        element.id = "edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF";
         element.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", GLOBAL_INTUITIVE_AUTH_TOKEN);
 
         let script = document.createElement("script");
-        script.src = `http://localhost:8000/lib/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js`;
+        script.src = `http://localhost:8000/lib/9.2/hcm/pages_fluid/ADDRESS_DFT_SCF/integration.js`;
       
         document.body.appendChild(element);
         document.body.appendChild(script);
         
-      }, [GLOBAL_INTUITIVE_AUTH_TOKEN, root ])
+      }, [ GLOBAL_INTUITIVE_AUTH_TOKEN, root ])
   }
 }
 
@@ -31,12 +31,12 @@ function addProWebOnDemand(useTypedown: boolean = false) {
     return this.parent
       .execute(function(PRO_WEB_AUTH_TOKEN, root, useTypedown) {
         let element = document.createElement("div");
-        element.id = "edq-9.2-hcm-pages-EO_ADDR_USA_SEC";
+        element.id = "edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF";
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", String(useTypedown));
         element.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
 
         let script = document.createElement("script");
-        script.src = `http://localhost:8000/lib/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js`;
+        script.src = `http://localhost:8000/lib/9.2/hcm/pages_fluid/ADDRESS_DFT_SCF/integration.js`;
       
         document.body.appendChild(element);
         document.body.appendChild(script);
@@ -50,12 +50,12 @@ function addProWebOnPremise(useTypedown: boolean = false) {
     return this.parent
       .execute(function(root, useTypedown) {
         let element = document.createElement("div");
-        element.id = "edq-9.2-hcm-pages-EO_ADDR_USA_SEC";
+        element.id = "edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF";
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", String(useTypedown));
         element.setAttribute("PRO_WEB_SERVICE_URL", "http://bospshcm92dev2.qas.com:8080");
 
         let script = document.createElement("script");
-        script.src = `http://localhost:8000/lib/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js`;
+        script.src = `http://localhost:8000/lib/9.2/hcm/pages_fluid/ADDRESS_DFT_SCF/integration.js`;
 
         document.body.appendChild(element);
         document.body.appendChild(script);
@@ -69,27 +69,27 @@ function addProWebOnPremise(useTypedown: boolean = false) {
 function typeAddressAndSubmit(address: any) {
   return function() {
     return this.parent
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+      .findByCssSelector("#ADDRESS1")
         .clearValue()
         .type(address.address1 || "")
         .end()
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS2")
+      .findByCssSelector("#ADDRESS2")
         .clearValue()
         .type(address.address2 || "")
         .end()
-      .findByCssSelector("#DERIVED_ADDRESS_CITY")
+      .findByCssSelector("#CITY")
         .clearValue()
         .type(address.city || "")
         .end()
-      .findByCssSelector("#DERIVED_ADDRESS_STATE")
+      .findByCssSelector("#DESCR_STATE")
         .clearValue()
         .type(address.state || "")
         .end()
-      .findByCssSelector("#DERIVED_ADDRESS_POSTAL")
+      .findByCssSelector("#POSTAL")
         .clearValue()
         .type(address.postal || "")
         .end()
-      .findByCssSelector("#DERIVED_ADDRESS_OK_PB")
+      .findByCssSelector("#DERIVED_ADDR_FL_SAVE_PB")
         .click()
         .end()
 
@@ -97,11 +97,11 @@ function typeAddressAndSubmit(address: any) {
 }
 
 /**
- * The URL to the relevant iframe, EO_ADDR_USA_SEC
+ * The URL to the relevant iframe, ADDRESS_DFT_SCF
  */
-const URL = "http://bospshcm92dev2.qas.com/psc/HCM92EXP/EMPLOYEE/HRMS/c/ADMINISTER_WORKFORCE_(GBL).PERSONAL_DATA_ADD.GBL";
+const URL = "http://bospshcm92dev2.qas.com/psc/HCM92EXP/EMPLOYEE/HRMS/c/EL_EMPLOYEE_FL.HR_EE_ADDR_FL.GBL";
 
-registerSuite("EO_ADDR_USA_SEC Tests", {
+registerSuite("ADDRESS_DFT_SCF Tests", {
   before: function() {
     return this.remote
       .setFindTimeout(10000)
@@ -123,29 +123,18 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
   beforeEach: function() {
     // Go to the page with the address
     return this.remote  
-      .sleep(1000)
       .get(URL)
-      .findByCssSelector("#DERIVED_HCR_PER_ADD_PERSON_LINK")
+      .findById("win0divDRVD_ADDR1_FL_ADDRESSLONG4$0")
         .click()
+        .sleep(500) 
         .end()
-      .sleep(1000) 
-      .findByCssSelector("#ICTAB_1")
-        .click()
-        .end()
-      .sleep(1000) 
-      .findByLinkText("Add Address Detail")
-        .click()
-        .end()
-      .sleep(1000) 
-      .findByLinkText("Add Address")
-        .click()
-        .end()
+      .switchToFrame("ptModFrame_0") 
       .sleep(4000) 
       .execute(function() { 
         window.EDQ = null;
         window.EdqConfig = null;
 
-        let address1: any = document.getElementById("DERIVED_ADDRESS_ADDRESS1");
+        let address1: any = document.getElementById("ADDRESS1");
         // Remove Typedown Integration
         address1.onclick = null;
         address1.setAttribute("onclick", null);
@@ -155,7 +144,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
         address1.removeEventListener("keydown", address1.keydownHandler);
 
         // Remove all traces of integration
-        let okButton = document.getElementById("DERIVED_ADDRESS_OK_PB");
+        let okButton = document.getElementById("DERIVED_ADDR_FL_SAVE_PB");
         okButton.onclick = null;
         okButton.setAttribute("onclick", null);
 
@@ -180,8 +169,8 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
         }
 
 
-        if (document.getElementById("edq-9.2-hcm-pages-EO_ADDR_USA_SEC")) {
-          let integration = document.getElementById("edq-9.2-hcm-pages-EO_ADDR_USA_SEC");
+        if (document.getElementById("edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF")) {
+          let integration = document.getElementById("edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF");
           integration.remove();
         }
 
@@ -197,7 +186,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           postal: "02109-2820"
         }))
         .sleep(1000)
-        .findByCssSelector("#DERIVED_ADDRESS_CITY")
+        .findByCssSelector("#CITY")
           .getProperty("value")
           .then(function(city: string) {
             assert.equal(city, "", "City is not populated");
@@ -214,7 +203,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           postal: "02109-2820"
         }))
         .sleep(3000)
-        .findByCssSelector("#DERIVED_ADDRESS_CITY")
+        .findByCssSelector("#CITY")
           .getProperty("value")
           .then(function(city) {
             assert.equal(city, "Boston", "Full address includes city")
@@ -233,7 +222,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           postal: "02110"
         }))
         .sleep(2000)
-        .findByCssSelector("#DERIVED_ADDRESS_POSTAL")
+        .findByCssSelector("#POSTAL")
           .getProperty("value")
           .then(function(postal: string) {
             assert.equal(postal, "02110-1681", "Full address includes ZIP+4")
@@ -243,7 +232,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
 
     "Pro Web with PRO_WEB_USE_TYPEDOWN does not work when integration is not properly set": function() {
       return this.remote
-        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .findByCssSelector("#ADDRESS1")
           .click()
           .end()
         .execute(function() {
@@ -259,7 +248,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
       return this.remote
         .then(addProWebOnPremise(true))
         .sleep(3000)
-        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .findByCssSelector("#ADDRESS1")
           .click()
           .end()
         .sleep(1000)
@@ -273,53 +262,49 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
 
     "Global Intuitive without adding integration does not work": function() {
       return this.remote
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .type("53 State Street Boston")
-        .sleep(1000)
-        .end()
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .click()
-        .type(" ")
-        .sleep(2000)
-        .end()
-      .execute(function() {
-        return document.querySelector(".edq-global-intuitive-address-suggestion")
-      })
-      .then(function(selector) {
-        assert.equal(selector, null, "No suggestions an be found");
-      })
-        
+        .findByCssSelector("#ADDRESS1")
+          .clearValue() 
+          .type("53 State Street Boston")
+          .sleep(1000)
+          .end()
+        .findByCssSelector("#ADDRESS1")
+          .click()
+          .type(" ")
+          .sleep(2000)
+          .end()
+        .execute(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion")
+        })
+        .then(function(selector) {
+          assert.equal(selector, null, "No suggestions an be found");
+        })
     },
 
     "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
       return this.remote
-      .then(addGlobalIntuitive())
-      .sleep(3000)  
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .type("53 State Street Boston")
+        .then(addGlobalIntuitive())
+        .sleep(5000)  
+        .findByCssSelector("#ADDRESS1")
+          .clearValue() 
+          .type("53 State Street Boston")
+          .sleep(1000)
+          .end()
+        .findByCssSelector("#ADDRESS1")
+          .click()
+          .type(" ")
+          .sleep(2000)
+          .end()
+        .findByCssSelector(".edq-global-intuitive-address-suggestion")
+          .click()
+          .end()
         .sleep(1000)
-        .end()
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .click()
-        .type(" ")
-        .sleep(2000)
-        .end()
-      .findByCssSelector(".edq-global-intuitive-address-suggestion")
-        .click()
-        .end()
-      .sleep(1000)
-      .findByCssSelector("#DERIVED_ADDRESS_CITY")
-        .getProperty("value")
-        .then(function(city: string) {
-          assert.equal(city, "Boston", "Full address includes city")
-        })
-        .end()
+        .findByCssSelector("#CITY")
+          .getProperty("value")
+          .then(function(city: string) {
+            assert.equal(city, "Boston", "Full address includes city")
+          })
+          .end()
     }
-  },
-
-  after: function() {
-    return this.remote
-      .get("http://bospshcm92dev2.qas.com/psp/HCM92EXP/?cmd=logout&fmode=1")
   }
 });
 
