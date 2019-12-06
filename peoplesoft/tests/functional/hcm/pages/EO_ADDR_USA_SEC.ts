@@ -123,7 +123,6 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
   beforeEach: function() {
     // Go to the page with the address
     return this.remote  
-      .sleep(1000)
       .get(URL)
       .findByCssSelector("#DERIVED_HCR_PER_ADD_PERSON_LINK")
         .click()

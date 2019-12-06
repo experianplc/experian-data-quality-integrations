@@ -1,3 +1,5 @@
 peoplesoft2/node_modules
 peoplesoft2/**/*.js
 **/nunit3.xml
+node_modules
+lib

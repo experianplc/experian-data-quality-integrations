@@ -12,6 +12,7 @@
   "include": [
       "functional/**/*.ts",
       "reporters/**/*.ts",
-      "../src/types"
+      "../src/types",
+      "../../utils"
   ]
 }

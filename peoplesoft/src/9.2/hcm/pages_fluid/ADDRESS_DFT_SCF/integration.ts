@@ -1,4 +1,4 @@
-import { createAssets } from "../../../../functions/create-assets";
+import { createAssets } from "utils/functions/create-assets";
 
 let currentElement = document.getElementById("edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF");
 

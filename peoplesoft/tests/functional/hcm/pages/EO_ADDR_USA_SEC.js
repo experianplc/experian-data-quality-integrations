@@ -101,7 +101,6 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
     },
     beforeEach: function () {
         return this.remote
-            .sleep(1000)
             .get(URL)
             .findByCssSelector("#DERIVED_HCR_PER_ADD_PERSON_LINK")
             .click()
