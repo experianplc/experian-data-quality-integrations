@@ -1,5 +1,6 @@
 import intern from "intern";
 import { spawn } from "child_process";
+import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
 
 const { registerSuite } = intern.getInterface('object');
 const { assert } = intern.getPlugin('chai');
@@ -105,6 +106,7 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
   before: function() {
     return this.remote
       .setFindTimeout(10000)
+      .setExecuteAsyncTimeout(10000)
       .clearCookies()
       .sleep(1000)
       .get(URL)
@@ -128,8 +130,13 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
         .click()
         .sleep(500) 
         .end()
+      .then(pollUntil(function() {
+        return document.querySelector("#ptModFrame_0");
+      }))
       .switchToFrame("ptModFrame_0") 
-      .sleep(4000) 
+      .then(pollUntil(function() {
+        return window.EDQ;
+      }))
       .execute(function() { 
         window.EDQ = null;
         window.EdqConfig = null;
@@ -175,7 +182,6 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
         }
 
       })
-      .sleep(4000)
   },
 
   tests: {
@@ -185,7 +191,9 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
           address1: "53 State Street",
           postal: "02109-2820"
         }))
-        .sleep(1000)
+        .then(pollUntil(function() {
+          return document.querySelector("#CITY");
+        }))
         .findByCssSelector("#CITY")
           .getProperty("value")
           .then(function(city: string) {
@@ -197,12 +205,16 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
     "Pro Web with PRO_WEB_AUTH_TOKEN works": function() {
       return this.remote
         .then(addProWebOnDemand())
-        .sleep(3000)
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && window.EdqConfig) || null; 
+        }))
         .then(typeAddressAndSubmit({
           address1: "53 State Street",
           postal: "02109-2820"
         }))
-        .sleep(3000)
+        .then(pollUntil(function() {
+          return (document.querySelector("#CITY") as HTMLInputElement).value || null;
+        }))
         .findByCssSelector("#CITY")
           .getProperty("value")
           .then(function(city) {
@@ -214,18 +226,21 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
     "Pro Web with PRO_WEB_SERVICE_URL works": function() {
       return this.remote
         .then(addProWebOnPremise())
-        .sleep(3000)
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && window.EdqConfig) || null; 
+        }))
         .then(typeAddressAndSubmit({
           address1: "125 Summer St",
           address2: "Ste 1020",
-          city: "Boston",
           postal: "02110"
         }))
-        .sleep(2000)
-        .findByCssSelector("#POSTAL")
+        .then(pollUntil(function() {
+          return (document.querySelector("#CITY") as HTMLInputElement).value || null;
+        }))
+        .findByCssSelector("#CITY")
           .getProperty("value")
-          .then(function(postal: string) {
-            assert.equal(postal, "02110-1681", "Full address includes ZIP+4")
+          .then(function(city: string) {
+            assert.equal(city, "Boston", "Full addreess includes city")
           })
           .end()
     },
@@ -262,18 +277,19 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
 
     "Global Intuitive without adding integration does not work": function() {
       return this.remote
+        .then(pollUntil(function() {
+          return document.querySelector("#ADDRESS1");
+        }))
         .findByCssSelector("#ADDRESS1")
           .clearValue() 
           .type("53 State Street Boston")
-          .sleep(1000)
           .end()
         .findByCssSelector("#ADDRESS1")
           .click()
           .type(" ")
-          .sleep(2000)
           .end()
         .execute(function() {
-          return document.querySelector(".edq-global-intuitive-address-suggestion")
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
         })
         .then(function(selector) {
           assert.equal(selector, null, "No suggestions an be found");
@@ -283,27 +299,32 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
     "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
       return this.remote
         .then(addGlobalIntuitive())
-        .sleep(5000)  
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && 
+            window.EdqConfig &&
+            document.querySelector("#ADDRESS1")
+          ) || null; 
+        }))
         .findByCssSelector("#ADDRESS1")
           .clearValue() 
           .type("53 State Street Boston")
-          .sleep(1000)
           .end()
         .findByCssSelector("#ADDRESS1")
           .click()
           .type(" ")
-          .sleep(2000)
           .end()
+        .then(pollUntil(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
+        }))
         .findByCssSelector(".edq-global-intuitive-address-suggestion")
           .click()
           .end()
-        .sleep(1000)
-        .findByCssSelector("#CITY")
-          .getProperty("value")
-          .then(function(city: string) {
-            assert.equal(city, "Boston", "Full address includes city")
-          })
-          .end()
+        .then(pollUntil(function() {
+          return (document.querySelector("#CITY") as HTMLInputElement).value || null;
+        }))
+        .then(function(city: string) {
+          assert.equal(city, "Boston", "Full address includes city")
+        })
     }
   }
 });

@@ -1,5 +1,6 @@
 import intern from "intern";
 import { spawn } from "child_process";
+import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
 
 const { registerSuite } = intern.getInterface('object');
 const { assert } = intern.getPlugin('chai');
@@ -105,6 +106,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
   before: function() {
     return this.remote
       .setFindTimeout(10000)
+      .setExecuteAsyncTimeout(20000)
       .clearCookies()
       .sleep(1000)
       .get(URL)
@@ -127,19 +129,27 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
       .findByCssSelector("#DERIVED_HCR_PER_ADD_PERSON_LINK")
         .click()
         .end()
-      .sleep(1000) 
+      .then(pollUntil(function() {
+        return document.querySelector("#ICTAB_1");
+      }))
       .findByCssSelector("#ICTAB_1")
         .click()
         .end()
-      .sleep(1000) 
+      .then(pollUntil(function() {
+        return document.getElementById("ADDR_HISTORY_BTN$0");
+      }))
       .findByLinkText("Add Address Detail")
         .click()
         .end()
-      .sleep(1000) 
+      .then(pollUntil(function() {
+          return document.getElementById("DERIVED_ADDR_UPDATE_ADDRESS$0");
+      }))
       .findByLinkText("Add Address")
         .click()
         .end()
-      .sleep(4000) 
+      .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+      }))
       .execute(function() { 
         window.EDQ = null;
         window.EdqConfig = null;
@@ -185,7 +195,11 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
         }
 
       })
-      .sleep(4000)
+      .then(pollUntil(function() {
+        return Boolean(
+          document.getElementById("DERIVED_ADDRESS_ADDRESS1").onclick === null
+        ) || null;
+      }))
   },
 
   tests: {
@@ -195,7 +209,9 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           address1: "53 State Street",
           postal: "02109-2820"
         }))
-        .sleep(1000)
+        .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_CITY");
+        }))
         .findByCssSelector("#DERIVED_ADDRESS_CITY")
           .getProperty("value")
           .then(function(city: string) {
@@ -207,12 +223,19 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
     "Pro Web with PRO_WEB_AUTH_TOKEN works": function() {
       return this.remote
         .then(addProWebOnDemand())
-        .sleep(3000)
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && 
+            window.EdqConfig &&
+            document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+          ) || null; 
+        }))
         .then(typeAddressAndSubmit({
           address1: "53 State Street",
           postal: "02109-2820"
         }))
-        .sleep(3000)
+        .then(pollUntil(function() {
+          return (document.querySelector("#DERIVED_ADDRESS_CITY") as HTMLInputElement).value || null;
+        }))
         .findByCssSelector("#DERIVED_ADDRESS_CITY")
           .getProperty("value")
           .then(function(city) {
@@ -224,18 +247,24 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
     "Pro Web with PRO_WEB_SERVICE_URL works": function() {
       return this.remote
         .then(addProWebOnPremise())
-        .sleep(3000)
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && 
+            window.EdqConfig &&
+            document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+          ) || null; 
+        }))
         .then(typeAddressAndSubmit({
           address1: "125 Summer St",
           address2: "Ste 1020",
-          city: "Boston",
           postal: "02110"
         }))
-        .sleep(2000)
-        .findByCssSelector("#DERIVED_ADDRESS_POSTAL")
+        .then(pollUntil(function() {
+          return (document.querySelector("#DERIVED_ADDRESS_CITY") as HTMLInputElement).value || null;
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_CITY")
           .getProperty("value")
-          .then(function(postal: string) {
-            assert.equal(postal, "02110-1681", "Full address includes ZIP+4")
+          .then(function(city: string) {
+            assert.equal(city, "Boston", "Full address includes the address")
           })
           .end()
     },
@@ -272,53 +301,57 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
 
     "Global Intuitive without adding integration does not work": function() {
       return this.remote
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .type("53 State Street Boston")
-        .sleep(1000)
-        .end()
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .click()
-        .type(" ")
-        .sleep(2000)
-        .end()
-      .execute(function() {
-        return document.querySelector(".edq-global-intuitive-address-suggestion")
-      })
-      .then(function(selector) {
-        assert.equal(selector, null, "No suggestions an be found");
-      })
-        
+        .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1");
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .clearValue()
+          .type("53 State Street Boston")
+          .end()
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .click()
+          .type(" ")
+          .sleep(2000)
+          .end()
+        .execute(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion")
+        })
+        .then(function(selector) {
+          assert.equal(selector, null, "No suggestions an be found");
+        })
     },
 
     "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
       return this.remote
-      .then(addGlobalIntuitive())
-      .sleep(3000)  
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .type("53 State Street Boston")
-        .sleep(1000)
-        .end()
-      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
-        .click()
-        .type(" ")
-        .sleep(2000)
-        .end()
-      .findByCssSelector(".edq-global-intuitive-address-suggestion")
-        .click()
-        .end()
-      .sleep(1000)
-      .findByCssSelector("#DERIVED_ADDRESS_CITY")
-        .getProperty("value")
+        .then(addGlobalIntuitive())
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && 
+            window.EdqConfig &&
+            document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+          ) || null; 
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .clearValue()
+          .type("53 State Street Boston")
+          .end()
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .click()
+          .type(" ")
+          .end()
+        .then(pollUntil(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
+        }))
+        .findByCssSelector(".edq-global-intuitive-address-suggestion")
+          .click()
+          .end()
+        .then(pollUntil(function() {
+          return (document.querySelector("#DERIVED_ADDRESS_CITY") as HTMLInputElement).value || null;
+        }))
         .then(function(city: string) {
+          console.log(`city: ${city}`); 
           assert.equal(city, "Boston", "Full address includes city")
         })
-        .end()
     }
-  },
-
-  after: function() {
-    return this.remote
-      .get("http://bospshcm92dev2.qas.com/psp/HCM92EXP/?cmd=logout&fmode=1")
   }
 });
 
