@@ -1,0 +1,32 @@
+{
+  "name": "peoplesoft-data-quality",
+  "version": "1.0.0",
+  "description": "Integrations for PeopleSoft",
+  "dependencies": {
+    "chromedriver": "^78.0.1",
+    "intern": "4.2.2",
+    "selenium-standalone": "^6.15.0",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^2.9.2",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/experianplc/peoplesoft-data-quality.git"
+  },
+  "keywords": [
+    "peoplesoft"
+  ],
+  "author": "Tabeth Nkangoh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/experianplc/peoplesoft-data-quality/issues"
+  },
+  "homepage": "https://github.com/experianplc/peoplesoft-data-quality#readme"
+}

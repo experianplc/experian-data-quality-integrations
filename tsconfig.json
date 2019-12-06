@@ -1,0 +1,35 @@
+{
+  "types": [
+    "intern",
+    "autocompletion"
+  ],
+
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2015"
+    ],
+
+    "baseUrl": ".",
+    "paths": {
+      "utils": ["utils"]
+     },
+    "target": "es5",
+    "module": "commonjs",
+    "checkJs": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "outDir": "lib"
+  },
+
+  "include": [
+    "./peoplesoft/src/**/*",
+    "./peoplesoft/tests/**/*",
+    "./utils/**/*"
+  ],
+
+  "exclude": ["node_modules/**/*"],
+  "compileOnSave": false
+}
