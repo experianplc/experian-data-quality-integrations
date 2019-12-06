@@ -1,0 +1,30 @@
+{
+  "types": [
+    "intern",
+    "autocompletion"
+  ],
+
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2015"
+    ],
+
+    "target": "es5",
+    "module": "commonjs",
+    "checkJs": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "outDir": "lib"
+  },
+
+  "include": [
+    "./src/**/*",
+    "./test/**/*"
+  ],
+
+  "exclude": ["node_modules/**/*"],
+  "compileOnSave": false
+}
