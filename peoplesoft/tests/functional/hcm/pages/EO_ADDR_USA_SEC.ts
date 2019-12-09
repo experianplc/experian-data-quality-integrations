@@ -150,7 +150,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
       .then(pollUntil(function() {
           return document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
       }))
-      .execute(function() { 
+      .then(pollUntil(function() { 
         window.EDQ = null;
         window.EdqConfig = null;
 
@@ -194,10 +194,11 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           integration.remove();
         }
 
-      })
-      .then(pollUntil(function() {
         return Boolean(
-          document.getElementById("DERIVED_ADDRESS_ADDRESS1").onclick === null
+          window.EdqConfig === null &&
+          window.EDQ === null &&
+          address1.getAttribute("onclick") === "null" &&
+          okButton.getAttribute("onclick") === "null"
         ) || null;
       }))
   },
@@ -314,7 +315,7 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           .sleep(2000)
           .end()
         .execute(function() {
-          return document.querySelector(".edq-global-intuitive-address-suggestion")
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
         })
         .then(function(selector) {
           assert.equal(selector, null, "No suggestions an be found");
@@ -348,7 +349,6 @@ registerSuite("EO_ADDR_USA_SEC Tests", {
           return (document.querySelector("#DERIVED_ADDRESS_CITY") as HTMLInputElement).value || null;
         }))
         .then(function(city: string) {
-          console.log(`city: ${city}`); 
           assert.equal(city, "Boston", "Full address includes city")
         })
     }

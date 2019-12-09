@@ -106,7 +106,7 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
   before: function() {
     return this.remote
       .setFindTimeout(10000)
-      .setExecuteAsyncTimeout(10000)
+      .setExecuteAsyncTimeout(20000)
       .clearCookies()
       .sleep(1000)
       .get(URL)
