@@ -4,6 +4,7 @@ import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
 import { addGlobalIntuitive } from "edq/utils/functions/test-helpers";
 import { addProWebOnPremise } from "edq/utils/functions/test-helpers";
 import { addProWebOnDemand } from "edq/utils/functions/test-helpers";
+import { typeAddress } from "edq/utils/functions/test-helpers";
 
 const { registerSuite } = intern.getInterface('object');
 const { assert } = intern.getPlugin('chai');
@@ -12,45 +13,13 @@ const root = __dirname + "../../../../..";
 const ROOT_PATH = __dirname + "../../../../..";
 const PRO_WEB_AUTH_TOKEN = process.env.PRO_WEB_AUTH_TOKEN;
 const GLOBAL_INTUITIVE_AUTH_TOKEN = process.env.GLOBAL_INTUITIVE_AUTH_TOKEN;
-const ELEMENT_ID = "edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF";
+const ELEMENT_ID = null;
 const INTEGRATION_SOURCE_PATH = "http://localhost:8000/lib/9.2/hcm/pages_fluid/ADDRESS_DFT_SCF/integration.js";
 const PRO_WEB_SERVICE_URL = "http://bospshcm92dev2.qas.com:8080";
 
-function typeAddressAndSubmit(address: any) {
-  return function() {
-    return this.parent
-      .findByCssSelector("#ADDRESS1")
-        .clearValue()
-        .type(address.address1 || "")
-        .end()
-      .findByCssSelector("#ADDRESS2")
-        .clearValue()
-        .type(address.address2 || "")
-        .end()
-      .findByCssSelector("#CITY")
-        .clearValue()
-        .type(address.city || "")
-        .end()
-      .findByCssSelector("#DESCR_STATE")
-        .clearValue()
-        .type(address.state || "")
-        .end()
-      .findByCssSelector("#POSTAL")
-        .clearValue()
-        .type(address.postal || "")
-        .end()
-      .findByCssSelector("#DERIVED_ADDR_FL_SAVE_PB")
-        .click()
-        .end()
-  };
-}
+const URL = "http://bosccb27.qas.com:180/ouaf/cis.jsp";
 
-/**
- * The URL to the relevant iframe, ADDRESS_DFT_SCF
- */
-const URL = "http://bospshcm92dev2.qas.com/psc/HCM92EXP/EMPLOYEE/HRMS/c/EL_EMPLOYEE_FL.HR_EE_ADDR_FL.GBL";
-
-registerSuite("ADDRESS_DFT_SCF Tests", {
+registerSuite("ext_personInfoCorresp Tests", {
   before: function() {
     return this.remote
       .setFindTimeout(10000)
@@ -58,96 +27,44 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
       .clearCookies()
       .sleep(1000)
       .get(URL)
-      .findByCssSelector("#userid")
-      .type("PS")
-      .end()
-      .findByCssSelector("#pwd")
-      .type("PS")
-      .end()
-      .findByCssSelector("[name='Submit']")
-      .click()
-      .end()
-      .sleep(1000) 
+      .findByCssSelector("#userId")
+        .type("sysuser")
+        .end()
+      .findByCssSelector("#password")
+        .type("hello123")
+        .end()
+      .findByCssSelector("#loginButton")
+        .click()
+        .end()
   },
 
   beforeEach: function() {
     // Go to the page with the address
-    return this.remote  
+    return this.remote
       .get(URL)
-      .findById("win0divDRVD_ADDR1_FL_ADDRESSLONG4$0")
-        .click()
-        .sleep(500) 
-        .end()
       .then(pollUntil(function() {
-        return document.querySelector("#ptModFrame_0");
+        // Go to 'Person' page and switch to 'Correspondence Info' tab.
+        (window as any).onSubMenuClick(null,"CI0000000135")
+        (window as any).setTab('CORINFO_TLBL')
+        return (document.querySelector(".activeTab") as HTMLElement).innerText === "Correspondence Info" || null;
       }))
-      .switchToFrame("ptModFrame_0") 
-      .then(pollUntil(function() {
-        return window.EDQ;
-      }))
-      .execute(function() { 
-        window.EDQ = null;
-        window.EdqConfig = null;
-
-        let address1: any = document.getElementById("ADDRESS1");
-        // Remove Typedown Integration
-        address1.onclick = null;
-        address1.setAttribute("onclick", null);
-
-        // Remove Global Intuitive Integration
-        address1.removeEventListener("keyup", address1.keyupHandler);
-        address1.removeEventListener("keydown", address1.keydownHandler);
-
-        // Remove all traces of integration
-        let okButton = document.getElementById("DERIVED_ADDR_FL_SAVE_PB");
-        okButton.onclick = null;
-        okButton.setAttribute("onclick", null);
-
-        if (document.getElementById("edq-pegasus")) {
-          let pegasus = document.getElementById("edq-pegasus");
-          pegasus.remove();
-        }
-
-        if (document.getElementById("edq-verification-unicorn")) {
-          let verification = document.getElementById("edq-verification-unicorn");
-          verification.remove();
-        }
-
-        if (document.getElementById("edq-typedown-unicorn")) {
-          let typedown = document.getElementById("edq-typedown-unicorn");
-          typedown.remove();
-        }
-
-        if (document.getElementById("edq-global-intuitive-unicorn")) {
-          let globalIntuitive = document.getElementById("edq-global-intuitive-unicorn");
-          globalIntuitive.remove();
-        }
-
-
-        if (document.getElementById("edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF")) {
-          let integration = document.getElementById("edq-9.2-hcm-pages_fluid-ADDRESS_DFT_SCF");
-          integration.remove();
-        }
-
-      })
   },
 
   tests: {
     "Pro Web without adding integration fails": function() {
       return this.remote
-        .then(typeAddressAndSubmit({
-          address1: "53 State Street",
-          postal: "02109-2820"
+        .then(typeAddress({
+          "address-line-one": "53 State Street",
+          "postal-code": "02109-2820"
         }))
         .then(pollUntil(function() {
-          return document.querySelector("#CITY");
+          return (window as any).EdqConfig.PRO_WEB_MAPPING.includes((obj) => {
+            return obj.modalFieldSelector.includes("locality")
+          })[0].field.value
         }))
-        .findByCssSelector("#CITY")
-          .getProperty("value")
-          .then(function(city: string) {
-            assert.equal(city, "", "City is not populated");
-          })
-          .end()
+        .then(function(city: string) {
+          assert.equal(city, "", "City is not populated");
+        })
     },
 
     "Pro Web with PRO_WEB_AUTH_TOKEN works": function() {
@@ -161,9 +78,9 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
         .then(pollUntil(function() {
           return Boolean(window.EDQ && window.EdqConfig) || null; 
         }))
-        .then(typeAddressAndSubmit({
-          address1: "53 State Street",
-          postal: "02109-2820"
+        .then(typeAddress({
+          "address-line-one": "53 State Street",
+          "postal-code": "02109-2820"
         }))
         .then(pollUntil(function() {
           return (document.querySelector("#CITY") as HTMLInputElement).value || null;
@@ -187,10 +104,10 @@ registerSuite("ADDRESS_DFT_SCF Tests", {
         .then(pollUntil(function() {
           return Boolean(window.EDQ && window.EdqConfig) || null;
         }))
-        .then(typeAddressAndSubmit({
-          address1: "125 Summer St",
-          address2: "Ste 1020",
-          postal: "02110"
+        .then(typeAddress({
+          "address-line-one": "125 Summer St",
+          "address-line-two": "Ste 1020",
+          "postal-code": "02110"
         }))
         .then(pollUntil(function() {
           return (document.querySelector("#CITY") as HTMLInputElement).value || null;
