@@ -27,6 +27,8 @@
   "include": [
     "./peoplesoft/src/**/*",
     "./peoplesoft/tests/**/*",
+    "./ccb/src/**/*",
+    "./ccb/tests/**/*",
     "./utils/**/*"
   ],
 

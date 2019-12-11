@@ -1,6 +1,13 @@
 interface UnicornObject {
   DEBUG?: boolean;
 
+  PRO_WEB_STYLESHEET?: string;
+  PRO_WEB_VERIFICATION_URL?: string;
+  PRO_WEB_TYPEDOWN_URL?: string;
+  PRO_WEB_EDQ_URL?: string;
+  GLOBAL_INTUITIVE_URL?: string;
+  PRO_WEB_USE_TYPEDOWN?: string;
+
   PHONE_ELEMENTS?: Array<Element>;
   EMAIL_ELEMENTS?: Array<Element>;
 
@@ -24,6 +31,7 @@ interface UnicornObject {
   SOAP_ACTION_URL?: string;
 
   PRO_WEB_TYPEDOWN_TRIGGER?: Element
+  GLOBAL_INTUITIVE_AUTH_TOKEN?: string;
   GLOBAL_INTUITIVE_USE_CURRENT_LOCATION?: boolean;
   GLOBAL_INTUITIVE_LOCATION?: string;
   GLOBAL_INTUITIVE_ELEMENT?: HTMLInputElement;

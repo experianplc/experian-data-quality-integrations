@@ -85,6 +85,6 @@ let interval = setInterval(function() {
       });
     };
 
-   createAssets(currentElement); 
+    createAssets({ currentElement: currentElement }); 
   }
 }, 1000);
