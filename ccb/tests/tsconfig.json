@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "removeComments": true,
+    "lib": ["es2016", "dom"],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "types": ["intern"],
+    "typeRoots": ["../node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "edq/utils/*": ["../../utils/*"]
+    }
+  },
+  "include": [
+      "functional/**/*.ts",
+      "reporters/**/*.ts",
+      "../src/types",
+      "../../utils/**/*.ts"
+  ]
+}
