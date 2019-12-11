@@ -1,0 +1,4 @@
+lib
+nunit3.xml
+src/**/*.js
+tests/**/*.js
