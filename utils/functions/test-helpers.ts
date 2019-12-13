@@ -1,3 +1,5 @@
+import intern from "intern";
+
 interface GlobalIntuitiveParams {
   authToken: string;
   elementId?: string;
@@ -10,15 +12,15 @@ export function addGlobalIntuitive(obj: GlobalIntuitiveParams) {
   return function() {
     return this.parent
       .execute(function(authToken) {
-        let element = document.createElement("div");
+        let element = (this.context || this).document.createElement("div");
         element.id = elementId;
         element.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", authToken);
 
-        let script = document.createElement("script");
+        let script = (this.context || this).document.createElement("script");
         script.src = source;
 
-        document.body.appendChild(element);
-        document.body.appendChild(script);
+        (this.context || this).document.body.appendChild(element);
+        (this.context || this).document.body.appendChild(script);
       }, [ authToken ])
   }
 };
@@ -29,6 +31,7 @@ interface ProWebParameters {
   elementId?: string;
   source: string;
   useTypedown: boolean;
+  document?: Document;
 }
 
 /**
@@ -42,19 +45,19 @@ export function addProWebOnPremise(obj: ProWebParameters) {
 
   return function() {
     return this.parent
-      .execute(function(useTypedown) {
-        let element = document.createElement("div");
+      .execute(function(serviceUrl, source, useTypedown, elementId) {
+        let element = (this.context || this).document.createElement("div");
         element.id = elementId;
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", useTypedown);
         element.setAttribute("PRO_WEB_SERVICE_URL", serviceUrl);
 
-        let script = document.createElement("script");
+        let script = (this.context || this).document.createElement("script");
         script.src = source;
 
-        document.body.appendChild(element);
-        document.body.appendChild(script);
+        (this.context || this).document.body.appendChild(element);
+        (this.context || this).document.body.appendChild(script);
 
-      }, [ useTypedown ])
+      }, [ serviceUrl, source, useTypedown, elementId ])
   }
 }
 
@@ -66,19 +69,21 @@ export function addProWebOnDemand(obj: ProWebParameters) {
 
   return function() {
     return this.parent
-      .execute(function(PRO_WEB_AUTH_TOKEN, root, useTypedown) {
-        let element = document.createElement("div");
-        element.id = elementId;
+      .execute(function(PRO_WEB_AUTH_TOKEN, source, useTypedown, elementId) {
+        let element = (this.context || this).document.createElement("div");
+        if (elementId) {
+          element.id = elementId;
+        }
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", useTypedown);
         element.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
 
         let script = document.createElement("script");
         script.src = source;
 
-        document.body.appendChild(element);
-        document.body.appendChild(script);
+        (this.context || this).document.body.appendChild(element);
+        (this.context || this).document.body.appendChild(script);
 
-      }, [ authToken, useTypedown ])
+      }, [ authToken, source, useTypedown, elementId ])
   }
 }
 
@@ -98,17 +103,28 @@ interface AddressMap {
 export function typeAddress(addressMap: AddressMap) {
   return function() {
     return this.parent
-      .execute(function() {
-        return (window as any).EdqConfig.PRO_WEB_MAPPING.includes((obj) => {
-          return obj.modalFieldSelector.includes("address-line-one")
-        })[0].field;
-      })
-      .then(function(field) {
-        return this.parent
-          .findByCssSelector(field.id)
-          .clearValue()
-          .type(addressMap["address-line-one"])
-          .end()
-      })
+      .execute(function(addressMap) {
+        if (!(this.context || this).EdqConfig) { return null; }
+
+        (this.context || this).EdqConfig.PRO_WEB_MAPPING.forEach((mapping: any) => {
+          mapping.field.value = null;
+
+          Object.keys(addressMap).forEach((addressKey) => {
+            if (mapping.modalFieldSelector.includes(addressKey)) {
+              mapping.field.value = addressMap[addressKey];
+            }           
+          })
+        });
+      }, [ addressMap ])
   }
 };
+
+intern.registerPlugin("edq-test-helpers", function() {
+  return {
+    typeAddress: typeAddress,
+    addProWebOnPremise: addProWebOnPremise,
+    addProWebOnDemand: addProWebOnDemand,
+    addGlobalIntuitive: addGlobalIntuitive
+  };
+});
+

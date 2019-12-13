@@ -7,6 +7,14 @@ let interval = setInterval(function() {
     clearInterval(interval);
 
     let trigger = parent.document.getElementById("IM_SAVE");
+    try {
+      if (!parent.window.EdqConfig) {
+        (parent.window.EdqConfig as any) = {}
+      } 
+    } catch(e) {
+      (parent.window.EdqConfig as any) = {};
+    }
+
     window.EdqConfig = Object.assign(parent.window.EdqConfig, {
       PRO_WEB_SUBMIT_TRIGGERS: [
         {

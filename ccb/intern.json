@@ -29,6 +29,9 @@
     }
   ],
 
-  "plugins": ["tests/reporters/nunit3.js"]
+  "plugins": [
+    "tests/reporters/nunit3.js",
+    "../utils/functions/test-helpers.js"
+  ]
 }
 
