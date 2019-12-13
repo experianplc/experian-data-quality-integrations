@@ -1,9 +1,9 @@
 import intern from "intern";
 import { spawn } from "child_process";
 import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
-import { addGlobalIntuitive } from "edq/utils/functions/test-helpers";
-import { addProWebOnPremise } from "edq/utils/functions/test-helpers";
-import { addProWebOnDemand } from "edq/utils/functions/test-helpers";
+import { addGlobalIntuitive } from "utils/functions/test-helpers";
+import { addProWebOnPremise } from "utils/functions/test-helpers";
+import { addProWebOnDemand } from "utils/functions/test-helpers";
 
 const { registerSuite } = intern.getInterface('object');
 const { assert } = intern.getPlugin('chai');

@@ -1,17 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var intern_1 = require("intern");
 function addGlobalIntuitive(obj) {
     var authToken = obj.authToken, elementId = obj.elementId, source = obj.source;
     return function () {
         return this.parent
             .execute(function (authToken) {
-            var element = document.createElement("div");
+            var element = (this.context || this).document.createElement("div");
             element.id = elementId;
             element.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", authToken);
-            var script = document.createElement("script");
+            var script = (this.context || this).document.createElement("script");
             script.src = source;
-            document.body.appendChild(element);
-            document.body.appendChild(script);
+            (this.context || this).document.body.appendChild(element);
+            (this.context || this).document.body.appendChild(script);
         }, [authToken]);
     };
 }
@@ -24,16 +25,16 @@ function addProWebOnPremise(obj) {
     }
     return function () {
         return this.parent
-            .execute(function (useTypedown) {
-            var element = document.createElement("div");
+            .execute(function (serviceUrl, source, useTypedown, elementId) {
+            var element = (this.context || this).document.createElement("div");
             element.id = elementId;
             element.setAttribute("PRO_WEB_USE_TYPEDOWN", useTypedown);
             element.setAttribute("PRO_WEB_SERVICE_URL", serviceUrl);
-            var script = document.createElement("script");
+            var script = (this.context || this).document.createElement("script");
             script.src = source;
-            document.body.appendChild(element);
-            document.body.appendChild(script);
-        }, [useTypedown]);
+            (this.context || this).document.body.appendChild(element);
+            (this.context || this).document.body.appendChild(script);
+        }, [serviceUrl, source, useTypedown, elementId]);
     };
 }
 exports.addProWebOnPremise = addProWebOnPremise;
@@ -41,36 +42,47 @@ function addProWebOnDemand(obj) {
     var authToken = obj.authToken, source = obj.source, useTypedown = obj.useTypedown, elementId = obj.elementId;
     return function () {
         return this.parent
-            .execute(function (PRO_WEB_AUTH_TOKEN, root, useTypedown) {
-            var element = document.createElement("div");
-            element.id = elementId;
+            .execute(function (PRO_WEB_AUTH_TOKEN, source, useTypedown, elementId) {
+            var element = (this.context || this).document.createElement("div");
+            if (elementId) {
+                element.id = elementId;
+            }
             element.setAttribute("PRO_WEB_USE_TYPEDOWN", useTypedown);
             element.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
             var script = document.createElement("script");
             script.src = source;
-            document.body.appendChild(element);
-            document.body.appendChild(script);
-        }, [authToken, useTypedown]);
+            (this.context || this).document.body.appendChild(element);
+            (this.context || this).document.body.appendChild(script);
+        }, [authToken, source, useTypedown, elementId]);
     };
 }
 exports.addProWebOnDemand = addProWebOnDemand;
 function typeAddress(addressMap) {
     return function () {
         return this.parent
-            .execute(function () {
-            return window.EdqConfig.PRO_WEB_MAPPING.includes(function (obj) {
-                return obj.modalFieldSelector.includes("address-line-one");
-            })[0].field;
-        })
-            .then(function (field) {
-            return this.parent
-                .findByCssSelector(field.id)
-                .clearValue()
-                .type(addressMap["address-line-one"])
-                .end();
-        });
+            .execute(function (addressMap) {
+            if (!(this.context || this).EdqConfig) {
+                return null;
+            }
+            (this.context || this).EdqConfig.PRO_WEB_MAPPING.forEach(function (mapping) {
+                mapping.field.value = null;
+                Object.keys(addressMap).forEach(function (addressKey) {
+                    if (mapping.modalFieldSelector.includes(addressKey)) {
+                        mapping.field.value = addressMap[addressKey];
+                    }
+                });
+            });
+        }, [addressMap]);
     };
 }
 exports.typeAddress = typeAddress;
 ;
+intern_1.default.registerPlugin("edq-test-helpers", function () {
+    return {
+        typeAddress: typeAddress,
+        addProWebOnPremise: addProWebOnPremise,
+        addProWebOnDemand: addProWebOnDemand,
+        addGlobalIntuitive: addGlobalIntuitive
+    };
+});
 //# sourceMappingURL=test-helpers.js.map
