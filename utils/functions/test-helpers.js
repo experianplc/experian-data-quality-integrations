@@ -5,15 +5,17 @@ function addGlobalIntuitive(obj) {
     var authToken = obj.authToken, elementId = obj.elementId, source = obj.source;
     return function () {
         return this.parent
-            .execute(function (authToken) {
+            .execute(function (authToken, elementId, source) {
             var element = (this.context || this).document.createElement("div");
-            element.id = elementId;
+            if (elementId) {
+                element.id = elementId;
+            }
             element.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", authToken);
             var script = (this.context || this).document.createElement("script");
             script.src = source;
             (this.context || this).document.body.appendChild(element);
             (this.context || this).document.body.appendChild(script);
-        }, [authToken]);
+        }, [authToken, elementId, source]);
     };
 }
 exports.addGlobalIntuitive = addGlobalIntuitive;
@@ -27,7 +29,9 @@ function addProWebOnPremise(obj) {
         return this.parent
             .execute(function (serviceUrl, source, useTypedown, elementId) {
             var element = (this.context || this).document.createElement("div");
-            element.id = elementId;
+            if (elementId) {
+                element.id = elementId;
+            }
             element.setAttribute("PRO_WEB_USE_TYPEDOWN", useTypedown);
             element.setAttribute("PRO_WEB_SERVICE_URL", serviceUrl);
             var script = (this.context || this).document.createElement("script");
@@ -61,6 +65,7 @@ function typeAddress(addressMap) {
     return function () {
         return this.parent
             .execute(function (addressMap) {
+            var _this = this;
             if (!(this.context || this).EdqConfig) {
                 return null;
             }
@@ -68,7 +73,11 @@ function typeAddress(addressMap) {
                 mapping.field.value = null;
                 Object.keys(addressMap).forEach(function (addressKey) {
                     if (mapping.modalFieldSelector.includes(addressKey)) {
+                        if (mapping.field.id) {
+                            _this.context.document.getElementById(mapping.field.id).value = addressMap[addressKey];
+                        }
                         mapping.field.value = addressMap[addressKey];
+                        mapping.field.innerText = addressMap[addressKey];
                     }
                 });
             });

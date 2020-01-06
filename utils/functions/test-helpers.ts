@@ -11,9 +11,11 @@ export function addGlobalIntuitive(obj: GlobalIntuitiveParams) {
 
   return function() {
     return this.parent
-      .execute(function(authToken) {
+      .execute(function(authToken, elementId, source) {
         let element = (this.context || this).document.createElement("div");
-        element.id = elementId;
+        if (elementId) {
+          element.id = elementId;
+        }
         element.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", authToken);
 
         let script = (this.context || this).document.createElement("script");
@@ -21,7 +23,7 @@ export function addGlobalIntuitive(obj: GlobalIntuitiveParams) {
 
         (this.context || this).document.body.appendChild(element);
         (this.context || this).document.body.appendChild(script);
-      }, [ authToken ])
+      }, [ authToken, elementId, source ])
   }
 };
 
@@ -47,7 +49,9 @@ export function addProWebOnPremise(obj: ProWebParameters) {
     return this.parent
       .execute(function(serviceUrl, source, useTypedown, elementId) {
         let element = (this.context || this).document.createElement("div");
-        element.id = elementId;
+        if (elementId) {
+          element.id = elementId;
+        }
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", useTypedown);
         element.setAttribute("PRO_WEB_SERVICE_URL", serviceUrl);
 
@@ -111,7 +115,11 @@ export function typeAddress(addressMap: AddressMap) {
 
           Object.keys(addressMap).forEach((addressKey) => {
             if (mapping.modalFieldSelector.includes(addressKey)) {
+              if (mapping.field.id) {
+                this.context.document.getElementById(mapping.field.id).value = addressMap[addressKey];
+              }
               mapping.field.value = addressMap[addressKey];
+              mapping.field.innerText = addressMap[addressKey];
             }           
           })
         });

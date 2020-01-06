@@ -15,9 +15,9 @@ const PRO_WEB_AUTH_TOKEN = process.env.PRO_WEB_AUTH_TOKEN;
 const GLOBAL_INTUITIVE_AUTH_TOKEN = process.env.GLOBAL_INTUITIVE_AUTH_TOKEN;
 const ELEMENT_ID = "edq-2.7-root-cm-ext_personCorrespInfoPage";
 const INTEGRATION_SOURCE_PATH = "http://localhost:8001/integration.js";
-const PRO_WEB_SERVICE_URL = "http://bosedqproxy.qas.com/pro-web/proweb.wsdl";
+const PRO_WEB_SERVICE_URL = "http://bospshcm92spi.qas.com:8080/";
 
-const URL = "http://bosccb27.qas.com:180/ouaf/cis.jsp";
+const URL = "http://bosccb27.qas.com/ouaf/cis.html";
 
 registerSuite("ext_personInfoCorresp Tests", {
   before: function() {
@@ -37,7 +37,7 @@ registerSuite("ext_personInfoCorresp Tests", {
         .click()
         .end()
       .then(pollUntil(function() {
-        return window.location.href === "http://bosccb27.qas.com:180/ouaf/cis.jsp" || null;
+        return window.location.href === "http://bosccb27.qas.com/ouaf/cis.jsp" || null;
       }))
   },
 
@@ -47,22 +47,30 @@ registerSuite("ext_personInfoCorresp Tests", {
       .get(URL)
       .then(pollUntil(function() {
         try {
-          return window.frames['main'].frames['tabPage'].document.readyState === "complete" &&
-            window.frames['main'].frames['tabPage'].document.getElementById("USER_ID");
+          return this.frames['main'].frames['dashboard'].document.getElementById("IM_GetToDo") &&
+            this.frames['main'].frames['tabPage'].document.getElementById("USER_ID");
         } catch(e) {
           return null;
         }
       }))
       .then(pollUntil(function() {
         // Go to 'Person' page and switch to 'Correspondence Info' tab.
-        (window.frames["main"] as any).onSubMenuClick(null,"CI0000000135");
-        return window.frames["main"].document.getElementById("ptitle");
+        (this.frames["main"] as any).onSubMenuClick(null,"CI0000000135");
+        return this.frames['main'].frames['dashboard'].document.getElementById("IM_GetToDo") &&
+          this.frames["main"].document.getElementById("ptitle").innerText === "Person";
       }))
-      .switchToFrame("main")
       .then(pollUntil(function() {
-        this.frames["tabMenu"].document.querySelector("[title='Correspondence Info']").click();
         try {
-          return this.frames["tabMenu"].document.querySelector(".activeTab").innerText === "Correspondence Info" 
+          if (this.frames["main"].frames["tabMenu"].document.querySelector(".activeTab").innerText !== "Correspondence Info") {
+            this.frames["main"].frames["tabMenu"].document.querySelector("[title='Correspondence Info']").click();
+          } 
+        } catch(e) {
+          return null;
+        }
+
+        try {
+          return this.frames['main'].frames['dashboard'].document.getElementById("IM_GetToDo") &&
+            this.frames["main"].frames["tabMenu"].document.querySelector(".activeTab").innerText === "Correspondence Info";
         } catch(e) {
           return null
         }
@@ -72,6 +80,10 @@ registerSuite("ext_personInfoCorresp Tests", {
         this.context.EDQ = null;
         this.context.EdqConfig = null;
         return this.context.document.getElementById("ADDRESS1");
+      }))
+      .then(pollUntil(function() {
+        this.frames["main"].document.getElementById("IM_SAVE").onclick = null;
+        return this.frames["main"].document.getElementById("IM_SAVE").onclick === null;
       }))
   },
 
@@ -97,13 +109,18 @@ registerSuite("ext_personInfoCorresp Tests", {
           useTypedown: false
         }))
         .then(pollUntil(function() {
+          console.log("Polling for context.EDQ and context.EdqConfig...");
           return Boolean(
             this.context.EDQ && 
             this.context.EdqConfig) || null; 
         }))
         .then(pollUntil(function() {
-          this.context.document.getElementById("ADDRESS1").click();
-          return this.context.EdqConfig.PRO_WEB_MAPPING || null;
+          console.log("Polling to ensure PER_ID has focus");
+          return this.context.document.activeElement.id === "PER_ID" || null;
+        }))
+        .then(pollUntil(function() {
+          this.context.document.getElementById("CITY").click();
+          return this.context.EdqConfig.PRO_WEB_MAPPING;
         }))
         .then(typeAddress({
           "address-line-one": "53 State Street",
@@ -111,10 +128,14 @@ registerSuite("ext_personInfoCorresp Tests", {
         }))
         .then(pollUntil(function() {
           this.context.parent.document.getElementById("IM_SAVE").click();
-          return (this.context.document.getElementById("CITY") as HTMLInputElement).value || null;
+          if (!Boolean(this.context.document.getElementById("CITY").value)) {
+            return null;
+          }
+
+          return this.context.document.getElementById("CITY").value;
         }))
         .then(function(city) {
-          assert.equal(city, "Boston", "Full address includes city")
+          assert.equal(city, "Boston", "City correctly returned");
         })
     },
 
@@ -127,13 +148,18 @@ registerSuite("ext_personInfoCorresp Tests", {
           useTypedown: false
         }))
         .then(pollUntil(function() {
+          console.log("Polling for context.EDQ and context.EdqConfig...");
           return Boolean(
             this.context.EDQ && 
             this.context.EdqConfig) || null; 
         }))
         .then(pollUntil(function() {
-          this.context.document.getElementById("SEAS_ADDR$ADDRESS1").click();
-          return this.context.EdqConfig.PRO_WEB_MAPPING || null;
+          console.log("Polling to ensure PER_ID has focus");
+          return this.context.document.activeElement.id === "PER_ID" || null;
+        }))
+        .then(pollUntil(function() {
+          this.context.document.getElementById("SEAS_ADDR$CITY").click();
+          return this.context.EdqConfig.PRO_WEB_MAPPING;
         }))
         .then(typeAddress({
           "address-line-one": "53 State Street",
@@ -141,15 +167,18 @@ registerSuite("ext_personInfoCorresp Tests", {
         }))
         .then(pollUntil(function() {
           this.context.parent.document.getElementById("IM_SAVE").click();
-          return (this.context.document.getElementById("SEAS_ADDR$CITY") as HTMLInputElement).value || null;
+          if (!Boolean(this.context.document.getElementById("SEAS_ADDR$CITY").value)) {
+            return null;
+          }
+
+          return this.context.document.getElementById("SEAS_ADDR$CITY").value;
         }))
         .then(function(city) {
-          assert.equal(city, "Boston", "Full address includes city")
+          assert.equal(city, "Boston", "City correctly returned");
         })
     },
-
     
-    "Pro Web with PRO_WEB_SERVICE_URL works (mailing address)": function() {
+   "Pro Web with PRO_WEB_SERVICE_URL works (mailing address)": function() {
       return this.remote
         .then(addProWebOnPremise({
           serviceUrl: PRO_WEB_SERVICE_URL,
@@ -163,20 +192,27 @@ registerSuite("ext_personInfoCorresp Tests", {
             this.context.EdqConfig) || null; 
         }))
         .then(pollUntil(function() {
-          this.context.document.getElementById("ADDRESS1").click();
-          return this.context.EdqConfig.PRO_WEB_MAPPING || null;
+          console.log("Polling to ensure PER_ID has focus");
+          return this.context.document.activeElement.id === "PER_ID" || null;
+        }))
+        .then(pollUntil(function() {
+          this.context.document.getElementById("CITY").click();
+          return this.context.EdqConfig.PRO_WEB_MAPPING;
         }))
         .then(typeAddress({
-          "address-line-one": "125 Summer St",
-          "address-line-two": "Ste 1020",
-          "postal-code": "02110"
+          "address-line-one": "53 State Street",
+          "postal-code": "02109-2820"
         }))
         .then(pollUntil(function() {
           this.context.parent.document.getElementById("IM_SAVE").click();
-          return (this.context.document.getElementById("CITY") as HTMLInputElement).value || null;
+          if (!Boolean(this.context.document.getElementById("CITY").value)) {
+            return null;
+          }
+
+          return this.context.document.getElementById("CITY").value;
         }))
-        .then(function(city: string) {
-          assert.equal(city, "Boston", "Full addreess includes city")
+        .then(function(city) {
+          assert.equal(city, "Boston", "City correctly returned");
         })
     },
 
@@ -189,25 +225,33 @@ registerSuite("ext_personInfoCorresp Tests", {
           useTypedown: false
         }))
         .then(pollUntil(function() {
+          console.log("Polling for context.EDQ and context.EdqConfig...");
           return Boolean(
             this.context.EDQ && 
             this.context.EdqConfig) || null; 
         }))
         .then(pollUntil(function() {
+          console.log("Polling to ensure PER_ID has focus");
+          return this.context.document.activeElement.id === "PER_ID" || null;
+        }))
+        .then(pollUntil(function() {
           this.context.document.getElementById("SEAS_ADDR$CITY").click();
-          return this.context.EdqConfig.PRO_WEB_MAPPING || null;
+          return this.context.EdqConfig.PRO_WEB_MAPPING;
         }))
         .then(typeAddress({
-          "address-line-one": "125 Summer St",
-          "address-line-two": "Ste 1020",
-          "postal-code": "02110"
+          "address-line-one": "53 State Street",
+          "postal-code": "02109-2820"
         }))
         .then(pollUntil(function() {
           this.context.parent.document.getElementById("IM_SAVE").click();
-          return (this.context.document.getElementById("SEAS_ADDR$CITY") as HTMLInputElement).value || null;
+          if (!Boolean(this.context.document.getElementById("SEAS_ADDR$CITY").value)) {
+            return null;
+          }
+
+          return this.context.document.getElementById("SEAS_ADDR$CITY").value;
         }))
-        .then(function(city: string) {
-          assert.equal(city, "Boston", "Full addreess includes city")
+        .then(function(city) {
+          assert.equal(city, "Boston", "City correctly returned");
         })
     },
 
@@ -239,29 +283,28 @@ registerSuite("ext_personInfoCorresp Tests", {
           assert(Boolean(typedownText), "Typedown pops up");
         })
     },
+     */
 
     "Global Intuitive without adding integration does not work": function() {
       return this.remote
         .then(pollUntil(function() {
-          return document.querySelector("#ADDRESS1");
+          return this.context.document.querySelector("#ADDRESS1");
         }))
-        .findByCssSelector("#ADDRESS1")
-          .clearValue() 
-          .type("53 State Street Boston")
-          .end()
-        .findByCssSelector("#ADDRESS1")
-          .click()
-          .type(" ")
-          .end()
-        .execute(function() {
-          return document.querySelector(".edq-global-intuitive-address-suggestion");
-        })
+        .then(pollUntil(function() {
+          this.context.document.querySelector("#ADDRESS1").value = "53 State Street Boston";
+          this.context.document.getElementById("ADDRESS1").dispatchEvent(new Event("keyup"));
+          if (this.context.document.querySelector(".edq-global-intuitive-address-suggestion") == null) {
+            return true;
+          }
+
+          return null;
+        }))
         .then(function(selector) {
-          assert.equal(selector, null, "No suggestions an be found");
+          assert.equal(selector, true, "No suggestions an be found");
         })
     },
 
-    "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
+    "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works (mailing)": function() {
       return this.remote
         .then(addGlobalIntuitive({
           authToken: GLOBAL_INTUITIVE_AUTH_TOKEN,
@@ -269,35 +312,36 @@ registerSuite("ext_personInfoCorresp Tests", {
           source: INTEGRATION_SOURCE_PATH
         }))
         .then(pollUntil(function() {
-          return Boolean(window.EDQ && 
-            window.EdqConfig &&
-            document.querySelector("#ADDRESS1")
-          ) || null; 
+          return Boolean(
+            this.context.EDQ && 
+            this.context.EdqConfig) || null; 
         }))
-        .findByCssSelector("#ADDRESS1")
-          .clearValue() 
-          .type("53 State Street Boston")
-          .end()
-        .findByCssSelector("#ADDRESS1")
-          .click()
-          .type(" ")
-          .end()
         .then(pollUntil(function() {
-          return document.querySelector(".edq-global-intuitive-address-suggestion");
+          console.log("Polling to ensure PER_ID has focus");
+          return this.context.document.activeElement.id === "PER_ID" || null;
         }))
-        .findByCssSelector(".edq-global-intuitive-address-suggestion")
-          .click()
-          .end()
         .then(pollUntil(function() {
-          return (document.querySelector("#CITY") as HTMLInputElement).value || null;
+          this.context.document.getElementById("ADDRESS1").click();
+          this.context.document.getElementById("ADDRESS1").value = "53 State Street Boston";
+          this.context.document.getElementById("ADDRESS1").dispatchEvent(new Event("keyup"))
+          return this.context.document.querySelector(".edq-global-intuitive-address-suggestion");
         }))
+        .then(pollUntil(function() {
+          let suggestion = this.context.document.querySelector(".edq-global-intuitive-address-suggestion")
+          suggestion.dispatchEvent(new MouseEvent("mousedown", { view: window, bubbles: true, cancelable: true, clientX: 0, clientY: 0, button: 0 }))
+          if (this.context.document.querySelector("#CITY").value === ""){
+            return null;
+          }
+
+          return this.context.document.querySelector("#CITY").value;
+        }, 20000, 3000))
         .then(function(city: string) {
+          console.log(`CITY: ${city}`);
           assert.equal(city, "Boston", "Full address includes city")
         })
     }
 
 
-     */
   }
 });
 
