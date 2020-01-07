@@ -6,6 +6,9 @@ interface PegasusObject {
   },
 
   address: {
+    proWeb: {
+      typedownEventListener
+    },
     globalIntuitive: {
       activateValidation: (element) => void,
       search: ({query, country: string, take: number, callback: object}) => XMLHttpRequest,
