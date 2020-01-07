@@ -48,6 +48,7 @@ let interval = setInterval(function() {
             field: document.getElementById('ADDRESS1'),
             elements: ['Primary number', 'Street'],
             separator: ' ',
+            typedownFieldSelector: '#typedown-final--address-line-one',
             modalFieldSelector: '#interaction-address--original-address-line-one',
           },
 
@@ -55,6 +56,7 @@ let interval = setInterval(function() {
             field: document.getElementById('ADDRESS2'),
             elements: ['Secondary number'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--address-line-two',
             modalFieldSelector: '#interaction-address--original-address-line-two',
           },
 
@@ -62,6 +64,7 @@ let interval = setInterval(function() {
             field: document.getElementById('CITY'),
             elements: ['City name'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--city',
             modalFieldSelector: '#interaction-address--original-locality',
           },
 
@@ -69,6 +72,7 @@ let interval = setInterval(function() {
             field: document.getElementById('STATE'),
             elements: ['State code'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--state',
             modalFieldSelector: '#interaction-address--original-province',
           },
 
@@ -76,6 +80,7 @@ let interval = setInterval(function() {
             field: document.getElementById('POSTAL'),
             elements: ['ZIP Code', '+4 code'],
             separator: '-',
+            typedownFieldSelector: '#typedown-final--postal-code',
             modalFieldSelector: '#interaction-address--original-postal-code',
           },
 
@@ -83,15 +88,14 @@ let interval = setInterval(function() {
             field: document.getElementById('COUNTY'),
             elements: ['County name'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--county',
             modalFieldSelector: '#',
           },
         ]
       });
 
       if (proWebUseTypedown) {
-        window.EdqConfig = Object.assign(window.EdqConfig, {
-          PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("ADDRESS1")
-        });
+        document.getElementById("ADDRESS1").onclick = window.EDQ.address.proWeb.typedownEventListener;
       }
     };
 
@@ -112,6 +116,7 @@ let interval = setInterval(function() {
             field: document.getElementById('SEAS_ADDR$ADDRESS1'),
             elements: ['Primary number', 'Street'],
             separator: ' ',
+            typedownFieldSelector: '#typedown-final--address-line-one',
             modalFieldSelector: '#interaction-address--original-address-line-one',
           },
 
@@ -119,6 +124,7 @@ let interval = setInterval(function() {
             field: document.getElementById('SEAS_ADDR$ADDRESS2'),
             elements: ['Secondary number'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--address-line-two',
             modalFieldSelector: '#interaction-address--original-address-line-two',
           },
 
@@ -126,6 +132,7 @@ let interval = setInterval(function() {
             field: document.getElementById('SEAS_ADDR$CITY'),
             elements: ['City name'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--city',
             modalFieldSelector: '#interaction-address--original-locality',
           },
 
@@ -133,6 +140,7 @@ let interval = setInterval(function() {
             field: document.getElementById('SEAS_ADDR$STATE'),
             elements: ['State code'],
             separator: '',
+            typedownFieldSelector: '#typedown-final--state',
             modalFieldSelector: '#interaction-address--original-province',
           },
 
@@ -140,6 +148,7 @@ let interval = setInterval(function() {
             field: document.getElementById('SEAS_ADDR$POSTAL'),
             elements: ['ZIP Code', "+4 code"],
             separator: '-',
+            typedownFieldSelector: '#typedown-final--postal-code',
             modalFieldSelector: '#interaction-address--original-postal-code',
           },
 
@@ -147,6 +156,7 @@ let interval = setInterval(function() {
             field: document.getElementById('SEAS_ADDR$COUNTY'),
             elements: ['County name'],
             separator: ' ',
+            typedownFieldSelector: '#typedown-final--county',
             modalFieldSelector: '#interaction-address--original-postal-code',
           },
 
@@ -154,9 +164,7 @@ let interval = setInterval(function() {
       });
 
       if (proWebUseTypedown) {
-        window.EdqConfig = Object.assign(window.EdqConfig, {
-          PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("SEAS_ADDR$ADDRESS1")
-        });
+        document.getElementById("SEAS_ADDR$ADDRESS1").onclick = window.EDQ.address.proWeb.typedownEventListener;
       }
     }
 
@@ -208,7 +216,7 @@ let interval = setInterval(function() {
         PRO_WEB_VERIFICATION_URL: parent.window.EdqConfig.PRO_WEB_VERIFICATION_URL,
         PRO_WEB_TYPEDOWN_URL: parent.window.EdqConfig.PRO_WEB_TYPEDOWN_URL,
         PRO_WEB_EDQ_URL: parent.window.EdqConfig.PRO_WEB_EDQ_URL,
-        GLOBAL_INTUITIVE_URL: parent.window.EdqConfig.GLOBAL_INTUITIVE_URL,
+        GLOBAL_INTUITIVE_URL: parent.window.EdqConfig.GLOBAL_INTUITIVE_URL
       },
       callbacks: {
         globalIntuitive: function() {
