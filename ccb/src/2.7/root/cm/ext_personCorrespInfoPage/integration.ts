@@ -23,6 +23,10 @@ let interval = setInterval(function() {
         },
       ],
       PRO_WEB_COUNTRY: "USA",
+      PRO_WEB_CALLBACK: function(savedTarget, newEvent) {
+        parent.doClose();
+        parent.doSave();
+      }
     });
 
     const mailingInfoSection: HTMLElement = document.querySelector("#secRow_2 table");
@@ -43,6 +47,7 @@ let interval = setInterval(function() {
           { field: document.getElementById("COUNTY"), elements: ["components.county1"] },
         ],
 
+        PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById('ADDRESS1'),
         PRO_WEB_MAPPING: [
           {
             field: document.getElementById('ADDRESS1'),
@@ -111,6 +116,7 @@ let interval = setInterval(function() {
           { field: document.getElementById("SEAS_ADDR$COUNTY"), elements: ["components.county1"] }
         ],
 
+        PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById('SEAS_ADDR$ADDRESS1'),
         PRO_WEB_MAPPING: [
           {
             field: document.getElementById('SEAS_ADDR$ADDRESS1'),
