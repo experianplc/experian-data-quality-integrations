@@ -7,6 +7,7 @@ let interval = setInterval(function() {
     clearInterval(interval);
 
     let trigger = parent.document.getElementById("IM_SAVE");
+    let defaultSaveFunction = trigger.onclick;
     try {
       if (!parent.window.EdqConfig) {
         (parent.window.EdqConfig as any) = {}
@@ -24,8 +25,8 @@ let interval = setInterval(function() {
       ],
       PRO_WEB_COUNTRY: "USA",
       PRO_WEB_CALLBACK: function(savedTarget, newEvent) {
-        parent.doClose();
-        parent.doSave();
+        (parent as any).doClose();
+        (parent as any).doSave();
       }
     });
 
@@ -219,12 +220,33 @@ let interval = setInterval(function() {
         GLOBAL_INTUITIVE_AUTH_TOKEN: parent.window.EdqConfig.GLOBAL_INTUITIVE_AUTH_TOKEN,
         PRO_WEB_USE_TYPEDOWN: parent.window.EdqConfig.PRO_WEB_USE_TYPEDOWN,
         PRO_WEB_STYLESHEET: parent.window.EdqConfig.PRO_WEB_STYLESHEET,
-        PRO_WEB_VERIFICATION_URL: parent.window.EdqConfig.PRO_WEB_VERIFICATION_URL,
+        PRO_WEB_VERIFICATION_URL: "http://localhost:8002/verification-unicorn.js",
         PRO_WEB_TYPEDOWN_URL: parent.window.EdqConfig.PRO_WEB_TYPEDOWN_URL,
         PRO_WEB_EDQ_URL: parent.window.EdqConfig.PRO_WEB_EDQ_URL,
         GLOBAL_INTUITIVE_URL: parent.window.EdqConfig.GLOBAL_INTUITIVE_URL
       },
       callbacks: {
+        verification: function() {
+          // One option is to build an object of pages where
+          // the integration has been loaded into. So in this case
+          // each page would indicate the URL where it was created in
+          // and load its own data into that particular spot
+
+          if (!parent.window.edqLoaded) {
+            parent.window.edqLoaded = {};
+          }
+
+          parent.window.edqLoaded[document.location.href] = true;
+          parent.document.getElementById("tabPage").onload = function(e: Event) {
+            // When a tabPage is loaded, reset the onclick handler if edq is not loaded
+            // for that particular page.
+            const cisMainWindow = e.currentTarget.contentWindow.parent; 
+            if (!cisMainWindow.edqLoaded[e.currentTarget.contentDocument.location.href]) {
+              parent.document.getElementById("IM_SAVE").onclick = defaultSaveFunction;
+            }
+          }
+        },
+
         globalIntuitive: function() {
           window.EDQ.address.globalIntuitive.activateValidation(
             document.getElementById("ADDRESS1")
