@@ -1,12 +1,28 @@
 import { createAssets } from "utils/functions/create-assets";
 
-let currentElement = document.getElementById("edq-9.2-hcm-pages-EO_ADDR_CAN_SEC");
+let currentElement = document.getElementById("edq-9.2-cs-pages-EO_ADDR_USA_SEC");
 
 let interval = setInterval(function() {
   if (document.getElementById("DERIVED_ADDRESS_ADDRESS1") !== null){
     clearInterval(interval);
 
     let trigger: any = document.getElementById("DERIVED_ADDRESS_OK_PB");
+
+    // This is an issue with how the page has an onchange listener. As a result we will refresh
+    document.getElementById("ACE_width").onchange = function() {
+      // Refresh PRO_WEB_MAPPING fields
+      if (window.EdqConfig.PRO_WEB_MAPPING.length) {
+        window.EdqConfig.PRO_WEB_MAPPING.forEach((mapping: any) => {
+          mapping.field = document.getElementById(mapping.field.id);
+        })
+      }
+
+      if (window.EdqConfig.GLOBAL_INTUITIVE_MAPPING.length) {
+        window.EdqConfig.GLOBAL_INTUITIVE_MAPPING.forEach((mapping: any) => {
+          mapping.field = document.getElementById(mapping.field.id);
+        });
+      }
+    };
 
     window.EdqConfig = {
       PRO_WEB_SUBMIT_TRIGGERS: [
@@ -15,7 +31,7 @@ let interval = setInterval(function() {
           element: trigger
         },
       ],
-      PRO_WEB_COUNTRY: "CAN",
+      PRO_WEB_COUNTRY: "USA",
       PRO_WEB_MAPPING: [
         {
           field: document.getElementById("DERIVED_ADDRESS_ADDRESS1"),
@@ -58,6 +74,34 @@ let interval = setInterval(function() {
           separator: "",
           modalFieldSelector: "#"
         },
+      ],
+
+      GLOBAL_INTUITIVE_ELEMENT: (document.getElementById("DERIVED_ADDRESS_ADDRESS1") as HTMLInputElement),
+      GLOBAL_INTUITIVE_MAPPING: [
+        {
+          field: document.getElementById("DERIVED_ADDRESS_ADDRESS1"),
+          elements: ["address.addressLine1"]
+        },
+        {
+          field: document.getElementById("DERIVED_ADDRESS_ADDRESS2"),
+          elements: ["address.addressLine2"],
+        },
+        {
+          field: document.getElementById("DERIVED_ADDRESS_CITY"),
+          elements: ["address.locality"]
+        },
+        {
+          field: document.getElementById("DERIVED_ADDRESS_STATE"),
+          elements: ["address.province"]
+        },
+        {
+          field: document.getElementById("DERIVED_ADDRESS_POSTAL"),
+          elements: ["address.postalCode"]
+        },
+        {
+          field: document.getElementById("DERIVED_ADDRESS_COUNTY"),
+          elements: ["components.county1"]
+        },
       ]
     };
 
@@ -65,6 +109,13 @@ let interval = setInterval(function() {
     if (proWebUseTypedown) {
       window.EdqConfig = Object.assign(window.EdqConfig, {
         PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("DERIVED_ADDRESS_ADDRESS1")
+      });
+    }
+
+    const globalIntuitiveAuthToken = currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
+    if (globalIntuitiveAuthToken) {
+      window.EdqConfig = Object.assign(window.EdqConfig, {
+        GLOBAL_INTUITIVE_AUTH_TOKEN: globalIntuitiveAuthToken
       });
     }
 

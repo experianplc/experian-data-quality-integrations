@@ -19,36 +19,56 @@ function createAssets(currentElement) {
     globalIntuitiveUnicornScript.type = "text/javascript";
     globalIntuitiveUnicornScript.id = "edq-global-intuitive-unicorn";
     globalIntuitiveUnicornScript.src = currentElement.getAttribute("GLOBAL_INTUITIVE_URL") || "https://edqprofservus.blob.core.windows.net/assets/global-intuitive-unicorn.js";
-    var edqScript = document.createElement("script");
-    edqScript.type = "text/javascript";
-    edqScript.src = currentElement.getAttribute("PRO_WEB_EDQ_URL") || "https://edqprofservus.blob.core.windows.net/assets/edq.js";
-    edqScript.id = "edq-pegasus";
-    edqScript.onload = function () {
+    function addVerificationUnicorn(currentElement) {
         var proWebAuthToken = currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
         var proWebServiceUrl = currentElement.getAttribute("PRO_WEB_SERVICE_URL");
         if (proWebAuthToken || proWebServiceUrl) {
             document.body.appendChild(verificationUnicornScript);
         }
+    }
+    function addGlobalIntuitiveUnicorn(currentElement) {
         var globalIntuitiveAuthToken = currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
         if (globalIntuitiveAuthToken) {
             document.body.appendChild(globalIntuitiveUnicornScript);
         }
+    }
+    function addTypedownUnicorn(currentElement) {
+        var proWebAuthToken = currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
+        var proWebServiceUrl = currentElement.getAttribute("PRO_WEB_SERVICE_URL");
         var useTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN") &&
             currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN") !== "false";
         if ((useTypedown && proWebAuthToken) || (useTypedown && proWebServiceUrl)) {
             document.body.appendChild(typedownUnicornScript);
         }
+    }
+    var edqScript = document.createElement("script");
+    edqScript.type = "text/javascript";
+    edqScript.src = currentElement.getAttribute("PRO_WEB_EDQ_URL") || "https://edqprofservus.blob.core.windows.net/assets/edq.js";
+    edqScript.id = "edq-pegasus";
+    edqScript.onload = function () {
+        addVerificationUnicorn(currentElement);
+        addGlobalIntuitiveUnicorn(currentElement);
+        addTypedownUnicorn(currentElement);
     };
     if (document.getElementById("edq-pegasus") === null) {
         document.body.appendChild(edqScript);
     }
     else {
-        document.getElementById("edq-verification-unicorn").remove();
-        document.body.appendChild(verificationUnicornScript);
-        document.getElementById("edq-typedown-unicorn").remove();
-        document.body.appendChild(typedownUnicornScript);
-        document.getElementById("edq-global-intuitive-unicorn").remove();
-        document.body.appendChild(globalIntuitiveUnicornScript);
+        try {
+            document.getElementById("edq-verification-unicorn").remove();
+        }
+        catch (e) { }
+        addVerificationUnicorn(currentElement);
+        try {
+            document.getElementById("edq-typedown-unicorn").remove();
+        }
+        catch (e) { }
+        addTypedownUnicorn(currentElement);
+        try {
+            document.getElementById("edq-global-intuitive-unicorn").remove();
+        }
+        catch (e) { }
+        addGlobalIntuitiveUnicorn(currentElement);
     }
 }
 exports.createAssets = createAssets;

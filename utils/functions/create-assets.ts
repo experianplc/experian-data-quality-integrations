@@ -21,21 +21,25 @@ export function createAssets(currentElement) {
   globalIntuitiveUnicornScript.id = "edq-global-intuitive-unicorn";
   globalIntuitiveUnicornScript.src = currentElement.getAttribute("GLOBAL_INTUITIVE_URL") || "https://edqprofservus.blob.core.windows.net/assets/global-intuitive-unicorn.js";
 
-  var edqScript = document.createElement("script");
-  edqScript.type = "text/javascript";
-  edqScript.src = currentElement.getAttribute("PRO_WEB_EDQ_URL") || "https://edqprofservus.blob.core.windows.net/assets/edq.js"
-  edqScript.id = "edq-pegasus";
-  edqScript.onload = function() { 
+  function addVerificationUnicorn(currentElement) {
     let proWebAuthToken = currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
     let proWebServiceUrl = currentElement.getAttribute("PRO_WEB_SERVICE_URL");
+
     if (proWebAuthToken || proWebServiceUrl) {
       document.body.appendChild(verificationUnicornScript); 
     }
+  }
 
+  function addGlobalIntuitiveUnicorn(currentElement) {
     let globalIntuitiveAuthToken = currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
     if (globalIntuitiveAuthToken) {
       document.body.appendChild(globalIntuitiveUnicornScript); 
     }
+  }
+
+  function addTypedownUnicorn(currentElement) {
+    let proWebAuthToken = currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
+    let proWebServiceUrl = currentElement.getAttribute("PRO_WEB_SERVICE_URL");
 
     let useTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN") &&
       currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN") !== "false";
@@ -44,20 +48,36 @@ export function createAssets(currentElement) {
     }
   }
 
+  var edqScript = document.createElement("script");
+  edqScript.type = "text/javascript";
+  edqScript.src = currentElement.getAttribute("PRO_WEB_EDQ_URL") || "https://edqprofservus.blob.core.windows.net/assets/edq.js"
+  edqScript.id = "edq-pegasus";
+  edqScript.onload = function() { 
+    addVerificationUnicorn(currentElement);
+    addGlobalIntuitiveUnicorn(currentElement);
+    addTypedownUnicorn(currentElement);
+  }
+
   if (document.getElementById("edq-pegasus") === null) {
     document.body.appendChild(edqScript);
 
     // This is here because PeopleSoft will "reset" the integration each time you change a field
     // and refocus. The purpose of this is to rebind the integration.
   } else {
-    document.getElementById("edq-verification-unicorn").remove();
-    document.body.appendChild(verificationUnicornScript);
+    try {
+      document.getElementById("edq-verification-unicorn").remove();
+    } catch(e) {}
+    addVerificationUnicorn(currentElement);
 
-    document.getElementById("edq-typedown-unicorn").remove();
-    document.body.appendChild(typedownUnicornScript);
+    try {
+      document.getElementById("edq-typedown-unicorn").remove();
+    } catch(e) {}
+    addTypedownUnicorn(currentElement);
 
-    document.getElementById("edq-global-intuitive-unicorn").remove();
-    document.body.appendChild(globalIntuitiveUnicornScript);
+    try {
+      document.getElementById("edq-global-intuitive-unicorn").remove();
+    } catch(e) {}
+    addGlobalIntuitiveUnicorn(currentElement);
 
   }
 
