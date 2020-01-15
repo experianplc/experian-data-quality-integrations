@@ -83,6 +83,7 @@ registerSuite("ext_personInfoCorresp Tests", {
       }))
       .then(pollUntil(function() {
         this.frames["main"].document.getElementById("IM_SAVE").onclick = null;
+        this.context.frames["main"].document.getElementById("IM_SAVE").onclick = null;
         return this.frames["main"].document.getElementById("IM_SAVE").onclick === null;
       }))
   },
@@ -102,6 +103,9 @@ registerSuite("ext_personInfoCorresp Tests", {
 
     "Pro Web with PRO_WEB_AUTH_TOKEN works (mailing address)": function() {
       return this.remote
+        .execute(function() {
+          debugger;
+        })
         .then(addProWebOnDemand({
           authToken: PRO_WEB_AUTH_TOKEN,
           elementId: ELEMENT_ID,
@@ -109,13 +113,11 @@ registerSuite("ext_personInfoCorresp Tests", {
           useTypedown: false
         }))
         .then(pollUntil(function() {
-          console.log("Polling for context.EDQ and context.EdqConfig...");
           return Boolean(
             this.context.EDQ && 
             this.context.EdqConfig) || null; 
         }))
         .then(pollUntil(function() {
-          console.log("Polling to ensure PER_ID has focus");
           return this.context.document.activeElement.id === "PER_ID" || null;
         }))
         .then(pollUntil(function() {
@@ -127,6 +129,7 @@ registerSuite("ext_personInfoCorresp Tests", {
           "postal-code": "02109-2820"
         }))
         .then(pollUntil(function() {
+          this.context.EdqConfig["PRO_WEB_CALLBACK"] = function() { }
           this.context.parent.document.getElementById("IM_SAVE").click();
           if (!Boolean(this.context.document.getElementById("CITY").value)) {
             return null;
