@@ -107,33 +107,26 @@ let interval = setInterval(function() {
 
     const proWebUseTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN");
     if (proWebUseTypedown) {
-      window.EdqConfig = Object.assign(window.EdqConfig, {
-        PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("DERIVED_ADDRESS_ADDRESS1")
-      });
+      window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = document.getElementById("DERIVED_ADDRESS_ADDRESS1");
     }
 
     const globalIntuitiveAuthToken = currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
     if (globalIntuitiveAuthToken) {
-      window.EdqConfig = Object.assign(window.EdqConfig, {
-        GLOBAL_INTUITIVE_AUTH_TOKEN: globalIntuitiveAuthToken
-      });
+      window.EdqConfig["GLOBAL_INTUITIVE_AUTH_TOKEN"] = globalIntuitiveAuthToken;
     }
 
     const proWebAuthToken = currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
     const proWebServiceUrl = currentElement.getAttribute("PRO_WEB_SERVICE_URL");
     const soapActionUrl = currentElement.getAttribute("SOAP_ACTION_URL") || "http://www.qas.com/web-2013-12";    
+
     if (proWebAuthToken) {
-      window.EdqConfig = Object.assign(window.EdqConfig, {
-        PRO_WEB_AUTH_TOKEN: proWebAuthToken,
-        PRO_WEB_LAYOUT: "AllElements",
-      });
+      window.EdqConfig["PRO_WEB_AUTH_TOKEN"] = proWebAuthToken;
+      window.EdqConfig["PRO_WEB_LAYOUT"] = "AllElements";
+
     } else if (proWebServiceUrl && soapActionUrl) {
-      window.EdqConfig = Object.assign(window.EdqConfig, {
-        PRO_WEB_SERVICE_URL: proWebServiceUrl,
-        SOAP_ACTION_URL: soapActionUrl,
-        PRO_WEB_LAYOUT: "Peoplesoft",
-        
-      });
+      window.EdqConfig["PRO_WEB_SERVICE_URL"] = proWebServiceUrl;
+      window.EdqConfig["SOAP_ACTION_URL"] = soapActionUrl;
+      window.EdqConfig["PRO_WEB_LAYOUT"] = "Peoplesoft";
     };
 
    createAssets(currentElement); 
