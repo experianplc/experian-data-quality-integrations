@@ -8,7 +8,6 @@ with their form fields.
 # Installation prerequisites
 Before starting, it's important to make sure you have access to the following things:
 
-- PeopleTools Application Designer 
 - [Reverse Proxy](https://github.com/experianplc/nginx-cors) (optional for general use, but required for use with self-hosted Pro Web).
 - The integration files, which will be provided in this repository in the src folder.
 - Pro Web 7.XX. If you are using a self installed Pro Web instance it must be at least version 7.
@@ -29,29 +28,32 @@ We have a variety of components and pages already created for the integration.
 The find these, you can visit the src folder and follow the file path to the component, or page of
 choice. 
 
-> For example, to use the pre-created integration for the fluid page `ADDRESS_DFT_SBF` you
-will need to go to `src/9.2/hcm/pages_fluid/ADDRESS_DFT_SBF`.
+> For example, to use the pre-created integration for the fluid page `ext_personCorrespInfoPage` you
+will need to go to `src/2.7/room/cm/ext_personCorrespInfoPage`
 
-Each pre-made integration has a single file, `integration.html`, that should be edited to
+Each pre-made integration has a single file, `integration.jsp`, that should be edited to
 enable the functionality that you would like. The functionality that *can* be enabled will be
 reflected in the options. 
 
 ## Configuring the integration
 Once you select which product you would like there is some basic configuration that needs to be
-done. For this example we will assume that we are using the `EO_ADDR_USA_SEC` integration.
+done. For this example we will assume that we are using the `ext_personCorespInfoPage` integration.
 
 For example, 
 
-```html
+```jsp
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@ taglib uri="spl.tld" prefix="spl" %>
+<spl:initializeLocale/>
 <div
-  id="edq-9.2-hcm-pages-EO_ADDR_USA_SEC"
+  id="edq-2.7-root-cm-ext_personCorrespInfoPage"
   PRO_WEB_AUTH_TOKEN=""
   PRO_WEB_SERVICE_URL=""
   PRO_WEB_USE_TYPEDOWN=false
   GLOBAL_INTUITIVE_AUTH_TOKEN="">
 </div>
 <script
-  src="https://edqprofservus.blob.core.windows.net/peoplesoft/9.2/hcm/pages/EO_ADDR_USA_SEC/integration.js">
+  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_personCorrespInfoPage/integration.js">
 </script>
 ```
 
@@ -65,52 +67,10 @@ The following table describes the functionality possible:
 | GLOBAL_INTUITIVE_AUTH_TOKEN | This is the auth token used for Global Intuitive. If unset, Global Intuitive will not be used |
 
 ## Putting the integration into your environment.
-Once the `integration.html` file has its configuration set you should put the file in the Definition
+Once the `integration.jsp` file has its configuration set you should put its contents
+in the corresponding extension page, e.g. `ext_personCorrespInfoPage.jsp`
 corresponding to the file.
 
-### Step 1
-The first thing you will want to do as you begin is open up the *Application Designer*.
-Once opened you should see a screen similar to the one below:
-
-![Signon - Application Designer](media/sign-on.png)
-
-You should specify the appropriate Database name, User ID and Password so that you 
-can access the tool.
-
-### Step 2
-
-Once you've logged in you will see the Application Designer with nothing open, as
-shown below.
-
-![Application Designer - New Instance](media/application-designer.png)
-
-What you will need to do is click *File* (top left corner) and then *Open*. 
-The modal should look like after selecting open and selecting a *Definition* type.
-![Open Definition - Unfilled](media/open-definition.png)
-
-After opening, you can specify any Definition you would like. The definition type and name will
-correspond to the folder structure in `src`. So for example a definition of Page (Fluid) will
-correspond to structure `src/9.2/page_fluid`.
-
-The picture below shows how you should fill it out.
-![Open Definition - Filled](media/open-definition-filled.png)
-
-### Step 3
-After opening the *Definition* you should then insert an **HTML Area**, done by selecting *Insert* and
-then *HTML Area*. The picture below shows you what to select
-
-![Application Designer - Add HTML Area](media/application-designer-add-html-area.png)
-
-Once selected create a rectangle for the HTML Area in the area specified by the image below.
-
-![Application Designer - HTML Area Drawn](media/application-designer-html-area-drawn.png)
-
-### Step 4
-Finally, once you've created and inserted your HTML Area you should double click the area you've 
-now selected to view the **HTML Area Properties**. The screen below will show how this modal looks like.
-
-![HTML Area Properties](media/html-area-properties.png)
-
-Then, after configuration, put the integration HTML code in the main field after specifying the HTML **Value**
-as being a *Constant*. In this case it would be configured snippet specified in the section
-**Configuring the Integration**.
+The contents of the `integration.jsp` for the particular touchpoint should be included
+in the extension page corresponding to that touchpoint. Once included, your Managed Server for 
+Customer Care and Billing should be restarted in order for the integration to take effect.
