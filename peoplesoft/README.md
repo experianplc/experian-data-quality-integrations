@@ -1,17 +1,19 @@
+![](https://cdn.edq.com/resources/1.7.14/images/logos/experian-social.png)
+
 # Overview
 
 Experian provides data quality solutions through our contact data management platform. 
 Specifically, we provide email and phone validation as well as address verification. 
 We are able to integrate into PeopleSoft to provide this functionality when interacting 
-with their form fields.
+with its  form fields.
 
 # Installation prerequisites
 Before starting, it's important to make sure you have access to the following things:
 
-- PeopleTools Application Designer 
+- [PeopleTools Application Designer](https://docs.oracle.com/cd/E87544_01/pt856pbr1/eng/pt/tapd/concept_PeopleSoftApplicationDesignerOverview-0776f8.html?pli=ul_d29e24_tapd)
 - [Reverse Proxy](https://github.com/experianplc/nginx-cors) (optional for general use, but required for use with self-hosted Pro Web).
 - The integration files, which will be provided in this repository in the src folder.
-- Pro Web 7.XX. If you are using a self installed Pro Web instance it must be at least version 7.
+- [Pro Web 7.73](https://www.edq.com/documentation/apis/pro-web/) (or later). If you are using a self installed Pro Web instance it must be at least version 7.
 
 ## Pro Web Layout (Optional)
 If you're using Pro Web that's hosted on your own premises you will need to create a layout. Edit
