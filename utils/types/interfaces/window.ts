@@ -3,4 +3,5 @@ interface Window {
     EdqConfig?: UnicornObject,
     EDQ?: PegasusObject,
     html: string
+    countries: any;
 }

@@ -5,12 +5,16 @@ interface PegasusObject {
     globalPhoneValidate: ({phoneNumber: string, callback: object}) => XMLHttpRequest,
   },
 
-  address: {
-    globalIntuitive: {
-      activateValidation: (element) => void,
-      search: ({query, country: string, take: number, callback: object}) => XMLHttpRequest,
-      format: ({formatUrl: string, callback: object}) => XMLHttpRequest
-    }
+    address: {
+      proWeb: {
+        activateValidation: Function;
+      }
+
+      globalIntuitive: {
+        activateValidation: (element) => void,
+          search: ({query, country: string, take: number, callback: object}) => XMLHttpRequest,
+          format: ({formatUrl: string, callback: object}) => XMLHttpRequest
+      }
   },
 
   email: {
