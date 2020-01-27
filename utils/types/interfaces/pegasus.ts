@@ -8,6 +8,7 @@ interface PegasusObject {
     address: {
       proWeb: {
         activateValidation: Function;
+        typedownEventListener: (this: GlobalEventHandlers, ev: MouseEvent) => any;
       }
 
       globalIntuitive: {

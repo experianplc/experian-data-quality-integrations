@@ -22,8 +22,9 @@ function setEdqConfigForCountry(iso3Country: string): void {
   try { 
     window.EdqConfig["PRO_WEB_SUBMIT_TRIGGERS"] = window.countries[iso3Country]["PRO_WEB_SUBMIT_TRIGGERS"];
     window.EdqConfig["PRO_WEB_COUNTRY"] = window.countries[iso3Country]["PRO_WEB_COUNTRY"];
+    window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = window.countries[iso3Country]["PRO_WEB_COUNTRY"];
 
-    // Pro Web On Demand uses a different layout for non-USA countries
+    window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = window.countries[iso3Country]["PRO_WEB_TYPEDOWN_TRIGGER"];
     if (window.EdqConfig["PRO_WEB_AUTH_TOKEN"] && window.countries[iso3Country]["PRO_WEB_ON_DEMAND_MAPPING"]) {
       window.EdqConfig["PRO_WEB_MAPPING"] = window.countries[iso3Country]["PRO_WEB_ON_DEMAND_MAPPING"];
     } else {
@@ -92,12 +93,27 @@ let interval = setInterval(function() {
             // Rebind verification
             window.EDQ.address.proWeb.activateValidation();
             document.querySelectorAll("form .ps-edit").forEach((inputElement) => {
+              // PeopleSoft needs each element to be detected as "changed" when saving. =
+              // This ensures that for the current window, which is dynamically returned,
+              // all form elements are subscribed as 'changed'
               //@ts-ignore
               window[`addchg_${window.winName}`](inputElement) 
             });
 
             // Rebind global intuitive
             window.EDQ.address.globalIntuitive.activateValidation("#DERIVED_ADDRESS_ADDRESS1");
+
+            // Rebind typedown (if enabled)
+            if (window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
+              let selector: HTMLElement;
+              if (typeof(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) === "string") {
+                selector = document.querySelector(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]);
+              } else {
+                selector = window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"];
+              }
+
+              selector.onclick = window.EDQ.address.proWeb.typedownEventListener;
+            }
           }
         } 
       } 
@@ -119,6 +135,7 @@ let interval = setInterval(function() {
     }
 
     window.countries["USA"] = {
+      PRO_WEB_TYPEDOWN_TRIGGER: "#DERIVED_ADDRESS_ADDRESS1",
       PRO_WEB_SUBMIT_TRIGGERS: [
         {
           type: "click",
@@ -206,11 +223,6 @@ let interval = setInterval(function() {
     let initialCountry = (document.getElementById("SCC_CNT_ADFMTVW_DESCR") as HTMLInputElement).value;
     let initialIso3Country = countryToIso3(initialCountry);
     window.EdqConfig = defaultEdqConfig;
-
-    const proWebUseTypedown = currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN");
-    if (proWebUseTypedown) {
-      window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = document.getElementById("DERIVED_ADDRESS_ADDRESS1");
-    }
 
     const globalIntuitiveAuthToken = currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
     if (globalIntuitiveAuthToken) {
