@@ -37,7 +37,7 @@ function addProWebOnDemand(useTypedown: boolean = false) {
         element.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
 
         let script = document.createElement("script");
-        script.src = `http://localhost:8000/lib/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js`;
+        script.src = `http://localhost:8000/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js`;
       
         document.body.appendChild(element);
         document.body.appendChild(script);
@@ -82,7 +82,7 @@ function typeAddressAndSubmit(address: any) {
         .clearValue()
         .type(address.city || "")
         .end()
-      .findByCssSelector("#SCC_STATE_FL_VW_DESCR")
+      .findByCssSelector("input[id^=SCC_STATE_FL_VW_DESCR]")
         .clearValue()
         .type(address.state || "")
         .end()
@@ -99,6 +99,32 @@ function typeAddressAndSubmit(address: any) {
         .click()
         .end()
 
+  };
+}
+
+function typeAddressCAN(address: any) {
+  return function() {
+    return this.parent
+      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .clearValue()
+        .type(address.address1 || "")
+        .end()
+      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS2")
+        .clearValue()
+        .type(address.address2 || "")
+        .end()
+      .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
+        .clearValue()
+        .type(address.city || "")
+        .end()
+      .findByCssSelector("input[id^=SCC_STATE_FL_VW_DESCR]")
+        .clearValue()
+        .type(address.state || "")
+        .end()
+      .findByCssSelector("input[id^=DERIVED_ADDRESS_POSTAL]")
+        .clearValue()
+        .type(address.postal || "")
+        .end()
   };
 }
 
@@ -367,3 +393,235 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
   }
 });
 
+registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
+  before: function() {
+    return this.remote
+      .setFindTimeout(10000)
+      .setExecuteAsyncTimeout(20000)
+      .clearCookies()
+      .sleep(1000)
+      .get(URL)
+      .findByCssSelector("#userid")
+      .type("PS")
+      .end()
+      .findByCssSelector("#pwd")
+      .type("Hello123")
+      .end()
+      .findByCssSelector("[name='Submit']")
+      .click()
+      .end()
+      .sleep(1000) 
+  },
+
+  beforeEach: function() {
+    // Go to the page with the address
+    return this.remote  
+      .get(URL)
+      .findByCssSelector(".ps_grid-cell")
+        .click()
+        .end()
+      .then(pollUntil(function() {
+        return window.frames.length > 0 || null;
+      }))
+      .switchToFrame(0) 
+      .then(pollUntil(function() {
+        return window.EDQ;
+      }))
+      .execute(function() { 
+        window.EDQ = null;
+        window.EdqConfig = null;
+
+        // This will refresh the instance with each change, re-creating the integration.
+        document.querySelector("input[id^='SCC_STATE_FL_VW_DESCR']").onchange = null;
+
+        let address1: any = document.getElementById("DERIVED_ADDRESS_ADDRESS1");
+        // Remove Typedown Integration
+        address1.onclick = null;
+        address1.setAttribute("onclick", null);
+
+        // Remove Global Intuitive Integration
+        address1.removeEventListener("keyup", address1.keyupHandler);
+        address1.removeEventListener("keydown", address1.keydownHandler);
+
+        // Remove all traces of integration
+        let okButton = document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN");
+        okButton.onclick = null;
+        okButton.setAttribute("onclick", null);
+
+        if (document.getElementById("edq-pegasus")) {
+          let pegasus = document.getElementById("edq-pegasus");
+          pegasus.remove();
+        }
+
+        if (document.getElementById("edq-verification-unicorn")) {
+          let verification = document.getElementById("edq-verification-unicorn");
+          verification.remove();
+        }
+
+        if (document.getElementById("edq-typedown-unicorn")) {
+          let typedown = document.getElementById("edq-typedown-unicorn");
+          typedown.remove();
+        }
+
+        if (document.getElementById("edq-global-intuitive-unicorn")) {
+          let globalIntuitive = document.getElementById("edq-global-intuitive-unicorn");
+          globalIntuitive.remove();
+        }
+
+        if (document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF")) {
+          let integration = document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF");
+          integration.remove();
+        }
+
+        if (window.EDQ === null) {
+          return true;
+        } 
+
+        return null;
+      })
+      .then(pollUntil(function() {
+        let countryField = (document.getElementById("SCC_CNT_ADFMTVW_DESCR") as HTMLInputElement);
+        countryField.value = "Canada";
+        window[`pAction_${window.winName}`](document.querySelector("form"), countryField.id);
+
+        try {
+          return window.EdqConfig.PRO_WEB_COUNTRY === "CAN";
+        } catch(e) {
+          return null;
+        }
+      }))
+  },
+
+  afterEach() {
+    return this.remote  
+      .refresh()
+  },
+
+  tests: {
+    "CAN - Pro Web without adding integration fails": function() {
+      return this.remote
+        .sleep(2000)
+        .then(typeAddressCAN({
+          address1: "53 Corbould Rd",
+          postal: "V3G 1T4"
+        }))
+        .then(pollUntil(function() {
+          return document.querySelector("input[id^='DERIVED_ADDRESS_CITY']");
+        }))
+        .findByCssSelector("input[id^='DERIVED_ADDRESS_CITY']")
+          .getProperty("value")
+          .then(function(city: string) {
+            assert.equal(city, "", "City is not populated");
+          })
+          .end()
+    },
+
+    "CAN - Pro Web with PRO_WEB_AUTH_TOKEN works": function() {
+      return this.remote
+        .then(addProWebOnDemand())
+        .then(pollUntil(function() {
+          return document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN").getAttribute("href") === "#" || null;
+        }))
+        .sleep(500)
+        .then(typeAddressCAN({
+          address1: "53 Corbould Rd",
+          postal: "V3G 1T4"
+        }))
+        .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
+          .click()
+          .end()
+        .findByCssSelector(".ps_box-gridc span")
+          .click()
+          .end()
+        .then(pollUntil(function() {
+          return window.frames.length > 0 || null;
+        }))
+        .switchToFrame(0)
+        .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
+          .getProperty("value")
+          .then(function(city) {
+            assert.equal(city, "ABBOTSFORD", "Full address includes city")
+          })
+          .end()
+    },
+
+    /* ENABLE AFTER CREATING LAYOUT 
+    "Pro Web with PRO_WEB_SERVICE_URL works": function() {
+      return this.remote
+        .then(addProWebOnPremise())
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && window.EdqConfig) || null; 
+        }))
+        .then(typeAddressAndSubmit({
+          address1: "125 Summer St",
+          address2: "Ste 1020",
+          postal: "02110"
+        }))
+        .then(pollUntil(function() {
+          return (document.querySelector("input[id^=DERIVED_ADDRESS_CITY]") as HTMLInputElement).value || null;
+        }))
+        .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
+          .getProperty("value")
+          .then(function(city: string) {
+            assert.equal(city, "Boston", "Full addreess includes city")
+          })
+          .end()
+    }, 
+     */
+
+    "CAN - Global Intuitive without adding integration does not work": function() {
+      return this.remote
+        .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1");
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .clearValue() 
+          .type("53 Corbould")
+          .end()
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .click()
+          .type(" ")
+          .end()
+        .execute(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
+        })
+        .then(function(selector) {
+          assert.equal(selector, null, "No suggestions an be found");
+        })
+    },
+
+    "CAN - Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
+      return this.remote
+        .then(addGlobalIntuitive())
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && 
+            window.EdqConfig &&
+            document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+          ) || null; 
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .clearValue() 
+          .type("53 Corbould")
+          .end()
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .click()
+          .type(" ")
+          .end()
+        .then(pollUntil(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
+        }))
+        .findByCssSelector(".edq-global-intuitive-address-suggestion")
+          .click()
+          .end()
+        .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1").getAttribute("edq-metadata");
+        }))
+        .then(pollUntil(function() {
+          return (document.querySelector("input[id^='DERIVED_ADDRESS_POSTAL']") as HTMLInputElement).value || null;
+        }))
+        .then(function(postal: string) {
+          assert.equal(postal, "V3G 1T4", "Postal is returned")
+        })
+    }
+  }
+});
