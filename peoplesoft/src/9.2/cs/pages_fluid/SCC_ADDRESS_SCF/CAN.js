@@ -1,22 +1,22 @@
 //@ts-nocheck
 /*
- * Data update for FRA - France
- * This file contains the configuration needed specifically for France
+ * Data update for CAN - Canada
+ * This file contains the configuration needed specifically for Canada
  * country support
  */
 
-window.countries["FRA"] = {};
+window.countries["CAN"] = {};
 
-window.countries["FRA"]["PRO_WEB_TYPEDOWN_TRIGGER"] = null;
+window.countries["CAN"]["PRO_WEB_TYPEDOWN_TRIGGER"] = null;
 
-window.countries["FRA"]["PRO_WEB_SUBMIT_TRIGGERS"] = [
+window.countries["CAN"]["PRO_WEB_SUBMIT_TRIGGERS"] = [
   {
     type: "click",
     element: "#SCC_PROF_FL_DRV_SAVE_BTN"
   },
 ];
 
-window.countries["FRA"]["PRO_WEB_ON_DEMAND_MAPPING"] = [
+window.countries["CAN"]["PRO_WEB_ON_DEMAND_MAPPING"] = [
   {
     selector: "#DERIVED_ADDRESS_ADDRESS1",
     elements: ["Building number", "Street name"],
@@ -40,93 +40,107 @@ window.countries["FRA"]["PRO_WEB_ON_DEMAND_MAPPING"] = [
   },
   {
     selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
-    elements: ["Postcode"],
-    separator: "",
-    modalFieldSelector: "#interaction-address--original-postal-code",
-    typedownFieldSelector: "#typedown-final--postal-code"
-  },
-  {
-    selector: "input[id^='DERIVED_ADDRESS_CITY']",
-    elements: ["Town"],
-    separator: "",
-    modalFieldSelector: "#interaction-address--original-locality",
-    typedownFieldSelector: "#typedown-final--city"
-  },
-  {
-    selector: "input[id^='SCC_STATE_FL_VW_DESCR']",
-    elements: ["Département"],
-    separator: "",
-    modalFieldSelector: "#interaction-address--original-province",
-    typedownFieldSelector: "#typedown-final--state"
-  },
-];
-
-window.countries["FRA"]["PRO_WEB_MAPPING"] = [
-  {
-    selector: "#DERIVED_ADDRESS_ADDRESS1",
-    elements: ["Number" "Street name"],
-    separator: " ",
-    modalFieldSelector: "#interaction-address--original-address-line-one",
-    typedownFieldSelector: "#typedown-final--address-line-one"
-  },
-  {
-    selector: "#DERIVED_ADDRESS_ADDRESS2",
-    elements: ["Company name"],
-    separator: "",
-    modalFieldSelector: "#interaction-address--original-address-line-two",
-    typedownFieldSelector: "#typedown-final--address-line-two"
-  },
-  {
-    selector: "#DERIVED_ADDRESS_ADDRESS3",
-    elements: ["Additional geographic data"],
-    separator: "",
-    modalFieldSelector: "#interaction-address--original-address-line-two",
-    typedownFieldSelector: "#typedown-final--address-line-two"
-  },
-  {
-    selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
-    elements: ["Postcode"],
+    elements: ["Postal code"],
     separator: "-",
     modalFieldSelector: "#interaction-address--original-postal-code",
     typedownFieldSelector: "#typedown-final--postal-code"
   },
   {
     selector: "input[id^='DERIVED_ADDRESS_CITY']",
-    elements: ["TOWN"],
+    elements: ["Municipality name"],
     separator: "",
     modalFieldSelector: "#interaction-address--original-locality",
     typedownFieldSelector: "#typedown-final--city"
   },
   {
     selector: "input[id^='SCC_STATE_FL_VW_DESCR']",
-    elements: ["Department"],
+    elements: ["Province name (English)"],
     separator: "",
     modalFieldSelector: "#interaction-address--original-province",
     typedownFieldSelector: "#typedown-final--state"
   },
 ];
 
-window.countries["FRA"]["PRO_WEB_CALLBACK"] = String(function(originalTrigger, newEvent) {
-  let provinceElement = document.querySelector("input[id^='SCC_STATE_FL_VW_DESCR']");
-  provinceElement.value = provinceElement.value.replace(/-/g, " ");
-  originalTrigger(newEvent);
-});
+window.countries["CAN"]["PRO_WEB_MAPPING"] = [
+  {
+    selector: "#DERIVED_ADDRESS_ADDRESS1",
+    elements: ["Building number", "Street name"],
+    separator: " ",
+    modalFieldSelector: "#interaction-address--original-address-line-one",
+    typedownFieldSelector: "#typedown-final--address-line-one"
+  },
+  {
+    selector: "#DERIVED_ADDRESS_ADDRESS2",
+    elements: ["Building name"],
+    separator: "",
+    modalFieldSelector: "#interaction-address--original-address-line-two",
+    typedownFieldSelector: "#typedown-final--address-line-two"
+  },
+  {
+    selector: "#DERIVED_ADDRESS_ADDRESS3",
+    elements: ["PO Box number"],
+    separator: "",
+    modalFieldSelector: "#interaction-address--original-address-line-two",
+    typedownFieldSelector: "#typedown-final--address-line-two"
+  },
+  {
+    selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
+    elements: ["Postal code"],
+    separator: "-",
+    modalFieldSelector: "#interaction-address--original-postal-code",
+    typedownFieldSelector: "#typedown-final--postal-code"
+  },
+  {
+    selector: "input[id^='DERIVED_ADDRESS_CITY']",
+    elements: ["MUNICIPALITY NAME"],
+    separator: "",
+    modalFieldSelector: "#interaction-address--original-locality",
+    typedownFieldSelector: "#typedown-final--city"
+  },
+  {
+    selector: "input[id^='SCC_STATE_FL_VW_DESCR']",
+    elements: ["Province name (English)"],
+    separator: "",
+    modalFieldSelector: "#interaction-address--original-province",
+    typedownFieldSelector: "#typedown-final--state"
+  },
+];
 
-window.countries["FRA"]["PRO_WEB_COUNTRY"] = "FRA";
+// Logic here needs to be added
+
+window.countries["CAN"]["PRO_WEB_COUNTRY"] = "CAN";
 
 /* Global Intuitive specific settings */
 
-window.countries["FRA"]["GLOBAL_INTUITIVE_MAPPING"] = [
+window.countries["CAN"]["GLOBAL_INTUITIVE_MAPPING"] = [
   { selector: "#DERIVED_ADDRESS_ADDRESS1", elements: ["address.addressLine1"] },
   { selector: "#DERIVED_ADDRESS_ADDRESS2", elements: ["address.addressLine2"] },
   { selector: "input[id^='DERIVED_ADDRESS_CITY']", elements: ["address.locality"] },
-  { selector: "input[id^='SCC_STATE_FL_VW_DESCR']", elements: ["components.province1"] },
+  { selector: "input[id^='SCC_STATE_FL_VW_DESCR']", elements: ["components.organisation2"] },
   { selector: "input[id^='DERIVED_ADDRESS_POSTAL']", elements: ["address.postalCode"] },
 ];
 
-window.countries["FRA"]["GLOBAL_INTUITIVE_ISO3_COUNTRY"] = "FRA";
+window.countries["CAN"]["GLOBAL_INTUITIVE_ISO3_COUNTRY"] = "CAN";
+window.countries["CAN"]["GLOBAL_INTUITIVE_CALLBACK"] = String(function(data) {
+  var provinceMap = {
+    "AB": "Alberta",
+    "BC": "British Columbia",
+    "MB": "Manitoba",
+    "NB": "New Brunswick",
+    "NF": "Newfoundland (NF)",
+    "NL": "Newfoundland (NL)",
+    "NN": "Nunavut (NN)",
+    "NS": "Nova Scotia",
+    "NT": "Northwest Territories",
+    "NU": "Nunavut (NU)",
+    "ON": "Ontario",
+    "PE": "Prince Edward Island",
+    "QC": "Quebec",
+    "SK": "Saskatchewan",
+    "YT": "Yukon"
+  };
 
-window.countries["FRA"]["GLOBAL_INTUITIVE_CALLBACK"] = String(function(data) {
   let provinceElement = document.querySelector("input[id^='SCC_STATE_FL_VW_DESCR']");
-  provinceElement.value = provinceElement.value.replace(/-/g, " ");
+  //@ts-ignore
+  provinceElement.value = provinceMap[data.address.province];
 });

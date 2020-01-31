@@ -12,7 +12,7 @@ function setEdqConfigForCountry(iso3Country: string): void {
   // Try to load from localStorage
   if (!window.countries[iso3Country]) { 
     try {
-      window.countries[iso3Country] = JSON.parse(localStorage.getItem(`edq-${iso3Country}`));
+      window.countries[iso3Country] = JSON.parse(localStorage.getItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`));
       console.log(`EDQ Configuration for ${iso3Country} loaded from memory`);
     } catch(e) {
     }
@@ -23,6 +23,7 @@ function setEdqConfigForCountry(iso3Country: string): void {
     window.EdqConfig["PRO_WEB_SUBMIT_TRIGGERS"] = window.countries[iso3Country]["PRO_WEB_SUBMIT_TRIGGERS"];
     window.EdqConfig["PRO_WEB_COUNTRY"] = window.countries[iso3Country]["PRO_WEB_COUNTRY"];
     window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = window.countries[iso3Country]["PRO_WEB_COUNTRY"];
+    window.EdqConfig["PRO_WEB_CALLBACK"] = window.countries[iso3Country]["PRO_WEB_CALLBACK"];
 
     window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = window.countries[iso3Country]["PRO_WEB_TYPEDOWN_TRIGGER"];
     if (window.EdqConfig["PRO_WEB_AUTH_TOKEN"] && window.countries[iso3Country]["PRO_WEB_ON_DEMAND_MAPPING"]) {
@@ -44,6 +45,41 @@ function setEdqConfigForCountry(iso3Country: string): void {
   }
 }
 
+function getTypedownElement(edqConfig: object): HTMLElement {
+  if (edqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
+    let selector: HTMLElement;
+    if (typeof(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) === "string") {
+      return document.querySelector(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]);
+    } else {
+      return window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"];
+    }
+  }
+}
+
+function removeTypedownIntegration(typedownElement: HTMLElement): void {
+  try {
+    typedownElement.onclick = null;
+    typedownElement.setAttribute("onclick", null);
+  } catch(e) {}
+}
+
+function getGlobalIntuitiveElement(edqConfig: object): HTMLElement {
+  if (edqConfig["GLOBAL_INTUITIVE_ELEMENT"]) {
+    if (typeof(edqConfig["GLOBAL_INTUITIVE_ELEMENT"]) === "string") {
+      return document.querySelector(edqConfig["GLOBAL_INTUITIVE_ELEMENT"]);
+    } else {
+      return edqConfig["GLOBAL_INTUITIVE_ELEMENT"];
+    }
+  }
+}
+
+function removeGlobalIntuitiveIntegration(globalIntuitiveElement: any): void {
+  try {
+    globalIntuitiveElement.removeEventListener("keyup", globalIntuitiveElement.keyupHandler);
+    globalIntuitiveElement.removeEventListener("keydown", globalIntuitiveElement.keydownHandler);
+  } catch(e) {}
+}
+
 /*
  * Loads the country data
  */
@@ -52,7 +88,7 @@ function loadConfigurationForCountry(iso3Country: string, onload: any): void {
   countryScript.src = `https://edqprofservus.blob.core.windows.net/peoplesoft/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/${iso3Country}.js`;
   countryScript.onload = function() {
     console.log(`${iso3Country} settings loaded from Experian`);
-    localStorage.setItem(`edq-${iso3Country}`, JSON.stringify(window.countries[iso3Country]));
+    localStorage.setItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`, JSON.stringify(window.countries[iso3Country]));
     onload();
   }
 
@@ -76,7 +112,11 @@ let interval = setInterval(function() {
 
           // The country is not supported if we don't have a mapping
           if (!iso3Country) {
-            throw(`The country ${iso3Country} is currently not supported`);
+            // Remove all integrations
+            removeTypedownIntegration(getTypedownElement(window.EdqConfig));
+            removeGlobalIntuitiveIntegration(getGlobalIntuitiveElement(window.EdqConfig));
+            console.log(`The country ${iso3Country} is currently not supported`);
+            return;
           }
 
           if (iso3Country === window.EdqConfig.PRO_WEB_COUNTRY || 
@@ -84,7 +124,7 @@ let interval = setInterval(function() {
             return;
           } else {
             // Reset configuration
-            if (window.countries[iso3Country] || localStorage.getItem(`edq-${iso3Country}`)) {
+            if (window.countries[iso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`)) {
               setEdqConfigForCountry(iso3Country);
             } else { loadConfigurationForCountry(iso3Country, function() {
               setEdqConfigForCountry(iso3Country);
@@ -105,13 +145,7 @@ let interval = setInterval(function() {
 
             // Rebind typedown (if enabled)
             if (window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
-              let selector: HTMLElement;
-              if (typeof(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) === "string") {
-                selector = document.querySelector(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]);
-              } else {
-                selector = window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"];
-              }
-
+              let selector: HTMLElement = getTypedownElement(window.EdqConfig);
               selector.onclick = window.EDQ.address.proWeb.typedownEventListener;
             }
           }
@@ -140,7 +174,7 @@ let interval = setInterval(function() {
         {
           type: "click",
           element: trigger
-        },
+        }
       ],
       PRO_WEB_COUNTRY: "USA",
       PRO_WEB_MAPPING: [
@@ -248,7 +282,7 @@ let interval = setInterval(function() {
      */
     if (currentElement.getAttribute("DISABLE_HOSTED_COUNTRIES")) {
       setEdqConfigForCountry(initialIso3Country);
-    } else if (window.countries[initialIso3Country] || localStorage.getItem(`edq-${initialIso3Country}`)) {
+    } else if (window.countries[initialIso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${initialIso3Country}`)) {
       setEdqConfigForCountry(initialIso3Country);
     } else { loadConfigurationForCountry(initialIso3Country, function() {
         setEdqConfigForCountry(initialIso3Country);
