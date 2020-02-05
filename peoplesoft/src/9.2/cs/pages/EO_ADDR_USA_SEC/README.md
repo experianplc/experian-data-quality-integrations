@@ -23,6 +23,9 @@ To enable `County name` as an option, please follow the steps below:
 
 ![image](https://user-images.githubusercontent.com/5572859/73857434-ee1a6e00-4804-11ea-8813-912910bf5e03.png)
 
+> Please note that in the EdqConfigOverride, `addressLines: [0]` will be associated with Address Line 1, `addressLines: [1]` will be 
+  associated with Address Line 2, and so forth.
+  
 4. Save your settings
 5. Restart your Pro Web Service
 6. Override `PRO_WEB_MAPPING` by doing the following
