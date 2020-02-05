@@ -20,6 +20,7 @@ To enable `County name` as an option, please follow the steps below:
 1. Open QAS Configuration Editor
 2. Select "Database layout"
 3. Add an additional address line and fix `County name` to the line. 
+
 ![image](https://user-images.githubusercontent.com/5572859/73857434-ee1a6e00-4804-11ea-8813-912910bf5e03.png)
 
 4. Save your settings
