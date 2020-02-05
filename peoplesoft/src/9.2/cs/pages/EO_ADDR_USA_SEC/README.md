@@ -34,7 +34,7 @@ function EdqConfigOverride() {
         {
           selector: "#DERIVED_ADDRESS_ADDRESS1",
           addressLines: [0],
-          separator: " ",
+          separator: "",
           modalFieldSelector: "#interaction-address--original-address-line-one",
           typedownFieldSelector: "#typedown-final--address-line-one"
         },
@@ -62,14 +62,14 @@ function EdqConfigOverride() {
         {
           selector: "#DERIVED_ADDRESS_POSTAL",
           addressLines: [5],
-          separator: "-",
+          separator: "",
           modalFieldSelector: "#interaction-address--original-postal-code",
           typedownFieldSelector: "#typedown-final--postal-code"
         },
         {
           selector: "#DERIVED_ADDRESS_COUNTY",
           addressLines: [7],
-          separator: "-",
+          separator: "",
           modalFieldSelector: "#",
           typedownFieldSelector: "#"
         },
