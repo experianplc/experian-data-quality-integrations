@@ -59,7 +59,7 @@ let interval = setInterval(function() {
         }
       ],
 
-      GLOBAL_INTUITIVE_ELEMENT: (document.getElementById("DERIVED_ADDRESS_ADDRESS1") as HTMLInputElement),
+      GLOBAL_INTUITIVE_ELEMENT: document.getElementById("DERIVED_ADDRESS_ADDRESS1"),
       GLOBAL_INTUITIVE_MAPPING: [
         {
           selector: "#DERIVED_ADDRESS_ADDRESS1",

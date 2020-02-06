@@ -75,7 +75,7 @@ let interval = setInterval(function() {
         },
       ],
 
-      GLOBAL_INTUITIVE_ELEMENT: (document.getElementById("ADDRESS1") as HTMLInputElement),
+      GLOBAL_INTUITIVE_ELEMENT: document.getElementById("ADDRESS1"),
       GLOBAL_INTUITIVE_MAPPING: [
         { field: document.getElementById("ADDRESS1"), elements: ["address.addressLine1"] },
         { field: document.getElementById("ADDRESS2"), elements: ["address.addressLine2"] },

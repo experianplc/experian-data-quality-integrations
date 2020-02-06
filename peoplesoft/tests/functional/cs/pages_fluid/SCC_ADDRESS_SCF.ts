@@ -157,7 +157,7 @@ function typeAddress(address: any) {
 /**
  * The URL to the relevant iframe, SCC_ADDRESS_SCF
  */
-const URL = "http://bospsoftcs92.qas.com:8000/psc/ps_18/EMPLOYEE/SA/c/SCC_PROFILE_FL.SCC_ADDR_DTLS_FL.GBL";
+const URL = "http://bospsoftcs92.qas.com:18000/psc/ps_18/EMPLOYEE/SA/c/SCC_PROFILE_FL.SCC_ADDR_DTLS_FL.GBL";
 
 registerSuite("CS - SCC_ADDRESS_SCF Tests", {
   before: function() {
@@ -190,61 +190,6 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
         return window.frames.length > 0 || null;
       }))
       .switchToFrame(0) 
-      .then(pollUntil(function() {
-        return window.EDQ;
-      }))
-      .execute(function() { 
-        window.EDQ = null;
-        window.EdqConfig = null;
-
-        // This will refresh the instance with each change, re-creating the integration.
-        document.getElementById("SCC_STATE_FL_VW_DESCR").onchange = null;
-
-        let address1: any = document.getElementById("DERIVED_ADDRESS_ADDRESS1");
-        // Remove Typedown Integration
-        address1.onclick = null;
-        address1.setAttribute("onclick", null);
-
-        // Remove Global Intuitive Integration
-        address1.removeEventListener("keyup", address1.keyupHandler);
-        address1.removeEventListener("keydown", address1.keydownHandler);
-
-        // Remove all traces of integration
-        let okButton = document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN");
-        okButton.onclick = null;
-        okButton.setAttribute("onclick", null);
-
-        if (document.getElementById("edq-pegasus")) {
-          let pegasus = document.getElementById("edq-pegasus");
-          pegasus.remove();
-        }
-
-        if (document.getElementById("edq-verification-unicorn")) {
-          let verification = document.getElementById("edq-verification-unicorn");
-          verification.remove();
-        }
-
-        if (document.getElementById("edq-typedown-unicorn")) {
-          let typedown = document.getElementById("edq-typedown-unicorn");
-          typedown.remove();
-        }
-
-        if (document.getElementById("edq-global-intuitive-unicorn")) {
-          let globalIntuitive = document.getElementById("edq-global-intuitive-unicorn");
-          globalIntuitive.remove();
-        }
-
-        if (document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF")) {
-          let integration = document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF");
-          integration.remove();
-        }
-
-        if (window.EDQ === null) {
-          return true;
-        } 
-
-        return null;
-      })
   },
 
   tests: {
@@ -269,7 +214,7 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
       return this.remote
         .then(addProWebOnDemand())
         .then(pollUntil(function() {
-          return Boolean(window.EDQ && window.EdqConfig) || null; 
+          return Boolean(window.EDQ) || null; 
         }))
         .then(typeAddressAndSubmit({
           address1: "53 State Street",
@@ -424,55 +369,7 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
         return window.frames.length > 0 || null;
       }))
       .switchToFrame(0) 
-      .then(pollUntil(function() {
-        return window.EDQ;
-      }))
       .execute(function() { 
-        window.EDQ = null;
-        window.EdqConfig = null;
-
-        // This will refresh the instance with each change, re-creating the integration.
-        document.querySelector("input[id^='SCC_STATE_FL_VW_DESCR']").onchange = null;
-
-        let address1: any = document.getElementById("DERIVED_ADDRESS_ADDRESS1");
-        // Remove Typedown Integration
-        address1.onclick = null;
-        address1.setAttribute("onclick", null);
-
-        // Remove Global Intuitive Integration
-        address1.removeEventListener("keyup", address1.keyupHandler);
-        address1.removeEventListener("keydown", address1.keydownHandler);
-
-        // Remove all traces of integration
-        let okButton = document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN");
-        okButton.onclick = null;
-        okButton.setAttribute("onclick", null);
-
-        if (document.getElementById("edq-pegasus")) {
-          let pegasus = document.getElementById("edq-pegasus");
-          pegasus.remove();
-        }
-
-        if (document.getElementById("edq-verification-unicorn")) {
-          let verification = document.getElementById("edq-verification-unicorn");
-          verification.remove();
-        }
-
-        if (document.getElementById("edq-typedown-unicorn")) {
-          let typedown = document.getElementById("edq-typedown-unicorn");
-          typedown.remove();
-        }
-
-        if (document.getElementById("edq-global-intuitive-unicorn")) {
-          let globalIntuitive = document.getElementById("edq-global-intuitive-unicorn");
-          globalIntuitive.remove();
-        }
-
-        if (document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF")) {
-          let integration = document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF");
-          integration.remove();
-        }
-
         if (window.EDQ === null) {
           return true;
         } 
@@ -484,11 +381,7 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
         countryField.value = "Canada";
         window[`pAction_${window.winName}`](document.querySelector("form"), countryField.id);
 
-        try {
-          return window.EdqConfig.PRO_WEB_COUNTRY === "CAN";
-        } catch(e) {
-          return null;
-        }
+        return document.getElementById(countryField.id).getAttribute("value") === "Canada" || null;
       }))
   },
 

@@ -1,51 +1,43 @@
 import { createAssets } from "utils/functions/create-assets";
 import { countryToIso3 } from "utils/functions/country-to-iso3";
+import loadPollyfills from "utils/functions/polyfills";
+
+loadPollyfills();
 
 let currentElement = document.getElementById("edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF");
 
-/*
+/**
  * Update the EdqConfig configuration object based on the specific country.
- * The country configuration can be loaded from files or manually input by a user. 
+ * The country configuration can be loaded from files or manually input by a user.
  * By default country information is loaded from Azure.
+ *
+ * @param iso3Country - the country in ISO-3 format, e.g. USA for United States
+ * @param countryOverride - a function that overrides per
  */
-function setEdqConfigForCountry(iso3Country: string): void {
-  // Try to load from localStorage
-  if (!window.countries[iso3Country]) { 
+function setEdqConfigForCountry(iso3Country: string, countryOverride?: EdqConfigCountryOverrideFn): void {
+  if (!window.EdqCountries[iso3Country]) {
     try {
-      window.countries[iso3Country] = JSON.parse(localStorage.getItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`));
+      window.EdqCountries[iso3Country] = JSON.parse(localStorage.getItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`));
       console.log(`EDQ Configuration for ${iso3Country} loaded from memory`);
     } catch(e) {
     }
   }
+  Object.assign(window.EdqConfig, window.EdqCountries[iso3Country]);
 
-  // Load Pro web related changes
-  try { 
-    window.EdqConfig["PRO_WEB_SUBMIT_TRIGGERS"] = window.countries[iso3Country]["PRO_WEB_SUBMIT_TRIGGERS"];
-    window.EdqConfig["PRO_WEB_COUNTRY"] = window.countries[iso3Country]["PRO_WEB_COUNTRY"];
-    window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = window.countries[iso3Country]["PRO_WEB_COUNTRY"];
-    window.EdqConfig["PRO_WEB_CALLBACK"] = window.countries[iso3Country]["PRO_WEB_CALLBACK"];
-
-    window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"] = window.countries[iso3Country]["PRO_WEB_TYPEDOWN_TRIGGER"];
-    if (window.EdqConfig["PRO_WEB_AUTH_TOKEN"] && window.countries[iso3Country]["PRO_WEB_ON_DEMAND_MAPPING"]) {
-      window.EdqConfig["PRO_WEB_MAPPING"] = window.countries[iso3Country]["PRO_WEB_ON_DEMAND_MAPPING"];
-    } else {
-      window.EdqConfig["PRO_WEB_MAPPING"] = window.countries[iso3Country]["PRO_WEB_MAPPING"];
-    }
-  } catch(e) {
-    console.log(`Pro Web support not available for ${iso3Country}`);
-  }
-
-  // Global Intuitive 
-  try {
-    window.EdqConfig["GLOBAL_INTUITIVE_ISO3_COUNTRY"] = window.countries[iso3Country]["GLOBAL_INTUITIVE_ISO3_COUNTRY"];
-    window.EdqConfig["GLOBAL_INTUITIVE_MAPPING"] = window.countries[iso3Country]["GLOBAL_INTUITIVE_MAPPING"];
-    window.EdqConfig["GLOBAL_INTUITIVE_CALLBACK"] = window.countries[iso3Country]["GLOBAL_INTUITIVE_CALLBACK"];
-  } catch(e) {
-    console.log(`Global Intuitive support not available for ${iso3Country}`);
+  // If countryOverride is set, a function named EdqConfigCountryOverride is passed in
+  // which returns an object. The result of said object must contain the key associated
+  // with the current country. If these conditions are satisfied, overriding is possible.
+  if (countryOverride && countryOverride()[iso3Country]) {
+    const overrideObject: UnicornObject = countryOverride()[iso3Country];
+    Object.assign(window.EdqConfig, overrideObject);
   }
 }
 
-function getTypedownElement(edqConfig: object): HTMLElement {
+/**
+ * Returns the Typedown trigger that is set in the EDQ configuration object
+ * @param edqConfig - The object containing EDQ integration configuration
+ */
+function getTypedownElement(edqConfig: UnicornObject): HTMLElement {
   if (edqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
     let selector: HTMLElement;
     if (typeof(window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) === "string") {
@@ -56,6 +48,10 @@ function getTypedownElement(edqConfig: object): HTMLElement {
   }
 }
 
+/**
+ * Removes Typedown integration
+ * @param typedownElement - The element that invokes Typedown on click.
+ */
 function removeTypedownIntegration(typedownElement: HTMLElement): void {
   try {
     typedownElement.onclick = null;
@@ -63,7 +59,11 @@ function removeTypedownIntegration(typedownElement: HTMLElement): void {
   } catch(e) {}
 }
 
-function getGlobalIntuitiveElement(edqConfig: object): HTMLElement {
+/**
+ * Gets the element associated with Global Intuitive
+ * @param edqConfig - The object containing integration information
+ */
+function getGlobalIntuitiveElement(edqConfig: UnicornObject): GlobalIntuitiveElement {
   if (edqConfig["GLOBAL_INTUITIVE_ELEMENT"]) {
     if (typeof(edqConfig["GLOBAL_INTUITIVE_ELEMENT"]) === "string") {
       return document.querySelector(edqConfig["GLOBAL_INTUITIVE_ELEMENT"]);
@@ -73,22 +73,29 @@ function getGlobalIntuitiveElement(edqConfig: object): HTMLElement {
   }
 }
 
-function removeGlobalIntuitiveIntegration(globalIntuitiveElement: any): void {
+/**
+ * Remove the integration associated with Global Intuitive
+ * @param globalIntuitiveElement - The element that invokes Global Intuitive
+ */
+function removeGlobalIntuitiveIntegration(globalIntuitiveElement: GlobalIntuitiveElement): void {
   try {
     globalIntuitiveElement.removeEventListener("keyup", globalIntuitiveElement.keyupHandler);
     globalIntuitiveElement.removeEventListener("keydown", globalIntuitiveElement.keydownHandler);
   } catch(e) {}
 }
 
-/*
+/**
  * Loads the country data
+ *
+ * @param iso3Country - The ISO-3 country representation, e.g. USA for United States of America
+ * @param onload - The callback called after country loading
  */
 function loadConfigurationForCountry(iso3Country: string, onload: any): void {
   let countryScript = document.createElement("script");
   countryScript.src = `https://edqprofservus.blob.core.windows.net/peoplesoft/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/${iso3Country}.js`;
   countryScript.onload = function() {
     console.log(`${iso3Country} settings loaded from Experian`);
-    localStorage.setItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`, JSON.stringify(window.countries[iso3Country]));
+    localStorage.setItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`, JSON.stringify(window.EdqCountries[iso3Country]));
     onload();
   }
 
@@ -124,14 +131,16 @@ let interval = setInterval(function() {
             return;
           } else {
             // Reset configuration
-            if (window.countries[iso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`)) {
-              setEdqConfigForCountry(iso3Country);
+            if (window.EdqCountries[iso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${iso3Country}`)) {
+              setEdqConfigForCountry(iso3Country, window.EdqConfigCountryOverride);
             } else { loadConfigurationForCountry(iso3Country, function() {
-              setEdqConfigForCountry(iso3Country);
+              setEdqConfigForCountry(iso3Country, window.EdqConfigCountryOverride);
             })}
 
             // Rebind verification
-            window.EDQ.address.proWeb.activateValidation();
+            if (window.EDQ?.address?.proWeb?.activateValidation) { 
+              window.EDQ.address.proWeb.activateValidation();
+            }
             document.querySelectorAll("form .ps-edit").forEach((inputElement) => {
               // PeopleSoft needs each element to be detected as "changed" when saving. =
               // This ensures that for the current window, which is dynamically returned,
@@ -141,7 +150,9 @@ let interval = setInterval(function() {
             });
 
             // Rebind global intuitive
-            window.EDQ.address.globalIntuitive.activateValidation("#DERIVED_ADDRESS_ADDRESS1");
+            if (window.EDQ?.address?.globalIntuitive?.activateValidation) { 
+              window.EDQ.address.globalIntuitive.activateValidation("#DERIVED_ADDRESS_ADDRESS1");
+            }
 
             // Rebind typedown (if enabled)
             if (window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
@@ -149,8 +160,8 @@ let interval = setInterval(function() {
               selector.onclick = window.EDQ.address.proWeb.typedownEventListener;
             }
           }
-        } 
-      } 
+        }
+      }
     });
 
     const config = { childList: true, subtree: true };
@@ -164,11 +175,15 @@ let interval = setInterval(function() {
      */
     let trigger: HTMLAnchorElement = (document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN") as HTMLAnchorElement);
 
-    if (!window.countries) {
-      window.countries = {};
+    let customCountriesFound = false;
+    if (!window.EdqCountries) {
+      window.EdqCountries = {};
+    } else {
+      customCountriesFound = true;
     }
 
-    window.countries["USA"] = {
+    window.EdqCountries["USA"] = {
+      PRO_WEB_LAYOUT: "Database layout",
       PRO_WEB_TYPEDOWN_TRIGGER: "#DERIVED_ADDRESS_ADDRESS1",
       PRO_WEB_SUBMIT_TRIGGERS: [
         {
@@ -233,7 +248,7 @@ let interval = setInterval(function() {
     };
 
     // We want a copy of the original object, not to use the original.
-    let defaultEdqConfig = JSON.parse(JSON.stringify(window.countries["USA"]));
+    let defaultEdqConfig = JSON.parse(JSON.stringify(window.EdqCountries["USA"]));
 
     // Makes a copy of the string
     let href = trigger.href.repeat(1);
@@ -268,24 +283,39 @@ let interval = setInterval(function() {
     const soapActionUrl = currentElement.getAttribute("SOAP_ACTION_URL") || "http://www.qas.com/web-2013-12";    
     if (proWebAuthToken) {
       window.EdqConfig["PRO_WEB_AUTH_TOKEN"] = proWebAuthToken;
-      window.EdqConfig["PRO_WEB_LAYOUT"] = "AllElements";
 
     } else if (proWebServiceUrl && soapActionUrl) {
       window.EdqConfig["PRO_WEB_SERVICE_URL"] = proWebServiceUrl;
       window.EdqConfig["SOAP_ACTION_URL"] = soapActionUrl;
-      window.EdqConfig["PRO_WEB_LAYOUT"] = "Peoplesoft";
     };
 
     /*
      * Customers who want to just handle country configuration themselves can do so by
-     * including the window.countries object manually - including using our pre-created files.
+     * including the window.EdqCountries object manually - including using our pre-created files.
      */
-    if (currentElement.getAttribute("DISABLE_HOSTED_COUNTRIES")) {
+    
+    /**
+     * 
+     * There are two things we aim to achieve here:
+     * 1. We want customers to have the ability to provide their own country keys, 
+     *    meaning a object called EdqCountries = {}, where the keys in that object
+     *    are each specific country, e.g. FRA: {}. Each country configuration is a 
+     *    standard EdqConfig object.
+     *
+     *  2. We also want it to be possible for a customer to use our default items,
+     *     and override what they would like by including a function EdqConfigCountryOverride
+     *     and having that return the country information as mentioned in (1). 
+     *
+     *  In general the main distinction between (1) and (2) is that (2) uses our countries
+     *  and will load them by default and override items. Whereas (1) will result in nothing
+     *  from our servers being loaded. Other than that they are functionality equivalent.
+     */
+    if (customCountriesFound) {
       setEdqConfigForCountry(initialIso3Country);
-    } else if (window.countries[initialIso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${initialIso3Country}`)) {
-      setEdqConfigForCountry(initialIso3Country);
+    } else if (window.EdqCountries[initialIso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${initialIso3Country}`)) {
+      setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);
     } else { loadConfigurationForCountry(initialIso3Country, function() {
-        setEdqConfigForCountry(initialIso3Country);
+        setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);
       })
     }
 
