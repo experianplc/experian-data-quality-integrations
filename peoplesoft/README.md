@@ -20,7 +20,8 @@ by default somewhere like `C:\Program Files\QAS\QAS Pro Web 7.XX\Qawserve`, wher
 sub-version number.
 
 Go to LAYOUT.md in this folder and copy the entire contents. From there paste those contents to the
-Qawserve found above.
+Qawserve found above. Finally, after saving Qawserve, restart your Pro Web service (in Windows
+this can be done by going to Services, and manually restarting the service). 
 
 # Installation instructions (pre-created integrations)
 

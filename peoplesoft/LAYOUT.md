@@ -1,4 +1,3 @@
-
 [Peoplesoft]
 USAComment=
 USALastEdited=Friday, 31 January 2020
@@ -40,6 +39,7 @@ USAReadOnlyAddress=No
 USAAllowPartialAddress=Yes
 USAInvalidateAncillary=Yes
 USAUseExtendedRetention=Yes
+<<<<<<< HEAD
 USAEnableEnhancedLayout=No
 USADisplayEnhancedInfoOnPicklist=No
 USAEnableIntelligentLayout=No
@@ -213,4 +213,3 @@ CANPasteSelect9=
 CANPasteLine9=
 CANPasteSelect10=
 CANPasteLine10=
-
