@@ -195,45 +195,39 @@ let interval = setInterval(function() {
       PRO_WEB_MAPPING: [
         {
           selector: "#DERIVED_ADDRESS_ADDRESS1",
-          elements: ["Primary number", "Street"],
+          addressLines: [0],
           separator: " ",
           modalFieldSelector: "#interaction-address--original-address-line-one",
           typedownFieldSelector: "#typedown-final--address-line-one"
         },
         {
           selector: "#DERIVED_ADDRESS_ADDRESS2",
-          elements: ["Secondary number"],
+          addressLines: [1],
           separator: "",
           modalFieldSelector: "#interaction-address--original-address-line-two",
           typedownFieldSelector: "#typedown-final--address-line-two"
         },
         {
           selector: "input[id^='DERIVED_ADDRESS_CITY']",
-          elements: ["City name"],
+          addressLines: [3],
           separator: "",
           modalFieldSelector: "#interaction-address--original-locality",
           typedownFieldSelector: "#typedown-final--city"
         },
         {
           selector: "#SCC_STATE_FL_VW_DESCR",
-          elements: ["State name"],
+          addressLines: [4],
           separator: "",
           modalFieldSelector: "#interaction-address--original-province",
           typedownFieldSelector: "#typedown-final--state"
         },
         {
           selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
-          elements: ["ZIP Code", "+4 code"],
+          addressLines: [5],
           separator: "-",
           modalFieldSelector: "#interaction-address--original-postal-code",
           typedownFieldSelector: "#typedown-final--postal-code"
-        },
-        {
-          selector: "#DERIVED_ADDRESS_COUNTY",
-          elements: ["County name"],
-          separator: "",
-          modalFieldSelector: "#"
-        },
+        }
       ],
 
       GLOBAL_INTUITIVE_ELEMENT: "#DERIVED_ADDRESS_ADDRESS1",
