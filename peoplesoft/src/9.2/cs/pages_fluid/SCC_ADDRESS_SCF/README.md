@@ -3,6 +3,92 @@ Create an HTML area for the SCC_ADDRESS_SCF component and insert the contents of
 into the area. After which, please set the configuration options as specified below. Please see
 the top level PeopleSoft documentation for more info. 
 
+# Customization
+You may desire specific changes per country in order to get the most out of
+address validaiton
+
+## USA 
+
+### Pro Web (Typedown and Verification)
+By default, the integration uses `Database layout` as the layout for addresses. This represents
+our best practice address configuration. However it does not include `County name` by default. 
+To enable `County name` as an option, please follow the steps below:
+
+> Please note that these general instructions can be used to update the configuration 
+  more generally speaking, as well.
+
+1. Open QAS Configuration Editor
+2. Select "Database layout"
+3. Add an additional address line and fix `County name` to the line. 
+4. Change `State code` to `State name` by refixing the element.
+
+![image](https://user-images.githubusercontent.com/5572859/74271178-72279680-4cda-11ea-9b79-30e4a99641e0.png)
+
+> Please note that in the EdqConfigCountryOverride, `addressLines: [0]` will be associated with Address Line 1, `addressLines: [1]` will be 
+  associated with Address Line 2, and so forth.
+  
+5. Save your settings
+6. Restart your Pro Web Service
+7. Override `PRO_WEB_MAPPING` by doing the following
+
+```javascript
+function EdqCountryOverride() {
+  // This can be edited to override settings per country
+  return {
+    "USA": {
+      PRO_WEB_MAPPING: [
+        {
+          selector: "#DERIVED_ADDRESS_ADDRESS1",
+          addressLines: [0],
+          separator: "",
+          modalFieldSelector: "#interaction-address--original-address-line-one",
+          typedownFieldSelector: "#typedown-final--address-line-one"
+        },
+        {
+          selector: "#DERIVED_ADDRESS_ADDRESS2",
+          addressLines: [1],
+          separator: "",
+          modalFieldSelector: "#interaction-address--original-address-line-two",
+          typedownFieldSelector: "#typedown-final--address-line-two"
+        },
+        {
+          selector: "input[id^='DERIVED_ADDRESS_CITY']",
+          addressLines: [3],
+          separator: "",
+          modalFieldSelector: "#interaction-address--original-locality",
+          typedownFieldSelector: "#typedown-final--city"
+        },
+        {
+          selector: "#SCC_STATE_FL_VW_DESCR",
+          addressLines: [4],
+          separator: "",
+          modalFieldSelector: "#interaction-address--original-province",
+          typedownFieldSelector: "#typedown-final--state"
+        },
+        {
+          selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
+          addressLines: [5],
+          separator: "",
+          modalFieldSelector: "#interaction-address--original-postal-code",
+          typedownFieldSelector: "#typedown-final--postal-code"
+        },
+        {
+          selector: "input[id^='DERIVED_ADDRESS_COUNTY']",
+          addressLines: [7],
+          separator: "",
+          modalFieldSelector: "#interaction-address--original-postal-code",
+          typedownFieldSelector: "#typedown-final--postal-code"
+        }
+      ]
+    }
+  }
+}
+```
+
+7. Update `integration.html` with the new changes.
+8. Save the changes in the PeopleSoft Application Designer.
+
+
 # Usage
 ## Pro Web - Verification
 ![verification_scc_address_scf](https://user-images.githubusercontent.com/5572859/72351121-bc066800-36ad-11ea-97f3-0c0522f54afd.gif)
