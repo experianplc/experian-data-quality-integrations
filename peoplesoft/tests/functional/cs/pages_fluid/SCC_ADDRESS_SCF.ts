@@ -37,7 +37,7 @@ function addProWebOnDemand(useTypedown: boolean = false) {
         element.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
 
         let script = document.createElement("script");
-        script.src = `http://localhost:8000/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js`;
+        script.src = `http://localhost:8000/lib/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js`;
       
         document.body.appendChild(element);
         document.body.appendChild(script);
@@ -53,7 +53,7 @@ function addProWebOnPremise(useTypedown: boolean = false) {
         let element = document.createElement("div");
         element.id = "edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF";
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", String(useTypedown));
-        element.setAttribute("PRO_WEB_SERVICE_URL", "http://bospshcm92spi.qas.com:8080");
+        element.setAttribute("PRO_WEB_SERVICE_URL", "http://bosdatatest1.qas.com:8080");
 
         let script = document.createElement("script");
         script.src = `http://localhost:8000/lib/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js`;
@@ -341,7 +341,7 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
 registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
   before: function() {
     return this.remote
-      .setFindTimeout(10000)
+      .setFindTimeout(1000)
       .setExecuteAsyncTimeout(20000)
       .clearCookies()
       .sleep(1000)
@@ -413,7 +413,11 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
       return this.remote
         .then(addProWebOnDemand())
         .then(pollUntil(function() {
-          return document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN").getAttribute("href") === "#" || null;
+          if (window.EdqConfig && window.EdqConfig.PRO_WEB_COUNTRY === "CAN") {
+            return true;
+          } else {
+            return null;
+          }
         }))
         .sleep(500)
         .then(typeAddressCAN({
@@ -423,19 +427,12 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
         .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
           .click()
           .end()
-        .findByCssSelector(".ps_box-gridc span")
-          .click()
-          .end()
         .then(pollUntil(function() {
-          return window.frames.length > 0 || null;
+          return (document.querySelector("input[id^=DERIVED_ADDRESS_CITY]") as HTMLInputElement).value || null;
         }))
-        .switchToFrame(0)
-        .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
-          .getProperty("value")
-          .then(function(city) {
-            assert.equal(city, "ABBOTSFORD", "Full address includes city")
-          })
-          .end()
+        .then(function(city) {
+          assert.equal(city, "ABBOTSFORD", "Full address includes city")
+        })
     },
 
     /* ENABLE AFTER CREATING LAYOUT 
@@ -496,6 +493,7 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
           .clearValue() 
           .type("53 Corbould")
           .end()
+        .sleep(100) 
         .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
           .click()
           .type(" ")
