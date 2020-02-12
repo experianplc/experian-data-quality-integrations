@@ -196,7 +196,7 @@ let interval = setInterval(function() {
         {
           selector: "#DERIVED_ADDRESS_ADDRESS1",
           addressLines: [0],
-          separator: " ",
+          separator: "",
           modalFieldSelector: "#interaction-address--original-address-line-one",
           typedownFieldSelector: "#typedown-final--address-line-one"
         },
@@ -224,7 +224,7 @@ let interval = setInterval(function() {
         {
           selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
           addressLines: [5],
-          separator: "-",
+          separator: "",
           modalFieldSelector: "#interaction-address--original-postal-code",
           typedownFieldSelector: "#typedown-final--postal-code"
         }

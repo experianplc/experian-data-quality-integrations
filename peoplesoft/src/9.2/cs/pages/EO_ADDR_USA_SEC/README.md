@@ -83,7 +83,7 @@ function EdqConfigOverride() {
 ```
 
 7. Update `integration.html` with the new changes. 
-8. Save the changes in the PeopleSoft Application Designer
+8. Save the changes in the PeopleSoft Application Designer.
 
 # Usage
 You can go to Self Service -> Campus Personal Information -> Addresses -> Add a new address 

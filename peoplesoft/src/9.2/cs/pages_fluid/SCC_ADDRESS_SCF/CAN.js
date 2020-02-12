@@ -39,7 +39,7 @@ window.EdqCountries["CAN"] = {
     {
       selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
       addressLines: [5],
-      separator: "-",
+      separator: "",
       modalFieldSelector: "#interaction-address--original-postal-code",
       typedownFieldSelector: "#typedown-final--postal-code"
     },
@@ -66,11 +66,11 @@ window.EdqCountries["CAN"] = {
   /* Global Intuitive specific settings */
 
   GLOBAL_INTUITIVE_MAPPING: [
-    { selector: "#DERIVED_ADDRESS_ADDRESS1", elements: address.addressLine1 },
-    { selector: "#DERIVED_ADDRESS_ADDRESS2", elements: address.addressLine2 },
-    { selector: "input[id^='DERIVED_ADDRESS_CITY']", elements: address.locality },
-    { selector: "input[id^='SCC_STATE_FL_VW_DESCR']", elements: components.organisation2 },
-    { selector: "input[id^='DERIVED_ADDRESS_POSTAL']", elements: address.postalCode },
+    { selector: "#DERIVED_ADDRESS_ADDRESS1", elements: ["address.addressLine1"] },
+    { selector: "#DERIVED_ADDRESS_ADDRESS2", elements: ["address.addressLine2"] },
+    { selector: "input[id^='DERIVED_ADDRESS_CITY']", elements: ["address.locality"] },
+    { selector: "input[id^='SCC_STATE_FL_VW_DESCR']", elements: ["components.organisation2"] },
+    { selector: "input[id^='DERIVED_ADDRESS_POSTAL']", elements: ["address.postalCode"] },
   ],
 
   GLOBAL_INTUITIVE_ISO3_COUNTRY: "CAN",
