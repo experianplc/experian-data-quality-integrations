@@ -81,7 +81,8 @@ function removeGlobalIntuitiveIntegration(globalIntuitiveElement: GlobalIntuitiv
   try {
     globalIntuitiveElement.removeEventListener("keyup", globalIntuitiveElement.keyupHandler);
     globalIntuitiveElement.removeEventListener("keydown", globalIntuitiveElement.keydownHandler);
-  } catch(e) {}
+  } catch(e) {
+  }
 }
 
 /**
@@ -122,7 +123,8 @@ let interval = setInterval(function() {
             // Remove all integrations
             removeTypedownIntegration(getTypedownElement(window.EdqConfig));
             removeGlobalIntuitiveIntegration(getGlobalIntuitiveElement(window.EdqConfig));
-            console.log(`The country ${iso3Country} is currently not supported`);
+            let countryName = (document.getElementById("SCC_CNT_ADFMTVW_DESCR") as HTMLInputElement).value;
+            console.log(`The country ${countryName} is currently not supported`);
             return;
           }
 
@@ -175,12 +177,9 @@ let interval = setInterval(function() {
      */
     let trigger: HTMLAnchorElement = (document.getElementById("SCC_PROF_FL_DRV_SAVE_BTN") as HTMLAnchorElement);
 
-    let customCountriesFound = false;
     if (!window.EdqCountries) {
       window.EdqCountries = {};
-    } else {
-      customCountriesFound = true;
-    }
+    } 
 
     window.EdqCountries["USA"] = {
       PRO_WEB_LAYOUT: "Database layout",
@@ -304,9 +303,7 @@ let interval = setInterval(function() {
      *  and will load them by default and override items. Whereas (1) will result in nothing
      *  from our servers being loaded. Other than that they are functionality equivalent.
      */
-    if (customCountriesFound) {
-      setEdqConfigForCountry(initialIso3Country);
-    } else if (window.EdqCountries[initialIso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${initialIso3Country}`)) {
+    if (window.EdqCountries[initialIso3Country] || localStorage.getItem(`edq-SCC_ADDRESS_SCF-${initialIso3Country}`)) {
       setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);
     } else { loadConfigurationForCountry(initialIso3Country, function() {
         setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);

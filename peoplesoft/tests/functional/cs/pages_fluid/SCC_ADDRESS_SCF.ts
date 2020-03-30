@@ -53,7 +53,7 @@ function addProWebOnPremise(useTypedown: boolean = false) {
         let element = document.createElement("div");
         element.id = "edq-9.2-cs-pages_fluid-SCC_ADDRESS_SCF";
         element.setAttribute("PRO_WEB_USE_TYPEDOWN", String(useTypedown));
-        element.setAttribute("PRO_WEB_SERVICE_URL", "http://bosdatatest1.qas.com:8080");
+        element.setAttribute("PRO_WEB_SERVICE_URL", "http://bospsoftcs92.qas.com:8080");
 
         let script = document.createElement("script");
         script.src = `http://localhost:8000/lib/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js`;
@@ -67,7 +67,7 @@ function addProWebOnPremise(useTypedown: boolean = false) {
 
 
 
-function typeAddressAndSubmit(address: any) {
+function typeAddressUSA(address: any) {
   return function() {
     return this.parent
       .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
@@ -94,11 +94,6 @@ function typeAddressAndSubmit(address: any) {
         .clearValue()
         .type(address.county || "")
         .end()
-      .sleep(2000)
-      .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
-        .click()
-        .end()
-
   };
 }
 
@@ -127,6 +122,33 @@ function typeAddressCAN(address: any) {
         .end()
   };
 }
+
+function typeAddressFRA(address: any) {
+  return function() {
+    return this.parent
+      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .clearValue()
+        .type(address.address1 || "")
+        .end()
+      .findByCssSelector("#DERIVED_ADDRESS_ADDRESS2")
+        .clearValue()
+        .type(address.address2 || "")
+        .end()
+      .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
+        .clearValue()
+        .type(address.city || "")
+        .end()
+      .findByCssSelector("input[id^=SCC_STATE_FL_VW_DESCR]")
+        .clearValue()
+        .type(address.state || "")
+        .end()
+      .findByCssSelector("input[id^=DERIVED_ADDRESS_POSTAL]")
+        .clearValue()
+        .type(address.postal || "")
+        .end()
+  };
+}
+
 
 function typeAddress(address: any) {
   return function() {
@@ -190,15 +212,26 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
         return window.frames.length > 0 || null;
       }))
       .switchToFrame(0) 
+      .then(pollUntil(function() {
+        let countryField = (document.getElementById("SCC_CNT_ADFMTVW_DESCR") as HTMLInputElement);
+        countryField.value = "United States";
+        window[`pAction_${window.winName}`](document.querySelector("form"), countryField.id);
+
+        return document.getElementById(countryField.id).getAttribute("value") === "United States" || null;
+      }))
+
   },
 
   tests: {
     "Pro Web without adding integration fails": function() {
       return this.remote
-        .then(typeAddressAndSubmit({
+        .then(typeAddressUSA({
           address1: "53 State Street",
           postal: "02109-2820"
         }))
+        .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
+          .click()
+          .end()
         .then(pollUntil(function() {
           return document.querySelector("input[id^='DERIVED_ADDRESS_CITY']");
         }))
@@ -216,19 +249,20 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
         .then(pollUntil(function() {
           return Boolean(window.EDQ) || null; 
         }))
-        .then(typeAddressAndSubmit({
+        .then(typeAddressUSA({
           address1: "53 State Street",
           postal: "02109-2820"
         }))
-        .then(pollUntil(function() {
-          return (document.querySelector("input[id^=DERIVED_ADDRESS_CITY]") as HTMLInputElement).value || null;
-        }))
-        .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
-          .getProperty("value")
-          .then(function(city) {
-            assert.equal(city, "Boston", "Full address includes city")
-          })
+        .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
+          .click()
           .end()
+        .sleep(1000) 
+        .then(pollUntil(function() {
+          return (document.querySelector("input[id^='DERIVED_ADDRESS_CITY']") as HTMLInputElement)?.value;
+        }))
+        .then(function(city) {
+          assert.equal(city, "Boston", "Full address includes city")
+        })
     },
     
     "Pro Web with PRO_WEB_SERVICE_URL works": function() {
@@ -237,15 +271,18 @@ registerSuite("CS - SCC_ADDRESS_SCF Tests", {
         .then(pollUntil(function() {
           return Boolean(window.EDQ && window.EdqConfig) || null; 
         }))
-        .then(typeAddressAndSubmit({
+        .then(typeAddressUSA({
           address1: "125 Summer St",
           address2: "Ste 1020",
           postal: "02110"
         }))
+        .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
+          .click()
+          .end()
         .then(pollUntil(function() {
-          return (document.querySelector("input[id^=DERIVED_ADDRESS_CITY]") as HTMLInputElement).value || null;
+          return (document.querySelector("input[id^='DERIVED_ADDRESS_CITY']") as HTMLInputElement).value || null;
         }))
-        .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
+        .findByCssSelector("input[id^='DERIVED_ADDRESS_CITY']")
           .getProperty("value")
           .then(function(city: string) {
             assert.equal(city, "Boston", "Full addreess includes city")
@@ -347,14 +384,14 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
       .sleep(1000)
       .get(URL)
       .findByCssSelector("#userid")
-      .type("PS")
-      .end()
+        .type("PS")
+        .end()
       .findByCssSelector("#pwd")
-      .type("Hello123")
-      .end()
+        .type("Hello123")
+        .end()
       .findByCssSelector("[name='Submit']")
-      .click()
-      .end()
+        .click()
+        .end()
       .sleep(1000) 
   },
 
@@ -442,7 +479,7 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
         .then(pollUntil(function() {
           return Boolean(window.EDQ && window.EdqConfig) || null; 
         }))
-        .then(typeAddressAndSubmit({
+        .then(typeAddressCAN({
           address1: "125 Summer St",
           address2: "Ste 1020",
           postal: "02110"
@@ -512,6 +549,184 @@ registerSuite("CS - SCC_ADDRESS_SCF - CAN Tests", {
         }))
         .then(function(postal: string) {
           assert.equal(postal, "V3G 1T4", "Postal is returned")
+        })
+    }
+  }
+});
+
+registerSuite("CS - SCC_ADDRESS_SCF - FRA Tests", {
+  before: function() {
+    return this.remote
+      .setFindTimeout(1000)
+      .setExecuteAsyncTimeout(20000)
+      .clearCookies()
+      .sleep(1000)
+      .get(URL)
+      .findByCssSelector("#userid")
+      .type("PS")
+      .end()
+      .findByCssSelector("#pwd")
+      .type("Hello123")
+      .end()
+      .findByCssSelector("[name='Submit']")
+      .click()
+      .end()
+      .sleep(1000) 
+  },
+
+  beforeEach: function() {
+    // Go to the page with the address
+    return this.remote  
+      .get(URL)
+      .findByCssSelector(".ps_grid-cell")
+        .click()
+        .end()
+      .then(pollUntil(function() {
+        return window.frames.length > 0 || null;
+      }))
+      .switchToFrame(0) 
+      .execute(function() { 
+        if (window.EDQ === null) {
+          return true;
+        } 
+
+        return null;
+      })
+      .then(pollUntil(function() {
+        let countryField = (document.getElementById("SCC_CNT_ADFMTVW_DESCR") as HTMLInputElement);
+        countryField.value = "France";
+        window[`pAction_${window.winName}`](document.querySelector("form"), countryField.id);
+
+        return document.getElementById(countryField.id).getAttribute("value") === "France" || null;
+      }))
+  },
+
+  afterEach() {
+    return this.remote  
+      .refresh()
+  },
+
+  tests: {
+    "FRA - Pro Web without adding integration fails": function() {
+      return this.remote
+        .sleep(2000)
+        .then(typeAddressFRA({
+          address1: "5 ROUTE WASHINGTON METREAU",
+          postal: "17270"
+        }))
+        .then(pollUntil(function() {
+          return document.querySelector("input[id^='DERIVED_ADDRESS_CITY']");
+        }))
+        .findByCssSelector("input[id^='DERIVED_ADDRESS_CITY']")
+          .getProperty("value")
+          .then(function(city: string) {
+            assert.equal(city, "", "City is not populated");
+          })
+          .end()
+    },
+
+    "FRA - Pro Web with PRO_WEB_AUTH_TOKEN works": function() {
+      return this.remote
+        .then(addProWebOnDemand())
+        .then(pollUntil(function() {
+          if (window.EdqConfig && window.EdqConfig.PRO_WEB_COUNTRY === "FRA") {
+            return true;
+          } else {
+            return null;
+          }
+        }))
+        .sleep(500)
+        .then(typeAddressFRA({
+          address1: "5 ROUTE WASHINGTON METREAU",
+          postal: "17270"
+        }))
+        .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
+          .click()
+          .end()
+        .then(pollUntil(function() {
+          return (document.querySelector("input[id^=DERIVED_ADDRESS_CITY]") as HTMLInputElement).value || null;
+        }))
+        .then(function(city) {
+          assert.equal(city, "ST PIERRE DU PALAIS", "Full address includes city")
+        })
+    },
+
+    "FRA - Pro Web with PRO_WEB_SERVICE_URL works": function() {
+      return this.remote
+        .then(addProWebOnPremise())
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && window.EdqConfig) || null; 
+        }))
+        .then(typeAddressFRA({
+          address1: "Am Wasserturm",
+          postal: "67120"
+        }))
+        .findByCssSelector("#SCC_PROF_FL_DRV_SAVE_BTN")
+          .click()
+          .end()
+        .then(pollUntil(function() {
+          return (document.querySelector("input[id^=DERIVED_ADDRESS_CITY]") as HTMLInputElement).value || null;
+        }))
+        .findByCssSelector("input[id^=DERIVED_ADDRESS_CITY]")
+          .getProperty("value")
+          .then(function(city: string) {
+            assert.equal(city, "KOLBSHEIM", "Full addreess includes city")
+          })
+          .end()
+    }, 
+
+    "FRA - Global Intuitive without adding integration does not work": function() {
+      return this.remote
+        .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1");
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .clearValue() 
+          .type("5 route Washington Metreau")
+          .end()
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .click()
+          .type(" ")
+          .end()
+        .execute(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
+        })
+        .then(function(selector) {
+          assert.equal(selector, null, "No suggestions an be found");
+        })
+    },
+
+    "FRA - Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
+      return this.remote
+        .then(addGlobalIntuitive())
+        .then(pollUntil(function() {
+          return Boolean(window.EDQ && 
+            window.EdqConfig &&
+            document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+          ) || null; 
+        }))
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .clearValue() 
+          .type("5 route Washington Metreau")
+          .end()
+        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+          .click()
+          .type(" ")
+          .end()
+        .then(pollUntil(function() {
+          return document.querySelector(".edq-global-intuitive-address-suggestion");
+        }))
+        .findByCssSelector(".edq-global-intuitive-address-suggestion")
+          .click()
+          .end()
+        .then(pollUntil(function() {
+          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1").getAttribute("edq-metadata");
+        }))
+        .then(pollUntil(function() {
+          return (document.querySelector("input[id^='DERIVED_ADDRESS_POSTAL']") as HTMLInputElement).value || null;
+        }))
+        .then(function(postal: string) {
+          assert.equal(postal, "17270", "Postal is returned")
         })
     }
   }

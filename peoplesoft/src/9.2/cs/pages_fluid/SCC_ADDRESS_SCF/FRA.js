@@ -15,90 +15,45 @@ window.EdqCountries["FRA"] = {
     },
   ],
 
-  PRO_WEB_ON_DEMAND_MAPPING: [
-    {
-      selector: "#DERIVED_ADDRESS_ADDRESS1",
-      elements: ["Building number", "Street name"],
-      separator: " ",
-      modalFieldSelector: "#interaction-address--original-address-line-one",
-      typedownFieldSelector: "#typedown-final--address-line-one"
-    },
-    {
-      selector: "#DERIVED_ADDRESS_ADDRESS2",
-      elements: ["AddressLine2"],
-      separator: "",
-      modalFieldSelector: "#interaction-address--original-address-line-two",
-      typedownFieldSelector: "#typedown-final--address-line-two"
-    },
-    {
-      selector: "#DERIVED_ADDRESS_ADDRESS3",
-      elements: ["AddressLine3"],
-      separator: "",
-      modalFieldSelector: "#interaction-address--original-address-line-two",
-      typedownFieldSelector: "#typedown-final--address-line-two"
-    },
-    {
-      selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
-      elements: ["Postcode"],
-      separator: "",
-      modalFieldSelector: "#interaction-address--original-postal-code",
-      typedownFieldSelector: "#typedown-final--postal-code"
-    },
-    {
-      selector: "input[id^='DERIVED_ADDRESS_CITY']",
-      elements: ["Town"],
-      separator: "",
-      modalFieldSelector: "#interaction-address--original-locality",
-      typedownFieldSelector: "#typedown-final--city"
-    },
-    {
-      selector: "input[id^='SCC_STATE_FL_VW_DESCR']",
-      elements: ["Département"],
-      separator: "",
-      modalFieldSelector: "#interaction-address--original-province",
-      typedownFieldSelector: "#typedown-final--state"
-    },
-  ],
-
   PRO_WEB_MAPPING: [
     {
       selector: "#DERIVED_ADDRESS_ADDRESS1",
-      elements: ["Number", "Street name"],
+      addressLines: [0],
       separator: " ",
       modalFieldSelector: "#interaction-address--original-address-line-one",
       typedownFieldSelector: "#typedown-final--address-line-one"
     },
     {
       selector: "#DERIVED_ADDRESS_ADDRESS2",
-      elements: ["Company name"],
+      addressLines: [1],
       separator: "",
       modalFieldSelector: "#interaction-address--original-address-line-two",
       typedownFieldSelector: "#typedown-final--address-line-two"
     },
     {
       selector: "#DERIVED_ADDRESS_ADDRESS3",
-      elements: ["Additional geographic data"],
+      addressLines: [2],
       separator: "",
       modalFieldSelector: "#interaction-address--original-address-line-two",
       typedownFieldSelector: "#typedown-final--address-line-two"
     },
     {
       selector: "input[id^='DERIVED_ADDRESS_POSTAL']",
-      elements: ["Postcode"],
+      addressLines: [5],
       separator: "-",
       modalFieldSelector: "#interaction-address--original-postal-code",
       typedownFieldSelector: "#typedown-final--postal-code"
     },
     {
       selector: "input[id^='DERIVED_ADDRESS_CITY']",
-      elements: ["TOWN"],
+      addressLines: [3],
       separator: "",
       modalFieldSelector: "#interaction-address--original-locality",
       typedownFieldSelector: "#typedown-final--city"
     },
     {
       selector: "input[id^='SCC_STATE_FL_VW_DESCR']",
-      elements: ["Department"],
+      addressLines: [4],
       separator: "",
       modalFieldSelector: "#interaction-address--original-province",
       typedownFieldSelector: "#typedown-final--state"
@@ -127,6 +82,5 @@ window.EdqCountries["FRA"] = {
     let provinceElement = document.querySelector("input[id^='SCC_STATE_FL_VW_DESCR']");
     provinceElement.value = provinceElement.value.replace(/-/g, " ");
   })
-
 };
 

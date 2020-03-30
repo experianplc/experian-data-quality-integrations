@@ -6,9 +6,6 @@ function countryToIso3(country) {
         "United States of America": "USA",
         "Canada": "CAN",
         "France": "FRA",
-        "Germany": "DEU",
-        "Italy": "ITA",
-        "United Kingdom": "GBR"
     };
     return countries[country];
 }
