@@ -88,6 +88,24 @@ function EdqConfigCountryOverride() {
 7. Update `integration.html` with the new changes.
 8. Save the changes in the PeopleSoft Application Designer.
 
+If desired you can override country to ISO3 code configuration by using `EdqCountriesOverride`. 
+
+For example, if your PeopleSoft installation calls "United States" "The United States of America",
+the name "The United States of America" by default is not associated with any ISO3 code for our
+integration and therefore your integration would not work if you selected "The United States of
+America". 
+
+Overriding the default country to ISO3 list can be done as follows:
+
+```javascript
+function EdqCountriesOverride() {
+  return {
+    "The United States of America": "USA"
+  }
+}
+```
+Once this is done "The United States of America" will be associated with "USA" and the associated
+address information.
 
 # Usage
 ## Pro Web - Verification

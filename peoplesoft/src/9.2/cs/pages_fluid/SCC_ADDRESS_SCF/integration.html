@@ -1,5 +1,14 @@
 <script>
-  function EdqCountryOverride() {
+  // This can be edited to add new countries that have not already been mapped.
+  // Usually this is to add alternate spellings of countries, e.g. { "Etats-Unis": "USA" }
+  // This is necessary if your countries are not supported by default.
+  function EdqCountriesOverride() {
+    return {
+      "Change-To-Your-Country-Name": "Change-To-Your-Country-ISO3-Code"
+    };
+  }
+
+  function EdqConfigCountryOverride() {
     // This can be edited to override settings per country
     return {
       "{Replace with ISO-3 Country}": {
@@ -17,4 +26,5 @@
 <script
   type="text/javascript"
   src="https://edqprofservus.blob.core.windows.net/peoplesoft/9.2/cs/pages_fluid/SCC_ADDRESS_SCF/integration.js">
-</script>
+<
+  "Change-To-Your-Country-Name": "Change-To-Your-Country-ISO3-Code"/script>
