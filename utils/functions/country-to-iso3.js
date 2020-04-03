@@ -7,6 +7,11 @@ function countryToIso3(country) {
         "Canada": "CAN",
         "France": "FRA",
     };
+    Object.keys(countries).forEach(function (key) {
+        if (!countries[countries[key]]) {
+            countries[countries[key]] = countries[key];
+        }
+    });
     return countries[country];
 }
 exports.countryToIso3 = countryToIso3;
