@@ -12,6 +12,14 @@ export function countryToIso3(country) {
      */
   };
 
+  Object.keys(countries).forEach((key) => {
+    // For continuity we want to map the key to itself because we're treating the ISO-3 country-code
+    // as primary source of truth respect to country files.
+    if (!countries[countries[key]]) {
+      countries[countries[key]] = countries[key];
+    }
+  });
+
   return countries[country];
 }
 
