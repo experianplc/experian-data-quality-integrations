@@ -103,7 +103,7 @@ function loadConfigurationForCountry(iso3Country: string, onload: any): void {
   document.body.appendChild(countryScript);
 }
 
-let interval = setInterval(function() {
+let enableIntegration = function() {
   if (document.querySelector("input[id^='CUST_ADDRESS_ADDRESS1']") !== null) {
     document.getElementById("#ICSave").setAttribute("edq-integration-set", "true");
 
@@ -113,9 +113,11 @@ let interval = setInterval(function() {
      * When the form changes, check to see if the country changed. If so,
      * update the EdqConfig
      */
+    // Looks like the simplest thing is basically to check to see if the fields exist. If they do,
+    // renable the integration by resetting the binding. If they do not, just ignore. 
     let formObserver = new MutationObserver(function(mutationsList, observer) { 
       for (let mutation of mutationsList) { 
-        if (mutation.type === "childList") { 
+        if (mutation.type === "childList" && document.querySelector(window.EdqConfig.PRO_WEB_MAPPING[0].selector)) { 
           // End it if the country did not change
           const country = (document.querySelector("input[id^='CUST_ADDRESS_COUNTRY']") as HTMLInputElement).value;
           const iso3Country = countryToIso3(country);
@@ -130,47 +132,42 @@ let interval = setInterval(function() {
             return;
           }
 
-          if (iso3Country === window.EdqConfig.PRO_WEB_COUNTRY || 
-            iso3Country === window.EdqConfig.GLOBAL_INTUITIVE_ISO3_COUNTRY) {
-            return;
-          } else {
-            // Reset configuration
-            if (window.EdqCountries[iso3Country] || localStorage.getItem(`edq-9.2-fscm-pages_cluid-CUST_GENERAL1-${iso3Country}`)) {
-              setEdqConfigForCountry(iso3Country, window.EdqConfigCountryOverride);
-            } else { loadConfigurationForCountry(iso3Country, function() {
-              setEdqConfigForCountry(iso3Country, window.EdqConfigCountryOverride);
-            })}
+          // Reset configuration
+          if (window.EdqCountries[iso3Country] || localStorage.getItem(`edq-9.2-fscm-pages_fluid-CUST_GENERAL1-${iso3Country}`)) {
+            setEdqConfigForCountry(iso3Country, window.EdqConfigCountryOverride);
+          } else { loadConfigurationForCountry(iso3Country, function() {
+            setEdqConfigForCountry(iso3Country, window.EdqConfigCountryOverride);
+          })}
 
-            // Rebind verification
-            if (window.EDQ?.address?.proWeb?.activateValidation) { 
-              window.EDQ.address.proWeb.activateValidation();
-            }
+          // Rebind verification
+          if (window.EDQ?.address?.proWeb?.activateValidation) { 
+            window.EDQ.address.proWeb.activateValidation();
+          }
 
-            document.querySelectorAll("form .ps-edit").forEach((inputElement) => {
-              // PeopleSoft needs each element to be detected as "changed" when saving. =
-              // This ensures that for the current window, which is dynamically returned,
-              // all form elements are subscribed as 'changed'
-              //@ts-ignore
-              window[`addchg_${window.winName}`](inputElement) 
-            });
+          document.querySelectorAll("form .ps-edit").forEach((inputElement) => {
+            // PeopleSoft needs each element to be detected as "changed" when saving. =
+            // This ensures that for the current window, which is dynamically returned,
+            // all form elements are subscribed as 'changed'
+            //@ts-ignore
+            window[`addchg_${window.winName}`](inputElement) 
+          });
 
-            // Rebind global intuitive
-            if (window.EDQ?.address?.globalIntuitive?.activateValidation) { 
-              window.EDQ.address.globalIntuitive.activateValidation("input[id^='CUST_ADDRESS_ADDRESS1']");
-            }
+          // Rebind global intuitive
+          if (window.EDQ?.address?.globalIntuitive?.activateValidation) { 
+            window.EDQ.address.globalIntuitive.activateValidation("input[id^='CUST_ADDRESS_ADDRESS1']");
+          }
 
-            // Rebind typedown (if enabled)
-            if (window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
-              let selector: HTMLElement = getTypedownElement(window.EdqConfig);
-              selector.onclick = window.EDQ.address.proWeb.typedownEventListener;
-            }
+          // Rebind typedown (if enabled)
+          if (window.EdqConfig["PRO_WEB_TYPEDOWN_TRIGGER"]) {
+            let selector: HTMLElement = getTypedownElement(window.EdqConfig);
+            selector.onclick = window.EDQ.address.proWeb.typedownEventListener;
           }
         }
       }
     });
 
-    const config = { childList: true, subtree: true, attributes: true };
-    formObserver.observe(document.querySelector("form"), config);
+    const config = { childList: true, subtree: true };
+    formObserver.observe(document.querySelector(".ps_pagecontainer"), config);
 
     /*
         By default PeopleSoft's Save button is embedded in the href
@@ -178,7 +175,7 @@ let interval = setInterval(function() {
         the change shown below in order to make sure that after
         saving the original event is called.
      */
-    let trigger: HTMLAnchorElement = (document.getElementById("#ICSave") as HTMLAnchorElement);
+    let triggerSelector: string = "[id='#ICSave']";
 
     if (!window.EdqCountries) {
       window.EdqCountries = {};
@@ -190,7 +187,7 @@ let interval = setInterval(function() {
       PRO_WEB_SUBMIT_TRIGGERS: [
         {
           type: "click",
-          element: trigger
+          element: triggerSelector
         }
       ],
       PRO_WEB_COUNTRY: "USA",
@@ -296,7 +293,7 @@ let interval = setInterval(function() {
      * Customers who want to just handle country configuration themselves can do so by
      * including the window.EdqCountries object manually - including using our pre-created files.
      */
-    
+
     /**
      * 
      * There are two things we aim to achieve here:
@@ -316,10 +313,12 @@ let interval = setInterval(function() {
     if (window.EdqCountries[initialIso3Country] || localStorage.getItem(`edq-9.2-fscm-pages_cluid-CUST_GENERAL1-${initialIso3Country}`)) {
       setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);
     } else { loadConfigurationForCountry(initialIso3Country, function() {
-        setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);
-      })
+      setEdqConfigForCountry(initialIso3Country, window.EdqConfigCountryOverride);
+    })
     }
 
-   createAssets(currentElement); 
+    createAssets(currentElement); 
   }
-}, 1000);
+}
+
+let interval = setInterval(enableIntegration, 1000);

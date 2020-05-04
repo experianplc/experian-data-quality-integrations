@@ -206,8 +206,9 @@ registerSuite("FSCM - CUST_GENERAL1 Tests", {
           return Boolean(window.EDQ && window.EdqConfig) || null; 
         }))
         .then(typeAddressUSA({
-          address1: "53 State Street Lbby 1",
-          postal: "02109-3208"
+          address1: "53 State St Lbby 2",
+          state: "MA",
+          postal: "02109"
         }))
         .findById(SAVE_BUTTON_SELECTOR)
           .click()
@@ -255,14 +256,14 @@ registerSuite("FSCM - CUST_GENERAL1 Tests", {
 
     "Global Intuitive without adding integration does not work": function() {
       return this.remote
-        .then(pollUntil(function() {
-          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1");
-        }))
-        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .then(pollUntil(function(ADDRESS1_SELECTOR) {
+          return document.querySelector(ADDRESS1_SELECTOR);
+        }, [ ADDRESS1_SELECTOR ]))
+        .findByCssSelector(ADDRESS1_SELECTOR)
           .clearValue() 
           .type("53 State Street Boston")
           .end()
-        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .findByCssSelector(ADDRESS1_SELECTOR)
           .click()
           .type(" ")
           .end()
@@ -277,17 +278,17 @@ registerSuite("FSCM - CUST_GENERAL1 Tests", {
     "Global Intuitive with GLOBAL_INTUITIVE_AUTH_TOKEN works": function() {
       return this.remote
         .then(addGlobalIntuitive())
-        .then(pollUntil(function() {
+        .then(pollUntil(function(ADDRESS1_SELECTOR) {
           return Boolean(window.EDQ && 
             window.EdqConfig &&
-            document.querySelector("#DERIVED_ADDRESS_ADDRESS1")
+            document.querySelector(ADDRESS1_SELECTOR)
           ) || null; 
-        }))
-        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        }, [ ADDRESS1_SELECTOR ]))
+        .findByCssSelector(ADDRESS1_SELECTOR)
           .clearValue() 
           .type("53 State Street Boston")
           .end()
-        .findByCssSelector("#DERIVED_ADDRESS_ADDRESS1")
+        .findByCssSelector(ADDRESS1_SELECTOR)
           .click()
           .type(" ")
           .end()
@@ -297,12 +298,12 @@ registerSuite("FSCM - CUST_GENERAL1 Tests", {
         .findByCssSelector(".edq-global-intuitive-address-suggestion")
           .click()
           .end()
-        .then(pollUntil(function() {
-          return document.querySelector("#DERIVED_ADDRESS_ADDRESS1").getAttribute("edq-metadata");
-        }))
-        .then(pollUntil(function() {
-          return (document.querySelector("input[id^='DERIVED_ADDRESS_CITY']") as HTMLInputElement).value || null;
-        }))
+        .then(pollUntil(function(ADDRESS1_SELECTOR) {
+          return document.querySelector(ADDRESS1_SELECTOR).getAttribute("edq-metadata");
+        }, [ ADDRESS1_SELECTOR ]))
+        .then(pollUntil(function(CITY_SELECTOR) {
+          return (document.querySelector(CITY_SELECTOR) as HTMLInputElement).value || null;
+        }, [ CITY_SELECTOR ]))
         .then(function(city: string) {
           assert.equal(city, "Boston", "Full address includes city")
         })
