@@ -200,6 +200,7 @@ registerSuite("FSCM - CUST_GENERAL1 Tests", {
     },
     
     "Pro Web with PRO_WEB_SERVICE_URL works": function() {
+      this.skip();
       return this.remote
         .then(addProWebOnPremise())
         .then(pollUntil(function() {
