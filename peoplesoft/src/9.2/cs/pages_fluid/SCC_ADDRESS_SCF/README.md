@@ -32,7 +32,7 @@ To enable `County name` as an option, please follow the steps below:
 7. Override `PRO_WEB_MAPPING` by doing the following
 
 ```javascript
-function EdqCountryOverride() {
+function EdqConfigCountryOverride() {
   // This can be edited to override settings per country
   return {
     "USA": {
