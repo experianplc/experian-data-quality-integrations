@@ -5,7 +5,7 @@
  * @param country - full form country name, e.g. United States
  * @param overrideObject - an object that represents user mapping to full form and ISO-3 codes.
  */
-export function countryToIso3(country: string, EdqCountriesOverride: Function) {
+export function countryToIso3(country: string, EdqCountriesOverride?: Function) {
   const countries = {
     "United States": "USA",
     "United States of America": "USA",

@@ -5,6 +5,7 @@ interface Window {
   EdqConfig?: UnicornObject;
   EdqConfigOverride?: () => UnicornObject;
   EdqConfigCountryOverride?: EdqConfigCountryOverrideFn;
+  EdqCountriesOverride?: () => { [key: string]: string };
   EDQ?: PegasusObject;
   html: string;
   EdqCountries?: {

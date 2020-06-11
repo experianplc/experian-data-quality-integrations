@@ -116,7 +116,7 @@ let interval = setInterval(function() {
         if (mutation.type === "childList") { 
           // End it if the country did not change
           const country = (document.getElementById("SCC_CNT_ADFMTVW_DESCR") as HTMLInputElement).value;
-          const iso3Country = countryToIso3(country, EdqCountriesOverride);
+          const iso3Country = countryToIso3(country, window.EdqCountriesOverride);
 
           // The country is not supported if we don't have a mapping
           if (!iso3Country) {
