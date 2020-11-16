@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_form_template_handle"/>
+    <body>
+        <referenceBlock name="customer_address_edit">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Experian_CustomerCustomAttributes::customer/address/edit.phtml</argument>
+            </action>
+            <arguments>
+                <argument name="check_attributes_on_render" xsi:type="array">
+                    <item name="telephone" xsi:type="string">telephone</item>
+                    <item name="company" xsi:type="string">company</item>
+                </argument>
+            </arguments>
+            <block class="Magento\CustomerCustomAttributes\Block\Form" template="Magento_CustomerCustomAttributes::form/userattributes.phtml" name="customer_form_address_user_attributes" cacheable="false">
+                <action method="setFormCode">
+                    <argument name="code" xsi:type="string">customer_address_edit</argument>
+                </action>
+                <action method="setEntityModelClass">
+                    <argument name="code" xsi:type="string">Magento\Customer\Model\Address</argument>
+                </action>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

@@ -7,6 +7,13 @@ interface Window {
   EdqConfigCountryOverride?: EdqConfigCountryOverrideFn;
   EdqCountriesOverride?: () => { [key: string]: string };
   EDQ?: PegasusObject;
+
+  // TODO: Add detailed type info
+  GlobalIntuitiveUnicorn?: any;
+  PhoneUnicorn?: any;
+  VerificationUnicorn?: any;
+  EmailUnicorn?: any;
+
   html: string;
   EdqCountries?: {
     [key: string]: UnicornObject
@@ -14,4 +21,11 @@ interface Window {
 
   // Unique to PeopleSoft CS
   winName: string;
+
+  /** Magento specific additions */
+  savedSubmitHandler: Function;
+  jQuery: Function;
+  shippingEdqConfig: UnicornObject;
+  billingEdqConfig: UnicornObject;
+  isCustomerLoggedIn: boolean;
 }

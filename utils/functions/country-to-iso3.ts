@@ -39,4 +39,3 @@ export function countryToIso3(country: string, EdqCountriesOverride?: Function) 
 
   return countries[country];
 }
-

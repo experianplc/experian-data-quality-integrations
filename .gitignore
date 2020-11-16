@@ -1,5 +1,7 @@
-peoplesoft2/node_modules
-peoplesoft2/**/*.js
-**/nunit3.xml
 node_modules
 lib
+peoplesoft/src/**/*/.js*
+peoplesoft/tests/**/*.js*
+magento/src/**/*.js*
+magento/tests/**/*.js*
+utils/**/*.js*

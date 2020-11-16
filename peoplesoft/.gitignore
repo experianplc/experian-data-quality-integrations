@@ -2,3 +2,4 @@ node_modules
 lib
 nunit3.xml
 **/*.js
+**/*.js.map

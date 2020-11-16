@@ -1,0 +1,6 @@
+development
+src/**/*.js
+node_modules
+tests/**/*.js*
+nunit3.xml
+lib/**/*

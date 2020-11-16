@@ -20,14 +20,15 @@
     "checkJs": true,
     "sourceMap": true,
     "allowJs": true,
-    "skipLibCheck": true,
-    "outDir": "lib"
+    "skipLibCheck": true
   },
 
   "include": [
-    "./peoplesoft/src/**/*",
-    "./peoplesoft/tests/**/*",
-    "./utils/**/*"
+    "peoplesoft/src/**/*",
+    "peoplesoft/tests/**/*",
+    "magento/src/**/*",
+    "magento/tests/**/*",
+    "utils/**/*"
   ],
 
   "exclude": ["node_modules/**/*"],
