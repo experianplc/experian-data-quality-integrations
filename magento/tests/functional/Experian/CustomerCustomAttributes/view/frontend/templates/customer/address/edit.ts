@@ -79,6 +79,7 @@ registerSuite("Experian CustomerCustomAttributes Address Edit", {
           return document.querySelector("[title='Save Address']");
         }))
         .then(proWebVerification({
+          "#telephone": "", // Blank so page doesn't submit
           "#street_1": "125 Summer Street",
           "#street_2": "Ste 110",
           "#city": "Boston",

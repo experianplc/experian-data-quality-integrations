@@ -17,8 +17,8 @@ registerSuite("Experian CustomerCustomAttributesFormEdit", {
   // Add the integration and login.
   before: function() {
     return this.remote
-      .setFindTimeout(20000)
-      .setExecuteAsyncTimeout(40000)
+      .setFindTimeout(30000)
+      .setExecuteAsyncTimeout(50000)
       .clearCookies()
       .get(`${URL}/customer/account/edit/`)
       .then(multiFill({

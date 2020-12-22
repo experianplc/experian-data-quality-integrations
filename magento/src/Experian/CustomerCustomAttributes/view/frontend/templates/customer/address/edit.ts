@@ -141,18 +141,27 @@ namespace CustomerCustomAttributesEdit {
   };
   let targetNode = document.querySelector("#form-validate");
   let targetNodeConfig = { attributes: true, childList: true, subtree: true };
-  let observer = new MutationObserver(function (mutationsList, observer) {
+  let iterations = 0;
+  let iterator = function () {
+    // An arbitrary number ( 5 seconds )
+    if (iterations > 10) {
+      return;
+    }
+
     try {
       if (jQuery("#form-validate").data("validator")) {
         if (document.getElementById("edq-pegasus") === null) {
           document.body.appendChild(edqScript);
         }
-        observer.disconnect();
+      } else {
+        iterations++;
+        setTimeout(iterator, 500);
       }
     }
     catch (e) {
-      // jQuery not loaded yet
+      iterations++;
+      setTimeout(iterator, 500);
     }
-  });
-  observer.observe(targetNode, targetNodeConfig);
+  };
+  iterator();
 }

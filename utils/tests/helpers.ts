@@ -9,8 +9,15 @@ export function emailValidate(emailAddress: string,  selector: string, assert: C
   return function() {
     return this.parent
       .findByCssSelector(selector)
-      .type(emailAddress)
-      .type(keys.TAB)
+        .clearValue()
+        .end()
+      .findByCssSelector(selector)
+        .type(keys.TAB)
+        .end()
+      .findByCssSelector(selector)
+        .type(emailAddress)
+        .type(keys.TAB)
+        .end()
       .then(pollUntil(function(selector: string) {
         return document.querySelector(selector).getAttribute("edq-metadata");
       }, [selector]))
@@ -122,10 +129,13 @@ export function proWebVerification(address: AddressObject, submitSelector, asser
         if (metadata) {
           return metadata;
         } else {
-          document.querySelector(submitSelector).click();
+          try {
+            document.querySelector(submitSelector).click();
+          } catch (e) {
+          }
           return null;
         }
-      }, [submitSelector]))
+      }, [submitSelector], 20000, 5000))
       .then(function(metadata) {
         assert.equal(Boolean(metadata), true, "Pro Web Verification works");
       })
