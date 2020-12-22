@@ -117,7 +117,7 @@ export function proWebVerification(address: AddressObject, submitSelector, asser
         .click()
         .end()
       .then(pollUntil(function(submitSelector) {
-        let metadata = document.querySelector(submitSelector).getAttribute("edq-metadata") || 
+        let metadata = document.querySelector(submitSelector)?.getAttribute("edq-metadata") || 
           document.querySelector(submitSelector)?.form.getAttribute("edq-metadata");
         if (metadata) {
           return metadata;
