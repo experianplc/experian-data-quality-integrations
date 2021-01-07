@@ -1,7 +1,9 @@
 import intern from "intern";
 import { spawn } from "child_process";
-import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
+import * as fs from "fs";
+import * as path from "path";
 
+import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
 const { registerSuite } = intern.getInterface("object");
 const { assert } = intern.getPlugin("chai");
 const { emailValidate } = intern.getPlugin("helpers");
@@ -35,21 +37,24 @@ const BILLING = `${URL}/checkout#payment`;
 registerSuite("Experian Checkout - onepage tests - signed out - shipping", {
   // Add the integration and login.
   before: function() {
-    console.log(PRODUCT);
     return this.remote
       .setFindTimeout(20000)
       .setExecuteAsyncTimeout(40000)
   },
 
+  // Go to the page with the address
   beforeEach: function() {
     // Go to the page with the address
     return this.remote 
       .clearCookies()
       .get(PRODUCT)
-      .then(pollUntil(function() {
-        return !(document.querySelector("#product-addtocart-button") as HTMLButtonElement).disabled || 
-          null;
-      }))
+
+      .then(
+        pollUntil(function() {
+          return !(document.querySelector("#product-addtocart-button") as HTMLButtonElement).disabled || 
+            null;
+        })
+      )
       .findByCssSelector("#product-addtocart-button")
         .click()
         .end()
@@ -60,24 +65,65 @@ registerSuite("Experian Checkout - onepage tests - signed out - shipping", {
       .execute(function(GLOBAL_PHONE_VALIDATION_AUTH_TOKEN, PRO_WEB_AUTH_TOKEN, GLOBAL_INTUITIVE_AUTH_TOKEN, EMAIL_VALIDATE_AUTH_TOKEN) {
         let script = document.createElement("script");
         script.type = "application/javascript";
-        script.src = "http://localhost:8000/lib/Experian/Checkout/view/frontend/templates/onepage.js";
-        script.setAttribute("GLOBAL_PHONE_VALIDATION_AUTH_TOKEN", GLOBAL_PHONE_VALIDATION_AUTH_TOKEN) ;
+        script.setAttribute("GLOBAL_PHONE_VALIDATION_AUTH_TOKEN", GLOBAL_PHONE_VALIDATION_AUTH_TOKEN);
         script.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
         script.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", GLOBAL_INTUITIVE_AUTH_TOKEN);
         script.setAttribute("EMAIL_VALIDATE_AUTH_TOKEN", EMAIL_VALIDATE_AUTH_TOKEN);
+        script.src = "http://localhost:8000/Experian/Checkout/view/frontend/templates/onepage.js";
         script.id = "edq-magento-experian-checkout-view-frontend-template-onepage";
         document.body.appendChild(script);
-      }, [ GLOBAL_PHONE_VALIDATION_AUTH_TOKEN, PRO_WEB_AUTH_TOKEN, GLOBAL_INTUITIVE_AUTH_TOKEN, EMAIL_VALIDATE_AUTH_TOKEN ])
+      }, [ 
+        GLOBAL_PHONE_VALIDATION_AUTH_TOKEN, 
+        PRO_WEB_AUTH_TOKEN, 
+        GLOBAL_INTUITIVE_AUTH_TOKEN, 
+        EMAIL_VALIDATE_AUTH_TOKEN,
+      ])
       .then(pollUntil(function() {
         return window.EDQ;
       }))
   },
+
+  afterEach: function() {
+    return this.remote
+      // Download window.__coverage__ from browser
+      .execute(function() {
+        //@ts-ignore
+        return window.__coverage__;
+      })
+      
+      .then(function(coverageOutput) {
+        if (coverageOutput) {
+          console.log("Coverage output found");
+
+          let outJsonPath = path.resolve("./.nyc_output/out.json");
+          let nycOutput: any = {};
+          try {
+            //@ts-ignore
+            nycOutput = fs.readFileSync(outJsonPath);
+            console.log("Existing .nyc_output/out.json found");
+          } catch(e) {
+          }
+
+          // Collapse window.__coverage__ onto .nyc_output/out.json
+          Object.assign(nycOutput, coverageOutput);
+          
+          // Save collapsed output to .nyc_output/out.json
+          try { 
+            fs.writeFileSync(outJsonPath, JSON.stringify(nycOutput));
+            console.log("New .nyc_output/out.json written");
+          } catch(e) {
+          }
+        }
+      })
+  },
+
 
     tests: {
     "Shipping Address Suite": {
 
       "Phone validation works for shipping phone number": function() {
         return this.remote
+
           .then(pollUntil(function() {
             try {
               return !document.querySelector("#co-shipping-form [name='telephone']").getAttribute("data-mage-init") || null;
@@ -193,11 +239,11 @@ registerSuite("Experian Checkout - onepage tests - signed out - billing", {
       .execute(function(GLOBAL_PHONE_VALIDATION_AUTH_TOKEN, PRO_WEB_AUTH_TOKEN, GLOBAL_INTUITIVE_AUTH_TOKEN, EMAIL_VALIDATE_AUTH_TOKEN) {
         let script = document.createElement("script");
         script.type = "application/javascript";
-        script.src = "http://localhost:8000/lib/Experian/Checkout/view/frontend/templates/onepage.js";
         script.setAttribute("GLOBAL_PHONE_VALIDATION_AUTH_TOKEN", GLOBAL_PHONE_VALIDATION_AUTH_TOKEN) ;
         script.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);
         script.setAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN", GLOBAL_INTUITIVE_AUTH_TOKEN);
         script.setAttribute("EMAIL_VALIDATE_AUTH_TOKEN", EMAIL_VALIDATE_AUTH_TOKEN);
+        script.src = "http://localhost:8000/Experian/Checkout/view/frontend/templates/onepage.js";
         script.id = "edq-magento-experian-checkout-view-frontend-template-onepage";
         document.body.appendChild(script);
       }, [ GLOBAL_PHONE_VALIDATION_AUTH_TOKEN, PRO_WEB_AUTH_TOKEN, GLOBAL_INTUITIVE_AUTH_TOKEN, EMAIL_VALIDATE_AUTH_TOKEN ])
@@ -213,6 +259,40 @@ registerSuite("Experian Checkout - onepage tests - signed out - billing", {
           return null;
         }
       }))
+  },
+
+  afterEach: function() {
+    return this.remote
+      // Download window.__coverage__ from browser
+      .execute(function() {
+        //@ts-ignore
+        return window.__coverage__;
+      })
+      
+      .then(function(coverageOutput) {
+        if (coverageOutput) {
+          console.log("Coverage output found");
+
+          let outJsonPath = path.resolve("./.nyc_output/out.json");
+          let nycOutput: any = {};
+          try {
+            //@ts-ignore
+            nycOutput = fs.readFileSync(outJsonPath);
+            console.log("Existing .nyc_output/out.json found");
+          } catch(e) {
+          }
+
+          // Collapse window.__coverage__ onto .nyc_output/out.json
+          Object.assign(nycOutput, coverageOutput);
+          
+          // Save collapsed output to .nyc_output/out.json
+          try { 
+            fs.writeFileSync(outJsonPath, JSON.stringify(nycOutput));
+            console.log("New .nyc_output/out.json written");
+          } catch(e) {
+          }
+        }
+      })
   },
 
   tests: {
