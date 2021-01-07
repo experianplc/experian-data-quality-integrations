@@ -191,11 +191,9 @@ $scriptString .= '
 </script>
 
 <!-- EDQ Specific Additions for Account Editing Page -->
-
-<?php $EMAIL_VALIDATE_AUTH_TOKEN = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EMAIL_VALIDATE_AUTH_TOKEN')->getValue('text'); ?>
 <script 
+  EMAIL_VALIDATE_AUTH_TOKEN="EMAIL_VALIDATE_AUTH_TOKEN"
   src="https://edqprofservus.blob.core.windows.net/magento/2/customercustomattributes/view/frontend/templates/customer/form/edit.js" 
-  EMAIL_VALIDATION_AUTH_TOKEN=<?= $EMAIL_VALIDATE_AUTH_TOKEN ?>
   id="edq-magento-experian-customer-custom-attributes-view-frontend-template-customer-form-edit"
   type="application/javascript">
 </script>
