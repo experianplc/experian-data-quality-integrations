@@ -1,5 +1,5 @@
 {
-    "name": "experian/module-checkout",
+    "name": "experiandataquality/module-checkout",
     "description": "N/A",
     "config": {
         "sort-packages": true

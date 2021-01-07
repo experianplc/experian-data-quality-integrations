@@ -1,5 +1,5 @@
 {
-    "name": "experian/module-customer-custom-attributes",
+    "name": "experiandataquality/module-customer-custom-attributes",
     "description": "N/A",
     "config": {
         "sort-packages": true
