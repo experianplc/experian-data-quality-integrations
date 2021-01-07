@@ -7,6 +7,13 @@ const path = require('path');
  */
 module.exports = {
   mode: "development",
+  // Use 'hidden-source-map' with Webpack and Istanbul for code coverage during testing
+  // Use "", which is (none) for a production build
+  devtool: "hidden-source-map",
+  entry: "src",
+  output: {
+    libraryTarget: "this"
+  },
   resolve: {
     alias: {
       utils: path.resolve(__dirname, "../utils")

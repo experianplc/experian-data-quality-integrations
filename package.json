@@ -29,6 +29,10 @@
   },
   "homepage": "https://github.com/experianplc/experian-data-quality-integrations#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.14"
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/chai": "^4.2.14",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.1.1"
   }
 }

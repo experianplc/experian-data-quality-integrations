@@ -1,0 +1,15 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "require": ["ts-node/register"],
+  "cache": true,
+  "cwd": ".",
+  "check-coverage": false,
+  "include": [
+    "lib/**",
+    "src/**",
+    "instrument/**",
+    "test/**"
+  ],
+  "reporter": ["lcov"],
+  "report-dir": "coverage"
+}

@@ -4,3 +4,7 @@ node_modules
 tests/**/*.js*
 nunit3.xml
 lib/**/*
+.nyc_output
+coverage
+instrumented
+release
