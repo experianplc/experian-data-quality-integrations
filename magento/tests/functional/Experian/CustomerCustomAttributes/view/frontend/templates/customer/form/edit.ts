@@ -6,6 +6,7 @@ const { registerSuite } = intern.getInterface("object");
 const { assert } = intern.getPlugin("chai");
 const { emailValidate } = intern.getPlugin("helpers");
 const { multiFill } = intern.getPlugin("helpers");
+const { enableCoverage } = intern.getPlugin("helpers");
 const EMAIL_VALIDATE_AUTH_TOKEN: string = process.env.EMAIL_VALIDATE_AUTH_TOKEN;
 
 /**
@@ -48,6 +49,11 @@ registerSuite("Experian CustomerCustomAttributesFormEdit", {
       .then(pollUntil(function() {
         return window.EDQ;
       }))
+  },
+
+  afterEach: function() {
+    return this.remote
+      .then(enableCoverage())
   },
 
   tests: {

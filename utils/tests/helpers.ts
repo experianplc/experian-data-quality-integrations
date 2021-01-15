@@ -1,6 +1,48 @@
 import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
 import keys from '@theintern/leadfoot/keys';
 import intern from "intern";
+import * as path from "path";
+import * as fs from "fs";
+
+
+/**
+ * Enableds intern coverage by merging out.json files for istanbul
+ */
+export function enableCoverage() {
+  return function() {
+    return this.parent
+    // Download window.__coverage__ from browser
+      .execute(function() {
+        //@ts-ignore
+        return window.__coverage__;
+      })
+
+      .then(function(coverageOutput) {
+        if (coverageOutput) {
+          console.log("Coverage output found");
+
+          let outJsonPath = path.resolve("./.nyc_output/out.json");
+          let nycOutput: any = {};
+          try {
+            //@ts-ignore
+            nycOutput = JSON.parse(fs.readFileSync(outJsonPath));
+            console.log("Existing .nyc_output/out.json found");
+          } catch(e) {
+          }
+
+          // Collapse window.__coverage__ onto .nyc_output/out.json
+          Object.assign(nycOutput, coverageOutput);
+
+          // Save collapsed output to .nyc_output/out.json
+          try { 
+            fs.writeFileSync(outJsonPath, JSON.stringify(nycOutput));
+            console.log("New .nyc_output/out.json written");
+          } catch(e) {
+          }
+        }
+      })
+  }
+}
 
 /**
  * Validates an email address, given a query selector and an expected status 
@@ -149,6 +191,7 @@ intern.registerPlugin("helpers", function() {
     emailValidate,
     globalIntuitiveAddressVerify,
     proWebVerification,
-    multiFill
+    multiFill,
+    enableCoverage
   };
 });

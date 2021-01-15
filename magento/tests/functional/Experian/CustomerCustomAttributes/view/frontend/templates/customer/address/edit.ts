@@ -8,6 +8,7 @@ const { phoneValidate } = intern.getPlugin("helpers");
 const { globalIntuitiveAddressVerify } = intern.getPlugin("helpers");
 const { proWebVerification } = intern.getPlugin("helpers");
 const { multiFill } = intern.getPlugin("helpers");
+const { enableCoverage} = intern.getPlugin("helpers");
 
 const GLOBAL_PHONE_VALIDATION_AUTH_TOKEN = process.env.GLOBAL_PHONE_VALIDATION_AUTH_TOKEN;
 const PRO_WEB_AUTH_TOKEN = process.env.PRO_WEB_AUTH_TOKEN;
@@ -51,6 +52,11 @@ registerSuite("Experian CustomerCustomAttributes Address Edit", {
       .then(pollUntil(function() {
         return window.EDQ;
       }))
+  },
+
+  afterEach: function() {
+    return this.remote
+      .then(enableCoverage())
   },
 
   tests: {

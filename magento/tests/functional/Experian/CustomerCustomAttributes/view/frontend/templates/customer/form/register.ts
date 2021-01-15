@@ -5,6 +5,7 @@ import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
 const { registerSuite } = intern.getInterface("object");
 const { assert } = intern.getPlugin("chai");
 const { emailValidate } = intern.getPlugin("helpers");
+const { enableCoverage } = intern.getPlugin("helpers");
 const EMAIL_VALIDATE_AUTH_TOKEN: string = process.env.EMAIL_VALIDATE_AUTH_TOKEN;
 
 /**
@@ -36,6 +37,11 @@ registerSuite("Experian CustomerCustomAttributesFormRegister", {
       .then(pollUntil(function() {
         return window.EDQ;
       }))
+  },
+
+  afterEach: function() {
+    return this.remote
+      .then(enableCoverage())
   },
 
   tests: {
