@@ -1,9 +1,9 @@
 {
   "extends": "@istanbuljs/nyc-config-typescript",
   "require": ["ts-node/register"],
-  "cache": true,
+  "cache": false,
   "cwd": ".",
-  "check-coverage": false,
+  "check-coverage": true,
   "include": [
     "lib/**",
     "src/**",
