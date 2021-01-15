@@ -9,4 +9,4 @@ There are no customization options for this touchpoint.
 
 ![email_validation](https://user-images.githubusercontent.com/5572859/101801252-1b4a4380-3adc-11eb-8d43-071a883a07f4.gif)
 
-Make sure `EMAIL_VALIDATE_AUTH_TOKEN` is set with a valid authorization token
+Make sure `EMAIL_VALIDATE_AUTH_TOKEN` is set with a valid authorization token in `register.phtml`
