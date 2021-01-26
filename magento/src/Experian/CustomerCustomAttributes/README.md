@@ -9,4 +9,4 @@ installing an extension.
 Alternatively you can downoad the latest version of the extension from our secure store [here]().
 
 # Configuration
-Please see the page specific configuration in `/view/frontend/templates`
+Please see the page specific configuration in [`/view/frontend/templates/customer`](./view/frontend/templates/customer)
