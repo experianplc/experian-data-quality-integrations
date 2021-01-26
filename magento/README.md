@@ -5,4 +5,9 @@ Specifically, we provide email and phone validation as well as address verificat
 We are able to integrate into Magento to provide this functionality when interacting 
 with their form fields.
 
-Amend this document.
+We offer two extensions:
+
+- [Magento Customer Custom Attributes](./src/Experian/CustomerCustomAttributes)
+- [Magento Checkout](./src/Experian/Checkout)
+
+Please view the repsective pages to see more information on their functionality. 
