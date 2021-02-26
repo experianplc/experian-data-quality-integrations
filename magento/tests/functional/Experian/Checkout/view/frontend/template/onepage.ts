@@ -1,7 +1,7 @@
 import intern from "intern";
 import { spawn } from "child_process";
-
 import pollUntil from "@theintern/leadfoot/helpers/pollUntil";
+
 const { registerSuite } = intern.getInterface("object");
 const { assert } = intern.getPlugin("chai");
 const { emailValidate } = intern.getPlugin("helpers");

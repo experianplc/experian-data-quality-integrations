@@ -22,20 +22,21 @@ export function enableCoverage() {
           console.log("Coverage output found");
 
           let outJsonPath = path.resolve("./.nyc_output/out.json");
-          let nycOutput: any = {};
+          let nycOutputObj: { [index: string]: any } = {};
           try {
             //@ts-ignore
-            nycOutput = JSON.parse(fs.readFileSync(outJsonPath));
+            nycOutputObj = JSON.parse(fs.readFileSync(outJsonPath));
             console.log("Existing .nyc_output/out.json found");
           } catch(e) {
           }
 
           // Collapse window.__coverage__ onto .nyc_output/out.json
-          Object.assign(nycOutput, coverageOutput);
+          Object.assign(nycOutputObj, coverageOutput);
 
           // Save collapsed output to .nyc_output/out.json
           try { 
-            fs.writeFileSync(outJsonPath, JSON.stringify(nycOutput));
+            fs.mkdirSync("./.nyc_output", { recursive: true });
+            fs.writeFileSync(outJsonPath, JSON.stringify(nycOutputObj));
             console.log("New .nyc_output/out.json written");
           } catch(e) {
           }

@@ -8,7 +8,7 @@ const { phoneValidate } = intern.getPlugin("helpers");
 const { globalIntuitiveAddressVerify } = intern.getPlugin("helpers");
 const { proWebVerification } = intern.getPlugin("helpers");
 const { multiFill } = intern.getPlugin("helpers");
-const { enableCoverage} = intern.getPlugin("helpers");
+const { enableCoverage } = intern.getPlugin("helpers");
 
 const GLOBAL_PHONE_VALIDATION_AUTH_TOKEN = process.env.GLOBAL_PHONE_VALIDATION_AUTH_TOKEN;
 const PRO_WEB_AUTH_TOKEN = process.env.PRO_WEB_AUTH_TOKEN;
@@ -42,7 +42,7 @@ registerSuite("Experian CustomerCustomAttributes Address Edit", {
       .execute(function(GLOBAL_PHONE_VALIDATION_AUTH_TOKEN, PRO_WEB_AUTH_TOKEN, GLOBAL_INTUITIVE_AUTH_TOKEN) {
         let script = document.createElement("script");
         script.type = "application/javascript";
-        script.src = "http://localhost:8000/lib/Experian/CustomerCustomAttributes/view/frontend/templates/customer/address/edit.js";
+        script.src = "http://localhost:8000/instrumented/Experian/CustomerCustomAttributes/view/frontend/templates/customer/address/edit.js";
         script.id = "edq-magento-experian-customer-custom-attributes-view-frontend-template-customer-address-edit";
         script.setAttribute("GLOBAL_PHONE_VALIDATION_AUTH_TOKEN", GLOBAL_PHONE_VALIDATION_AUTH_TOKEN);
         script.setAttribute("PRO_WEB_AUTH_TOKEN", PRO_WEB_AUTH_TOKEN);

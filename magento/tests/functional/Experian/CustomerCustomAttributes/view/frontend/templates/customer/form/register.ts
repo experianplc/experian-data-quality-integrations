@@ -29,7 +29,7 @@ registerSuite("Experian CustomerCustomAttributesFormRegister", {
       .execute(function(EMAIL_VALIDATE_AUTH_TOKEN) {
         let script = document.createElement("script");
         script.type = "application/javascript";
-        script.src = "http://localhost:8000/lib/Experian/CustomerCustomAttributes/view/frontend/templates/customer/form/register.js";
+        script.src = "http://localhost:8000/instrumented/Experian/CustomerCustomAttributes/view/frontend/templates/customer/form/register.js";
         script.setAttribute("EMAIL_VALIDATE_AUTH_TOKEN", EMAIL_VALIDATE_AUTH_TOKEN) ;
         script.id = "edq-magento-experian-customer-custom-attributes-view-frontend-template-customer-form-register";
         document.body.appendChild(script);

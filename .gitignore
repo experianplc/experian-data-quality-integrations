@@ -1,7 +1,9 @@
 node_modules
 lib
+coverage
 peoplesoft/src/**/*/.js*
 peoplesoft/tests/**/*.js*
 magento/src/**/*.js*
 magento/tests/**/*.js*
 utils/**/*.js*
+.nyc_output

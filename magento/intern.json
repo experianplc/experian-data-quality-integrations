@@ -2,7 +2,7 @@
   "functionalSuites": "tests/functional/**/*.js",
   "filterErrorStack": false,
 
-  "leaveRemoteOpen": true,
+  "leaveRemoteOpen": false,
   "capabilities": {
     "acceptInsecureCerts": true
   },
