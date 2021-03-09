@@ -11,7 +11,6 @@ import {
  * https://int-nwuiyna-hjcmsglwkhlty.us-4.magentosite.cloud/customer/address/edit/id/1/
  */
 namespace CustomerCustomAttributesEdit {
-  const jQuery = window.jQuery;
   const phoneElement = document.querySelector("[name='telephone']");
   const addressElement = document.getElementById("street_1");
 
@@ -111,17 +110,17 @@ namespace CustomerCustomAttributesEdit {
   edqScript.src = "https://edqprofservus.blob.core.windows.net/assets/edq.js";
   edqScript.id = "edq-pegasus";
   edqScript.onload = function () {
-    window.savedSubmitHandler = jQuery("#form-validate").data("validator").settings.submitHandler;
-    jQuery("#form-validate").data("validator").settings.submitHandler = null;
-    jQuery("#form-validate").data("validator").settings.debug = true;
-    jQuery("#form-validate")[0].onsubmit = function () {
+    window.savedSubmitHandler = window.jQuery("#form-validate").data("validator").settings.submitHandler;
+    window.jQuery("#form-validate").data("validator").settings.submitHandler = null;
+    window.jQuery("#form-validate").data("validator").settings.debug = true;
+    window.jQuery("#form-validate")[0].onsubmit = function () {
       let button = this.submitter;
       /**
        * Since we're overriding the default form submission behavior, we want to make sure
        * that we re-validate before submitting. Submitting without doing this would result
        * in server-side  validation but the intention is to keep things client-side if possible.
        */
-      if (jQuery(button.form).valid()) {
+      if (window.jQuery(button.form).valid()) {
         button.disabled = true;
         button.form.submit();
       }
@@ -149,7 +148,7 @@ namespace CustomerCustomAttributesEdit {
     }
 
     try {
-      if (jQuery("#form-validate").data("validator")) {
+      if (window.jQuery("#form-validate").data("validator")) {
         if (document.getElementById("edq-pegasus") === null) {
           document.body.appendChild(edqScript);
         }
