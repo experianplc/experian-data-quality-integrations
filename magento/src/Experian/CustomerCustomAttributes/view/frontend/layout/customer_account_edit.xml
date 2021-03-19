@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_form_template_handle"/>
+    <body>
+        <referenceBlock name="head.components">
+            <block class="Magento\Framework\View\Element\Js\Components" name="customercustomattributes_account_edit_head_components" template="Magento_CustomerCustomAttributes::js/components.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="customer_edit">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Experian_CustomerCustomAttributes::customer/form/edit.phtml</argument>
+            </action>
+            <block class="Magento\CustomerCustomAttributes\Block\Form" template="Magento_CustomerCustomAttributes::form/userattributes.phtml" name="customer_form_user_attributes" cacheable="false">
+                <action method="setFormCode">
+                    <argument name="code" xsi:type="string">customer_account_edit</argument>
+                </action>
+                <action method="setEntityModelClass">
+                    <argument name="code" xsi:type="string">Magento\Customer\Model\Customer</argument>
+                </action>
+            </block>
+        </referenceBlock>
+    </body>
+</page>
