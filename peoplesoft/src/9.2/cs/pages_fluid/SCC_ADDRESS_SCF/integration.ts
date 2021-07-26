@@ -310,6 +310,6 @@ let interval = setInterval(function() {
       })
     }
 
-   createAssets(currentElement); 
+    createAssets({currentElement}); 
   }
 }, 1000);

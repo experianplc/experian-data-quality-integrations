@@ -111,6 +111,6 @@ let interval = setInterval(function() {
       window.EdqConfig["PRO_WEB_LAYOUT"] = "Peoplesoft";
     };
 
-   createAssets(currentElement); 
+    createAssets({currentElement}); 
   }
 }, 1000);

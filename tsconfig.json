@@ -26,6 +26,8 @@
   "include": [
     "peoplesoft/src/**/*",
     "peoplesoft/tests/**/*",
+    "ccb/src/**/*",
+    "ccb/tests/**/*",
     "magento/src/**/*",
     "magento/tests/**/*",
     "utils/**/*"

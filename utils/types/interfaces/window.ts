@@ -14,6 +14,7 @@ interface Window {
   VerificationUnicorn?: any;
   EmailUnicorn?: any;
 
+  edqLoaded?: { [key: string]: boolean } ;
   html: string;
   EdqCountries?: {
     [key: string]: UnicornObject

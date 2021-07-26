@@ -114,6 +114,6 @@ let interval = setInterval(function() {
      * Any overrides to any item in the configuration can be included here. 
      */
     Object.assign(window.EdqConfig, window.EdqConfigOverride()); 
-    createAssets(currentElement);
+    createAssets({currentElement});
   }
 }, 1000);

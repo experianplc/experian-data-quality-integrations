@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function createAssets(obj) {
-    var currentElement = obj.currentElement, overrides = obj.overrides, callbacks = obj.callbacks;
+exports.createAssets = void 0;
+function createAssets(_a) {
+    var currentElement = _a.currentElement, overrides = _a.overrides, callbacks = _a.callbacks;
     var proWebStylesheet = document.createElement("link");
     proWebStylesheet.type = "text/css";
     proWebStylesheet.rel = "stylesheet";
-    proWebStylesheet.id = "edq-pro-web-css";
     proWebStylesheet.onload = callbacks.proWebStylesheet;
+    proWebStylesheet.id = "edq-pro-web-css";
     proWebStylesheet.href =
         overrides.PRO_WEB_STYLESHEET ||
             currentElement.getAttribute("PRO_WEB_STYLESHEET") ||
@@ -57,22 +58,43 @@ function createAssets(obj) {
             document.body.appendChild(globalIntuitiveUnicornScript);
         }
         var useTypedownIndicator = overrides.PRO_WEB_USE_TYPEDOWN || currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN");
-        var useTypedown = useTypedownIndicator &&
-            useTypedownIndicator !== "false";
+        var useTypedown = useTypedownIndicator && useTypedownIndicator !== "false";
         if ((useTypedown && proWebAuthToken) || (useTypedown && proWebServiceUrl)) {
             document.body.appendChild(typedownUnicornScript);
         }
     };
     if (document.getElementById("edq-pegasus") === null) {
         document.body.appendChild(edqScript);
+        // This is here because PeopleSoft will "reset" the integration each time you change a field
+        // and refocus. The purpose of this is to rebind the integration.
     }
     else {
-        document.getElementById("edq-verification-unicorn").remove();
-        document.body.appendChild(verificationUnicornScript);
-        document.getElementById("edq-typedown-unicorn").remove();
-        document.body.appendChild(typedownUnicornScript);
-        document.getElementById("edq-global-intuitive-unicorn").remove();
-        document.body.appendChild(globalIntuitiveUnicornScript);
+        try {
+            document.getElementById("edq-verification-unicorn").remove();
+        }
+        catch (e) { }
+        var proWebAuthToken = overrides.PRO_WEB_AUTH_TOKEN || currentElement.getAttribute("PRO_WEB_AUTH_TOKEN");
+        var proWebServiceUrl = overrides.PRO_WEB_SERVICE_URL || currentElement.getAttribute("PRO_WEB_SERVICE_URL");
+        if (proWebAuthToken || proWebServiceUrl) {
+            document.body.appendChild(verificationUnicornScript);
+        }
+        try {
+            document.getElementById("edq-typedown-unicorn").remove();
+        }
+        catch (e) { }
+        var useTypedownIndicator = overrides.PRO_WEB_USE_TYPEDOWN || currentElement.getAttribute("PRO_WEB_USE_TYPEDOWN");
+        var useTypedown = useTypedownIndicator && useTypedownIndicator !== "false";
+        if ((useTypedown && proWebAuthToken) || (useTypedown && proWebServiceUrl)) {
+            document.body.appendChild(typedownUnicornScript);
+        }
+        try {
+            document.getElementById("edq-global-intuitive-unicorn").remove();
+        }
+        catch (e) { }
+        var globalIntuitiveAuthToken = overrides.GLOBAL_INTUITIVE_AUTH_TOKEN || currentElement.getAttribute("GLOBAL_INTUITIVE_AUTH_TOKEN");
+        if (globalIntuitiveAuthToken) {
+            document.body.appendChild(globalIntuitiveUnicornScript);
+        }
     }
 }
 exports.createAssets = createAssets;

@@ -317,7 +317,7 @@ let enableIntegration = function() {
     })
     }
 
-    createAssets(currentElement); 
+    createAssets({currentElement}); 
   }
 }
 

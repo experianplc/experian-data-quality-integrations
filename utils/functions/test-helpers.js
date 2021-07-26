@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.typeAddress = exports.addProWebOnDemand = exports.addProWebOnPremise = exports.addGlobalIntuitive = void 0;
 var intern_1 = require("intern");
 function addGlobalIntuitive(obj) {
     var authToken = obj.authToken, elementId = obj.elementId, source = obj.source;
@@ -20,6 +21,9 @@ function addGlobalIntuitive(obj) {
 }
 exports.addGlobalIntuitive = addGlobalIntuitive;
 ;
+/**
+ * Adds Pro Web to the page with the specified proxied service url.
+ */
 function addProWebOnPremise(obj) {
     var serviceUrl = obj.serviceUrl, source = obj.source, useTypedown = obj.useTypedown, elementId = obj.elementId;
     if (!useTypedown) {
@@ -42,6 +46,9 @@ function addProWebOnPremise(obj) {
     };
 }
 exports.addProWebOnPremise = addProWebOnPremise;
+/**
+ * Adds Pro Web On Demand to the page with the specified authorization token.
+ */
 function addProWebOnDemand(obj) {
     var authToken = obj.authToken, source = obj.source, useTypedown = obj.useTypedown, elementId = obj.elementId;
     return function () {

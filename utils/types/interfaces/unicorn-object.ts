@@ -11,17 +11,23 @@ interface UnicornObject {
   PRO_WEB_MAPPING?: Array<any>;
   PRO_WEB_COUNTRY?: string;
   PRO_WEB_TYPEDOWN_CALLBACK?: any;
+  PRO_WEB_USE_TYPEDOWN?: boolean;
+  PRO_WEB_TYPEDOWN_URL?: string;
+  PRO_WEB_VERIFICATION_URL?: string;
   PRO_WEB_CALLBACK?: any;
   PRO_WEB_LAYOUT?: string;
   PRO_WEB_SUBMIT_TRIGGERS?: TriggerPair[];
   PRO_WEB_TIMEOUT?: number;
   PRO_WEB_SERVICE_URL?: string;
+  PRO_WEB_EDQ_URL?: string;
+  PRO_WEB_STYLESHEET_URL?: string;
 
   NO_SAVED_TARGET?: boolean;
   SOAP_ACTION_URL?: string;
 
   PRO_WEB_TYPEDOWN_TRIGGER?: any;
   GLOBAL_INTUITIVE_AUTH_TOKEN?: string;
+  GLOBAL_INTUITIVE_URL?: string;
   GLOBAL_INTUITIVE_USE_CURRENT_LOCATION?: boolean;
   GLOBAL_INTUITIVE_LOCATION?: string;
   GLOBAL_INTUITIVE_ELEMENT?: GlobalIntuitiveElement | string;
