@@ -9,6 +9,7 @@ interface Window {
   EDQ?: PegasusObject;
 
   // TODO: Add detailed type info
+  TypedownUnicorn?: any;
   GlobalIntuitiveUnicorn?: any;
   PhoneUnicorn?: any;
   VerificationUnicorn?: any;

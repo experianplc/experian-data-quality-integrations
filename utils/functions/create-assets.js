@@ -65,8 +65,6 @@ function createAssets(_a) {
     };
     if (document.getElementById("edq-pegasus") === null) {
         document.body.appendChild(edqScript);
-        // This is here because PeopleSoft will "reset" the integration each time you change a field
-        // and refocus. The purpose of this is to rebind the integration.
     }
     else {
         try {
