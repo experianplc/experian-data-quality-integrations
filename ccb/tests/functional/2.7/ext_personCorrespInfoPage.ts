@@ -15,7 +15,7 @@ const PRO_WEB_AUTH_TOKEN = process.env.PRO_WEB_AUTH_TOKEN;
 const GLOBAL_INTUITIVE_AUTH_TOKEN = process.env.GLOBAL_INTUITIVE_AUTH_TOKEN;
 const ELEMENT_ID = "edq-2.7-root-cm-ext_personCorrespInfoPage";
 const INTEGRATION_SOURCE_PATH = "http://localhost:8001/integration.js";
-const PRO_WEB_SERVICE_URL = "http://bospshcm92spi.qas.com:8080/";
+const PRO_WEB_SERVICE_URL = "http://bosccb27.qas.com:2021/";
 
 const URL = "http://bosccb27.qas.com/ouaf/cis.html";
 
@@ -103,9 +103,6 @@ registerSuite("ext_personInfoCorresp Tests", {
 
     "Pro Web with PRO_WEB_AUTH_TOKEN works (mailing address)": function() {
       return this.remote
-        .execute(function() {
-          debugger;
-        })
         .then(addProWebOnDemand({
           authToken: PRO_WEB_AUTH_TOKEN,
           elementId: ELEMENT_ID,
@@ -271,7 +268,6 @@ registerSuite("ext_personInfoCorresp Tests", {
         })
     },
 
-    /* TODO: Enable once Typedown-unicorn is uploaded 
     "Pro Web typedown works": function() {
       return this.remote
         .then(addProWebOnPremise(true))
@@ -286,7 +282,6 @@ registerSuite("ext_personInfoCorresp Tests", {
           assert(Boolean(typedownText), "Typedown pops up");
         })
     },
-     */
 
     "Global Intuitive without adding integration does not work": function() {
       return this.remote

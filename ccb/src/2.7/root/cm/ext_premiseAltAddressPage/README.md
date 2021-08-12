@@ -9,7 +9,7 @@ Account Billing (Customer Information > Account > Persons > Accounts Override)
 
 ## Configuring the integration
 Once you select which product you would like there is some basic configuration that needs to be
-done. For this example we will assume that we are using the `ext_accountPersonsPage` integration.
+done. For this example we will assume that we are using the `ext_premiseAltAddressPage` integration.
 
 For example, 
 
@@ -18,14 +18,14 @@ For example,
 <%@ taglib uri="spl.tld" prefix="spl" %>
 <spl:initializeLocale/>
 <div
-  id="edq-2.7-root-cm-ext_accountPersonsPage"
+  id="edq-2.7-root-cm-ext_premiseAltAddressPage"
   PRO_WEB_AUTH_TOKEN=""
   PRO_WEB_SERVICE_URL=""
   PRO_WEB_USE_TYPEDOWN=false
   GLOBAL_INTUITIVE_AUTH_TOKEN="">
 </div>
 <script
-  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_accountPersonsPage/integration.js">
+  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_premiseAltAddressPage/integration.js">
 </script>
 ```
 
@@ -41,7 +41,7 @@ The following table describes the functionality possible:
 
 ## Putting the integration into your environment.
 Once the `integration.jsp` file has its configuration set you should put its contents
-in the corresponding extension page, e.g. `ext_accountPersonsPage.jsp`
+in the corresponding extension page, e.g. `ext_premiseAltAddressPage.jsp`
 corresponding to the file.
 
 The contents of the `integration.jsp` for the particular touchpoint should be included
@@ -51,10 +51,10 @@ Customer Care and Billing should be restarted in order for the integration to ta
 # Functionality
 
 ## Typedown
-![typedown-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046080-a9dd596e-86e3-4e6b-8791-6586dc5fa6be.gif)
+![typedown-premiseAltPage](https://user-images.githubusercontent.com/5572859/129221490-51de4322-cf93-4359-be2f-81d2c1f65d4f.gif)
 
 ## Global Intuitive
-![globalIntuitive-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046077-dbd5eff0-2b37-4259-82f5-6d3946aedf77.gif)
+![globalIntuitive-premiseAltPage](https://user-images.githubusercontent.com/5572859/129221489-1eae7056-2d1f-4bca-b39d-77c155091eab.gif)
 
 ## Verification
-![verification-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046068-cc133e8e-7581-4750-886c-fa4be977ef03.gif)
+![verification-premiseAltPage](https://user-images.githubusercontent.com/5572859/129221487-b3ba3524-69b1-4b70-93dc-a5694103731a.gif)

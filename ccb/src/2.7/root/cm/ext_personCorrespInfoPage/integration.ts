@@ -39,6 +39,7 @@ let interval = setInterval(function() {
     })();
 
     const mailingAddressConfig: any = Object.assign({
+      PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("ADDRESS1"),
       PRO_WEB_SUBMIT_TRIGGERS: [
         {
           "type": "click",
@@ -120,6 +121,7 @@ let interval = setInterval(function() {
     })();
 
     const seasonalInfoConfig = Object.assign({
+      PRO_WEB_TYPEDOWN_TRIGGER: document.getElementById("SEAS_ADDR$ADDRESS1"),
       PRO_WEB_SUBMIT_TRIGGERS: [
         {
           "type": "click",
@@ -220,7 +222,7 @@ let interval = setInterval(function() {
       window.EdqConfig = Object.assign(window.EdqConfig, {
         PRO_WEB_SERVICE_URL: proWebServiceUrl,
         SOAP_ACTION_URL: soapActionUrl,
-        PRO_WEB_LAYOUT: "Peoplesoft",
+        PRO_WEB_LAYOUT: "Database layout",
       });
     };
 
@@ -237,6 +239,14 @@ let interval = setInterval(function() {
         GLOBAL_INTUITIVE_URL: parent.window.EdqConfig.GLOBAL_INTUITIVE_URL
       },
       callbacks: {
+        typedown: function() {
+          let typedownMailing: any = new window.TypedownUnicorn(mailingAddressConfig);
+          typedownMailing.activateValidation();
+
+          let typedownSeasonal: any = new window.TypedownUnicorn(seasonalInfoConfig);
+          typedownSeasonal.activateValidation();
+        },
+
         verification: function() {
           // One option is to build an object of pages where
           // the integration has been loaded into. So in this case

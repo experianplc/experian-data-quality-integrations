@@ -1,15 +1,15 @@
 # Usage
+StartStop Address (Customer Information > Start/Stop > Address/Phone)
 
-Account Billing (Customer Information > Account > Persons > Accounts Override)
-- Typedown (Pro Web)
-- Verification (Pro Web)
+- Verification (Proweb)
+- Typedown (Pro web)
 - Global Intuitive
 
 # Installation instructions (pre-created integrations)
 
 ## Configuring the integration
 Once you select which product you would like there is some basic configuration that needs to be
-done. For this example we will assume that we are using the `ext_accountPersonsPage` integration.
+done. For this example we will assume that we are using the `ext_startStopAddrOverride` integration.
 
 For example, 
 
@@ -18,14 +18,14 @@ For example,
 <%@ taglib uri="spl.tld" prefix="spl" %>
 <spl:initializeLocale/>
 <div
-  id="edq-2.7-root-cm-ext_accountPersonsPage"
+  id="edq-2.7-root-cm-ext_startStopAddrOverride"
   PRO_WEB_AUTH_TOKEN=""
   PRO_WEB_SERVICE_URL=""
   PRO_WEB_USE_TYPEDOWN=false
   GLOBAL_INTUITIVE_AUTH_TOKEN="">
 </div>
 <script
-  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_accountPersonsPage/integration.js">
+  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_startStopAddrOverride/integration.js">
 </script>
 ```
 
@@ -41,7 +41,7 @@ The following table describes the functionality possible:
 
 ## Putting the integration into your environment.
 Once the `integration.jsp` file has its configuration set you should put its contents
-in the corresponding extension page, e.g. `ext_accountPersonsPage.jsp`
+in the corresponding extension page, e.g. `ext_startStopAddrOverride.jsp`
 corresponding to the file.
 
 The contents of the `integration.jsp` for the particular touchpoint should be included
@@ -51,10 +51,10 @@ Customer Care and Billing should be restarted in order for the integration to ta
 # Functionality
 
 ## Typedown
-![typedown-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046080-a9dd596e-86e3-4e6b-8791-6586dc5fa6be.gif)
+![typedown-startStopAddrOverridePage](https://user-images.githubusercontent.com/5572859/128932695-1709e013-a926-4717-8d26-afeb71e3aadb.gif)
 
 ## Global Intuitive
-![globalIntuitive-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046077-dbd5eff0-2b37-4259-82f5-6d3946aedf77.gif)
+![globalIntuitive-startStopAddrOverridePage](https://user-images.githubusercontent.com/5572859/128932705-599fc72b-4fd2-47f0-a9de-0730ae202135.gif)
 
 ## Verification
-![verification-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046068-cc133e8e-7581-4750-886c-fa4be977ef03.gif)
+![verification-startStopAddrOverridePage](https://user-images.githubusercontent.com/5572859/128932703-0a6b4a8a-f11e-4854-990c-044d73b3cdc9.gif)

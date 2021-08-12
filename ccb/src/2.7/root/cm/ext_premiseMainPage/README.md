@@ -9,7 +9,7 @@ Account Billing (Customer Information > Account > Persons > Accounts Override)
 
 ## Configuring the integration
 Once you select which product you would like there is some basic configuration that needs to be
-done. For this example we will assume that we are using the `ext_accountPersonsPage` integration.
+done. For this example we will assume that we are using the `ext_premiseMainPage` integration.
 
 For example, 
 
@@ -18,14 +18,14 @@ For example,
 <%@ taglib uri="spl.tld" prefix="spl" %>
 <spl:initializeLocale/>
 <div
-  id="edq-2.7-root-cm-ext_accountPersonsPage"
+  id="edq-2.7-root-cm-ext_premiseMainPage"
   PRO_WEB_AUTH_TOKEN=""
   PRO_WEB_SERVICE_URL=""
   PRO_WEB_USE_TYPEDOWN=false
   GLOBAL_INTUITIVE_AUTH_TOKEN="">
 </div>
 <script
-  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_accountPersonsPage/integration.js">
+  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_premiseMainPage/integration.js">
 </script>
 ```
 
@@ -41,7 +41,7 @@ The following table describes the functionality possible:
 
 ## Putting the integration into your environment.
 Once the `integration.jsp` file has its configuration set you should put its contents
-in the corresponding extension page, e.g. `ext_accountPersonsPage.jsp`
+in the corresponding extension page, e.g. `ext_premiseMainPage.jsp`
 corresponding to the file.
 
 The contents of the `integration.jsp` for the particular touchpoint should be included
@@ -51,10 +51,10 @@ Customer Care and Billing should be restarted in order for the integration to ta
 # Functionality
 
 ## Typedown
-![typedown-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046080-a9dd596e-86e3-4e6b-8791-6586dc5fa6be.gif)
+![typedown-premiseMainPage](https://user-images.githubusercontent.com/5572859/129221818-1123b00d-1fde-4656-bb49-2047b727074f.gif)
 
 ## Global Intuitive
-![globalIntuitive-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046077-dbd5eff0-2b37-4259-82f5-6d3946aedf77.gif)
+![globalIntuitive-premiseMainPage](https://user-images.githubusercontent.com/5572859/129221816-75c024f1-75ec-4d1b-b96c-1a7a6f560f3b.gif)
 
 ## Verification
-![verification-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046068-cc133e8e-7581-4750-886c-fa4be977ef03.gif)
+![verification-premiseMainPage](https://user-images.githubusercontent.com/5572859/129221820-43783542-f955-4a36-be41-5f27564ac115.gif)

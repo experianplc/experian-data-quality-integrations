@@ -9,7 +9,7 @@ Account Billing (Customer Information > Account > Persons > Accounts Override)
 
 ## Configuring the integration
 Once you select which product you would like there is some basic configuration that needs to be
-done. For this example we will assume that we are using the `ext_accountPersonsPage` integration.
+done. For this example we will assume that we are using the `ext_personCorrespInfoPage` integration.
 
 For example, 
 
@@ -18,14 +18,14 @@ For example,
 <%@ taglib uri="spl.tld" prefix="spl" %>
 <spl:initializeLocale/>
 <div
-  id="edq-2.7-root-cm-ext_accountPersonsPage"
+  id="edq-2.7-root-cm-ext_personCorrespInfoPage"
   PRO_WEB_AUTH_TOKEN=""
   PRO_WEB_SERVICE_URL=""
   PRO_WEB_USE_TYPEDOWN=false
   GLOBAL_INTUITIVE_AUTH_TOKEN="">
 </div>
 <script
-  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_accountPersonsPage/integration.js">
+  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_personCorrespInfoPage/integration.js">
 </script>
 ```
 
@@ -41,7 +41,7 @@ The following table describes the functionality possible:
 
 ## Putting the integration into your environment.
 Once the `integration.jsp` file has its configuration set you should put its contents
-in the corresponding extension page, e.g. `ext_accountPersonsPage.jsp`
+in the corresponding extension page, e.g. `ext_personCorrespInfoPage.jsp`
 corresponding to the file.
 
 The contents of the `integration.jsp` for the particular touchpoint should be included
@@ -51,10 +51,10 @@ Customer Care and Billing should be restarted in order for the integration to ta
 # Functionality
 
 ## Typedown
-![typedown-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046080-a9dd596e-86e3-4e6b-8791-6586dc5fa6be.gif)
+![typedown-personCorrespInfoPage](https://user-images.githubusercontent.com/5572859/129221213-22208a1f-dfa6-4d04-b3b7-db83a7c2f77b.gif)
 
 ## Global Intuitive
-![globalIntuitive-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046077-dbd5eff0-2b37-4259-82f5-6d3946aedf77.gif)
+![globalIntuitive-personCorrespInfoPage](https://user-images.githubusercontent.com/5572859/129221210-509cdaad-eff3-4e11-a539-e053842f8ca5.gif)
 
 ## Verification
-![verification-accountPersonsPage](https://user-images.githubusercontent.com/5572859/129046068-cc133e8e-7581-4750-886c-fa4be977ef03.gif)
+![verification-personCorrespInfoPage](https://user-images.githubusercontent.com/5572859/129221208-37f7b117-626f-47db-92d7-652f8b746509.gif)
