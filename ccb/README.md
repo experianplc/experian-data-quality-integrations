@@ -13,13 +13,8 @@ Before starting, it's important to make sure you have access to the following th
 - Pro Web 7.XX. If you are using a self installed Pro Web instance it must be at least version 7.
 
 ## Pro Web Layout (Optional)
-If you're using Pro Web that's hosted on your own premises you will need to create a layout. Edit
-your `Qawserve` file for the version of Pro Web you're using (in Windows this file will be located
-by default somewhere like `C:\Program Files\QAS\QAS Pro Web 7.XX\Qawserve`, where XX is the
-sub-version number.
-
-Go to LAYOUT.md in this folder and copy the entire contents. From there paste those contents to the
-Qawserve found above.
+If you're using Pro Web that's hosted on your own premises you will need to create a layout. Please change 'Database layout' to be identical to the screenshot below:
+![image](https://user-images.githubusercontent.com/5572859/129387688-f0284b76-395b-48b6-8fc8-af74f8bbe95a.png)
 
 # Installation instructions (pre-created integrations)
 
