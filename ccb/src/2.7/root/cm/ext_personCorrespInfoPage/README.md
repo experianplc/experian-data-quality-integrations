@@ -1,6 +1,6 @@
 # Usage
 
-Account Billing (Customer Information > Account > Persons > Accounts Override)
+Account Billing (Customer Information > Person > Correspondence Info)
 - Typedown (Pro Web)
 - Verification (Pro Web)
 - Global Intuitive
