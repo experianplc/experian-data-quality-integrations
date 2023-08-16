@@ -9,6 +9,6 @@
   GLOBAL_INTUITIVE_AUTH_TOKEN="">
 </div>
 <script
-  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/root/cm/ext_premiseMainPage/integration.js">
+  src="https://edqprofservus.blob.core.windows.net/ccb/2.7/1.1/root/cm/ext_premiseMainPage/integration.js">
 </script>
 

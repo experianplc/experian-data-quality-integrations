@@ -24,15 +24,16 @@
   },
 
   "include": [
-    "peoplesoft/src/**/*",
+    "ccb/src/**/*"
+  ],
+
+  "exclude": ["node_modules/**/*",
+	"peoplesoft/src/**/*",
     "peoplesoft/tests/**/*",
-    "ccb/src/**/*",
-    "ccb/tests/**/*",
+	"ccb/tests/**/*",
     "magento/src/**/*",
     "magento/tests/**/*",
     "utils/**/*"
-  ],
-
-  "exclude": ["node_modules/**/*"],
+    ],
   "compileOnSave": false
 }

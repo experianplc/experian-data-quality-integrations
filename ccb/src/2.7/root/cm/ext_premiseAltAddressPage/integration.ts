@@ -15,6 +15,31 @@ let interval = setInterval(function() {
     } catch(e) {
       (parent.window.EdqConfig as any) = {};
     }
+	
+	// Added for IE compatibility **
+	if (typeof Object.assign != 'function') {
+		Object.assign = function(target) {
+			'use strict';
+			if (target == null) {
+				throw new TypeError('Cannot convert undefined or null to object');
+			}
+			
+			target = Object(target);
+			for (var index = 1; index < arguments.length; index++) {
+				var source = arguments[index];
+				if (source != null) {
+					for (var key in source) {
+						if (Object.prototype.hasOwnProperty.call(source, key)) {
+							target[key] = source[key];
+						}
+					}
+				}
+			}
+			
+			return target;
+		};
+	}
+	// End of Compatibilty **
 
     window.EdqConfig = Object.assign(parent.window.EdqConfig, {
       GLOBAL_INTUITIVE_NO_SAVED_TARGET: true,
